@@ -98,8 +98,6 @@ function Index() {
   useEffect(() => {
     setMounted(true);
     try {
-      const seen = localStorage.getItem("seenTerminal");
-      if (!seen) setShowTerminal(true);
       setGamingMode(localStorage.getItem("gamingMode") !== "0");
     } catch {}
     const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
