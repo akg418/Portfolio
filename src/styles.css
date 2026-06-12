@@ -166,6 +166,7 @@
 
 /* === Custom scrollbar === */
 html {
+  scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--color-primary) transparent;
 }

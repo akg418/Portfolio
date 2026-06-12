@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
+
+export type TerminalMode = "float" | "full" | "min";
 
 type Line = { kind: "in" | "out" | "sys"; text: string; cmd?: string; desc?: string };
 
@@ -18,8 +20,9 @@ const COMMANDS = [
   "gaming",
   "game",
   "clear",
-  "enter",
   "exit",
+  "minimize",
+  "min",
   "open",
   "color",
   "alias",
@@ -46,7 +49,8 @@ const HELP_LINES: { cmd: string; desc: string }[] = [
   { cmd: "alias", desc: "list | <name>=<command>   (e.g. alias ll=skills)" },
   { cmd: "unalias <name>", desc: "Remove an alias" },
   { cmd: "clear", desc: "Clear the terminal" },
-  { cmd: "enter", desc: "Enter the portfolio" },
+  { cmd: "minimize", desc: "Minimize the terminal to the bottom bar" },
+  { cmd: "exit", desc: "Close the terminal window" },
 ];
 
 const MAX_INPUT = 50;
@@ -189,10 +193,22 @@ function renderInputOverlay(
   );
 }
 
-export function Terminal({ onEnter }: { onEnter: () => void }) {
+export function Terminal({
+  mode,
+  onClose,
+  onMinimize,
+  onToggleFull,
+  onRestore,
+}: {
+  mode: TerminalMode;
+  onClose: () => void;
+  onMinimize: () => void;
+  onToggleFull: () => void;
+  onRestore: () => void;
+}) {
   const [lines, setLines] = useState<Line[]>([
     { kind: "sys", text: "ahmed-os v1.0.4 — © Ahmed Khaled" },
-    { kind: "sys", text: "Type `help` to see what I can do, or `enter` to open the portfolio." },
+    { kind: "sys", text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize." },
   ]);
   const [input, setInput] = useState("");
   const [visits, setVisits] = useState(0);
@@ -201,8 +217,44 @@ export function Terminal({ onEnter }: { onEnter: () => void }) {
   const [aliases, setAliases] = useState<Record<string, string>>({});
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const backStack = useRef<string[]>([]);
   const forwardStack = useRef<string[]>([]);
+
+  // Window position & size (used in float mode). Persisted in localStorage.
+  const [winPos, setWinPos] = useState<{ x: number; y: number }>(() => {
+    if (typeof window === "undefined") return { x: 80, y: 80 };
+    try {
+      const raw = localStorage.getItem("term-winpos");
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {
+      x: Math.max(24, Math.round(window.innerWidth / 2 - 360)),
+      y: Math.max(24, Math.round(window.innerHeight / 2 - 260)),
+    };
+  });
+  const [winSize, setWinSize] = useState<{ w: number; h: number }>(() => {
+    if (typeof window === "undefined") return { w: 720, h: 480 };
+    try {
+      const raw = localStorage.getItem("term-winsize");
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return {
+      w: Math.min(720, window.innerWidth - 48),
+      h: Math.min(480, window.innerHeight - 96),
+    };
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("term-winpos", JSON.stringify(winPos));
+    } catch {}
+  }, [winPos]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("term-winsize", JSON.stringify(winSize));
+    } catch {}
+  }, [winSize]);
 
   useEffect(() => {
     const v = getVisits() + 1;
@@ -219,6 +271,67 @@ export function Terminal({ onEnter }: { onEnter: () => void }) {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [lines]);
+
+  useEffect(() => {
+    if (mode !== "min") inputRef.current?.focus();
+  }, [mode]);
+
+  // Click outside the terminal window → minimize.
+  useEffect(() => {
+    if (mode === "min") return;
+    const onDocMouseDown = (e: MouseEvent) => {
+      const t = e.target as Node | null;
+      if (!t) return;
+      if (innerRef.current && !innerRef.current.contains(t)) {
+        onMinimize();
+      }
+    };
+    document.addEventListener("mousedown", onDocMouseDown);
+    return () => document.removeEventListener("mousedown", onDocMouseDown);
+  }, [mode, onMinimize]);
+
+  // ---- drag (header) ----
+  function onHeaderMouseDown(e: React.MouseEvent) {
+    if (mode !== "float") return;
+    // Ignore drags that start on the traffic-light buttons
+    if ((e.target as HTMLElement).closest("[data-window-btn]")) return;
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startPos = { ...winPos };
+    const onMove = (ev: MouseEvent) => {
+      const nx = Math.max(0, Math.min(window.innerWidth - 80, startPos.x + (ev.clientX - startX)));
+      const ny = Math.max(0, Math.min(window.innerHeight - 40, startPos.y + (ev.clientY - startY)));
+      setWinPos({ x: nx, y: ny });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
+
+  // ---- resize (bottom-right corner) ----
+  function onResizeMouseDown(e: React.MouseEvent) {
+    if (mode !== "float") return;
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startSize = { ...winSize };
+    const onMove = (ev: MouseEvent) => {
+      const nw = Math.max(360, Math.min(window.innerWidth - winPos.x - 8, startSize.w + (ev.clientX - startX)));
+      const nh = Math.max(240, Math.min(window.innerHeight - winPos.y - 8, startSize.h + (ev.clientY - startY)));
+      setWinSize({ w: nw, h: nh });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
 
   function run(raw: string, depth = 0) {
     const trimmed = raw.trim();
@@ -432,13 +545,19 @@ export function Terminal({ onEnter }: { onEnter: () => void }) {
         setLines([]);
         setInput("");
         return;
-      case "enter":
       case "exit":
       case "open":
-        out.push({ kind: "out", text: "Booting portfolio…" });
+        out.push({ kind: "out", text: "Closing terminal window…" });
         setLines((l) => [...l, ...out]);
         setInput("");
-        setTimeout(onEnter, 350);
+        setTimeout(onClose, 250);
+        return;
+      case "minimize":
+      case "min":
+        out.push({ kind: "out", text: "Minimizing…" });
+        setLines((l) => [...l, ...out]);
+        setInput("");
+        setTimeout(onMinimize, 200);
         return;
       default:
         out.push({ kind: "out", text: `command not found: ${cmd}. Try \`help\`.` });
@@ -488,32 +607,90 @@ export function Terminal({ onEnter }: { onEnter: () => void }) {
     }
   }
 
+  const cssVars = {
+    ["--t-prompt" as any]: colors.prompt,
+    ["--t-path" as any]: colors.path,
+    ["--t-sys" as any]: colors.sys,
+    ["--t-out" as any]: colors.out,
+    ["--t-in" as any]: colors.in,
+    ["--t-ghost" as any]: colors.ghost,
+    ["--t-cmd" as any]: colors.cmd,
+  } as React.CSSProperties;
+
+  // ---- Minimized: render only a clickable bar pinned to the bottom ----
+  if (mode === "min") {
+    return (
+      <button
+        onClick={onRestore}
+        className="dark fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group"
+        aria-label="Restore terminal"
+        style={cssVars}
+      >
+        <div className="max-w-5xl mx-auto px-6 h-11 flex items-center gap-2 font-mono text-xs text-muted-foreground">
+          <span className="h-3 w-3 rounded-full" style={{ background: colors.dotRed }} />
+          <span className="h-3 w-3 rounded-full" style={{ background: colors.dotGreen }} />
+          <span className="ml-2" style={{ color: colors.prompt }}>{username}@ahmed.dev</span>
+          <span>— zsh (minimized)</span>
+          <span className="ml-auto opacity-60 group-hover:opacity-100">click to restore</span>
+        </div>
+      </button>
+    );
+  }
+
+  const isFull = mode === "full";
+  const outerClass = isFull
+    ? "dark fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+    : "dark fixed z-50";
+  const outerStyle: React.CSSProperties = isFull
+    ? cssVars
+    : { ...cssVars, left: winPos.x, top: winPos.y, width: winSize.w, height: winSize.h };
+
+  const innerClass = isFull
+    ? "w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card/90 shadow-2xl backdrop-blur"
+    : "relative h-full w-full overflow-hidden rounded-xl border border-border bg-card/95 shadow-2xl backdrop-blur";
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background p-4"
+      className={outerClass}
       onClick={() => inputRef.current?.focus()}
-      style={{
-        ["--t-prompt" as any]: colors.prompt,
-        ["--t-path" as any]: colors.path,
-        ["--t-sys" as any]: colors.sys,
-        ["--t-out" as any]: colors.out,
-        ["--t-in" as any]: colors.in,
-        ["--t-ghost" as any]: colors.ghost,
-        ["--t-cmd" as any]: colors.cmd,
-      }}
+      style={outerStyle}
     >
-      <div className="w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card/80 shadow-2xl backdrop-blur">
-        <div className="flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5">
-          <span className="h-3 w-3 rounded-full" style={{ background: colors.dotRed }} />
-          <span className="h-3 w-3 rounded-full" style={{ background: colors.dotYellow }} />
-          <span className="h-3 w-3 rounded-full" style={{ background: colors.dotGreen }} />
+      <div ref={innerRef} className={innerClass}>
+        <div
+          className="flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5 select-none"
+          onMouseDown={onHeaderMouseDown}
+          style={{ cursor: mode === "float" ? "move" : "default" }}
+        >
+          <button
+            type="button"
+            data-window-btn
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110"
+            style={{ background: colors.dotRed }}
+            aria-label="Close terminal"
+            title="Close"
+          >
+            <span className="opacity-0 group-hover:opacity-90 text-[8px] leading-none font-bold text-black">×</span>
+          </button>
+          <button
+            type="button"
+            data-window-btn
+            onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+            className="group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110"
+            style={{ background: colors.dotGreen }}
+            aria-label="Minimize terminal"
+            title="Minimize to bottom bar"
+          >
+            <span className="opacity-0 group-hover:opacity-90 text-[10px] leading-none font-bold text-black">–</span>
+          </button>
           <span className="ml-3 font-mono text-xs text-muted-foreground">
             {username}@ahmed.dev — zsh
           </span>
         </div>
         <div
           ref={scrollRef}
-          className="h-[60vh] overflow-y-auto px-5 py-4 font-mono text-sm leading-relaxed"
+          className="overflow-y-auto px-5 py-4 font-mono text-sm leading-relaxed"
+          style={{ height: isFull ? "60vh" : "calc(100% - 41px)" }}
         >
           {lines.map((l, idx) => (
             <div
@@ -597,6 +774,17 @@ export function Terminal({ onEnter }: { onEnter: () => void }) {
             </div>
           </form>
         </div>
+        {mode === "float" && (
+          <div
+            onMouseDown={onResizeMouseDown}
+            className="absolute bottom-0 right-0 h-4 w-4 cursor-se-resize"
+            title="Drag to resize"
+            style={{
+              background:
+                "linear-gradient(135deg, transparent 50%, var(--t-path) 50%, var(--t-path) 60%, transparent 60%, transparent 70%, var(--t-path) 70%, var(--t-path) 80%, transparent 80%)",
+            }}
+          />
+        )}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Github, Linkedin, Mail, Phone, ArrowUpRight, Code2, Trophy, Briefcase, GraduationCap, TerminalSquare, FileText, Globe, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Terminal } from "@/components/Terminal";
+import { Terminal, type TerminalMode } from "@/components/Terminal";
 import { MouseGlow } from "@/components/MouseGlow";
 import { CustomCursor } from "@/components/CustomCursor";
 import { Typewriter } from "@/components/Typewriter";
@@ -11,6 +11,7 @@ import { Starfield } from "@/components/Starfield";
 import { CupGame } from "@/components/CupGame";
 import { NavBar } from "@/components/NavBar";
 import { SessionTimer } from "@/components/SessionTimer";
+
 import avatar from "@/assets/me.jpeg";
 
 export const Route = createFileRoute("/")({
@@ -90,7 +91,17 @@ const skills = {
 };
 
 function Index() {
-  const [showTerminal, setShowTerminal] = useState(false);
+  const [termMode, setTermMode] = useState<TerminalMode | "closed">(() => {
+    if (typeof window === "undefined") return "closed";
+    try {
+      const saved = localStorage.getItem("termMode") as TerminalMode | "closed" | null;
+      // first visit → open in float mode
+      if (!saved) return "float";
+      return saved;
+    } catch {
+      return "float";
+    }
+  });
   const [mounted, setMounted] = useState(false);
   const [gamingMode, setGamingMode] = useState(false);
   const [terminalUser, setTerminalUser] = useState("guest");
@@ -118,11 +129,33 @@ function Index() {
     return () => window.removeEventListener("usernamechange", onChange as EventListener);
   }, []);
 
-  const closeTerminal = () => {
+  const persistMode = (m: TerminalMode | "closed") => {
     try {
-      localStorage.setItem("seenTerminal", "1");
+      localStorage.setItem("termMode", m);
     } catch {}
-    setShowTerminal(false);
+  };
+
+  const closeTerminal = () => {
+    persistMode("closed");
+    setTermMode("closed");
+  };
+
+  const handleMinimize = () => {
+    persistMode("min");
+    setTermMode("min");
+  };
+
+  const handleRestore = () => {
+    persistMode("float");
+    setTermMode("float");
+  };
+
+  const handleToggleFull = () => {
+    setTermMode((m) => {
+      const next = m === "full" ? "float" : "full";
+      persistMode(next);
+      return next;
+    });
   };
 
   return (
@@ -130,7 +163,15 @@ function Index() {
       {mounted && <Starfield />}
       {mounted && <MouseGlow />}
       {mounted && <CustomCursor />}
-      {mounted && showTerminal && <Terminal onEnter={closeTerminal} />}
+      {mounted && termMode !== "closed" && (
+        <Terminal
+          mode={termMode}
+          onClose={closeTerminal}
+          onMinimize={handleMinimize}
+          onToggleFull={handleToggleFull}
+          onRestore={handleRestore}
+        />
+      )}
 
       <NavBar />
       {mounted && <SessionTimer />}
@@ -437,10 +478,10 @@ function Index() {
       </main>
 
       {/* Bottom command bar — reopens the terminal */}
-      {mounted && !showTerminal && (
+      {mounted && termMode === "closed" && (
         <button
-          onClick={() => setShowTerminal(true)}
-          className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group"
+          onClick={() => setTermMode("float")}
+          className="dark fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group"
           aria-label="Open terminal"
         >
           <div className="max-w-5xl mx-auto px-6 h-11 flex items-center gap-3 font-mono text-xs text-muted-foreground">
