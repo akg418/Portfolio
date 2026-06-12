@@ -75,8 +75,9 @@ const COMMANDS = [
   "gaming",
   "game",
   "clear",
-  "enter",
   "exit",
+  "minimize",
+  "min",
   "open",
   "color",
   "alias",
@@ -101,7 +102,8 @@ const HELP_LINES = [
   { cmd: "alias", desc: "list | <name>=<command>   (e.g. alias ll=skills)" },
   { cmd: "unalias <name>", desc: "Remove an alias" },
   { cmd: "clear", desc: "Clear the terminal" },
-  { cmd: "enter", desc: "Enter the portfolio" }
+  { cmd: "minimize", desc: "Minimize the terminal to the bottom bar" },
+  { cmd: "exit", desc: "Close the terminal window" }
 ];
 const MAX_INPUT = 50;
 const DEFAULT_COLORS = {
@@ -186,10 +188,16 @@ function renderInputOverlay(text, baseColor, cmdColor, knownCommands) {
     tail ? renderHexInline(tail, baseColor) : null
   ] });
 }
-function Terminal({ onEnter }) {
+function Terminal({
+  mode,
+  onClose,
+  onMinimize,
+  onToggleFull,
+  onRestore
+}) {
   const [lines, setLines] = reactExports.useState([
     { kind: "sys", text: "ahmed-os v1.0.4 — © Ahmed Khaled" },
-    { kind: "sys", text: "Type `help` to see what I can do, or `enter` to open the portfolio." }
+    { kind: "sys", text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize." }
   ]);
   const [input, setInput] = reactExports.useState("");
   const [visits, setVisits] = reactExports.useState(0);
@@ -198,8 +206,45 @@ function Terminal({ onEnter }) {
   const [aliases, setAliases] = reactExports.useState({});
   const inputRef = reactExports.useRef(null);
   const scrollRef = reactExports.useRef(null);
+  const innerRef = reactExports.useRef(null);
   const backStack = reactExports.useRef([]);
   const forwardStack = reactExports.useRef([]);
+  const [winPos, setWinPos] = reactExports.useState(() => {
+    if (typeof window === "undefined") return { x: 80, y: 80 };
+    try {
+      const raw = localStorage.getItem("term-winpos");
+      if (raw) return JSON.parse(raw);
+    } catch {
+    }
+    return {
+      x: Math.max(24, Math.round(window.innerWidth / 2 - 360)),
+      y: Math.max(24, Math.round(window.innerHeight / 2 - 260))
+    };
+  });
+  const [winSize, setWinSize] = reactExports.useState(() => {
+    if (typeof window === "undefined") return { w: 720, h: 480 };
+    try {
+      const raw = localStorage.getItem("term-winsize");
+      if (raw) return JSON.parse(raw);
+    } catch {
+    }
+    return {
+      w: Math.min(720, window.innerWidth - 48),
+      h: Math.min(480, window.innerHeight - 96)
+    };
+  });
+  reactExports.useEffect(() => {
+    try {
+      localStorage.setItem("term-winpos", JSON.stringify(winPos));
+    } catch {
+    }
+  }, [winPos]);
+  reactExports.useEffect(() => {
+    try {
+      localStorage.setItem("term-winsize", JSON.stringify(winSize));
+    } catch {
+    }
+  }, [winSize]);
   reactExports.useEffect(() => {
     const v = getVisits() + 1;
     try {
@@ -215,6 +260,59 @@ function Terminal({ onEnter }) {
   reactExports.useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [lines]);
+  reactExports.useEffect(() => {
+    if (mode !== "min") inputRef.current?.focus();
+  }, [mode]);
+  reactExports.useEffect(() => {
+    if (mode === "min") return;
+    const onDocMouseDown = (e) => {
+      const t = e.target;
+      if (!t) return;
+      if (innerRef.current && !innerRef.current.contains(t)) {
+        onMinimize();
+      }
+    };
+    document.addEventListener("mousedown", onDocMouseDown);
+    return () => document.removeEventListener("mousedown", onDocMouseDown);
+  }, [mode, onMinimize]);
+  function onHeaderMouseDown(e) {
+    if (mode !== "float") return;
+    if (e.target.closest("[data-window-btn]")) return;
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startPos = { ...winPos };
+    const onMove = (ev) => {
+      const nx = Math.max(0, Math.min(window.innerWidth - 80, startPos.x + (ev.clientX - startX)));
+      const ny = Math.max(0, Math.min(window.innerHeight - 40, startPos.y + (ev.clientY - startY)));
+      setWinPos({ x: nx, y: ny });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
+  function onResizeMouseDown(e) {
+    if (mode !== "float") return;
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startSize = { ...winSize };
+    const onMove = (ev) => {
+      const nw = Math.max(360, Math.min(window.innerWidth - winPos.x - 8, startSize.w + (ev.clientX - startX)));
+      const nh = Math.max(240, Math.min(window.innerHeight - winPos.y - 8, startSize.h + (ev.clientY - startY)));
+      setWinSize({ w: nw, h: nh });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  }
   function run(raw, depth = 0) {
     const trimmed = raw.trim();
     const lower = trimmed.toLowerCase();
@@ -438,13 +536,19 @@ function Terminal({ onEnter }) {
         setLines([]);
         setInput("");
         return;
-      case "enter":
       case "exit":
       case "open":
-        out.push({ kind: "out", text: "Booting portfolio…" });
+        out.push({ kind: "out", text: "Closing terminal window…" });
         setLines((l) => [...l, ...out]);
         setInput("");
-        setTimeout(onEnter, 350);
+        setTimeout(onClose, 250);
+        return;
+      case "minimize":
+      case "min":
+        out.push({ kind: "out", text: "Minimizing…" });
+        setLines((l) => [...l, ...out]);
+        setInput("");
+        setTimeout(onMinimize, 200);
         return;
       default:
         out.push({ kind: "out", text: `command not found: ${cmd}. Try \`help\`.` });
@@ -490,35 +594,99 @@ function Terminal({ onEnter }) {
       if (s) setInput(input + s);
     }
   }
+  const cssVars = {
+    ["--t-prompt"]: colors.prompt,
+    ["--t-path"]: colors.path,
+    ["--t-sys"]: colors.sys,
+    ["--t-out"]: colors.out,
+    ["--t-in"]: colors.in,
+    ["--t-ghost"]: colors.ghost,
+    ["--t-cmd"]: colors.cmd
+  };
+  if (mode === "min") {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        onClick: onRestore,
+        className: "dark fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group",
+        "aria-label": "Restore terminal",
+        style: cssVars,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto px-6 h-11 flex items-center gap-2 font-mono text-xs text-muted-foreground", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-3 w-3 rounded-full", style: { background: colors.dotRed } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-3 w-3 rounded-full", style: { background: colors.dotGreen } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-2", style: { color: colors.prompt }, children: [
+            username,
+            "@ahmed.dev"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "— zsh (minimized)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto opacity-60 group-hover:opacity-100", children: "click to restore" })
+        ] })
+      }
+    );
+  }
+  const isFull = mode === "full";
+  const outerClass = isFull ? "dark fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" : "dark fixed z-50";
+  const outerStyle = isFull ? cssVars : { ...cssVars, left: winPos.x, top: winPos.y, width: winSize.w, height: winSize.h };
+  const innerClass = isFull ? "w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card/90 shadow-2xl backdrop-blur" : "relative h-full w-full overflow-hidden rounded-xl border border-border bg-card/95 shadow-2xl backdrop-blur";
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
-      className: "fixed inset-0 z-50 flex items-center justify-center bg-background p-4",
+      className: outerClass,
       onClick: () => inputRef.current?.focus(),
-      style: {
-        ["--t-prompt"]: colors.prompt,
-        ["--t-path"]: colors.path,
-        ["--t-sys"]: colors.sys,
-        ["--t-out"]: colors.out,
-        ["--t-in"]: colors.in,
-        ["--t-ghost"]: colors.ghost,
-        ["--t-cmd"]: colors.cmd
-      },
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card/80 shadow-2xl backdrop-blur", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-3 w-3 rounded-full", style: { background: colors.dotRed } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-3 w-3 rounded-full", style: { background: colors.dotYellow } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-3 w-3 rounded-full", style: { background: colors.dotGreen } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-3 font-mono text-xs text-muted-foreground", children: [
-            username,
-            "@ahmed.dev — zsh"
-          ] })
-        ] }),
+      style: outerStyle,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: innerRef, className: innerClass, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5 select-none",
+            onMouseDown: onHeaderMouseDown,
+            style: { cursor: mode === "float" ? "move" : "default" },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  "data-window-btn": true,
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    onClose();
+                  },
+                  className: "group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110",
+                  style: { background: colors.dotRed },
+                  "aria-label": "Close terminal",
+                  title: "Close",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "opacity-0 group-hover:opacity-90 text-[8px] leading-none font-bold text-black", children: "×" })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  "data-window-btn": true,
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    onMinimize();
+                  },
+                  className: "group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110",
+                  style: { background: colors.dotGreen },
+                  "aria-label": "Minimize terminal",
+                  title: "Minimize to bottom bar",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "opacity-0 group-hover:opacity-90 text-[10px] leading-none font-bold text-black", children: "–" })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-3 font-mono text-xs text-muted-foreground", children: [
+                username,
+                "@ahmed.dev — zsh"
+              ] })
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "div",
           {
             ref: scrollRef,
-            className: "h-[60vh] overflow-y-auto px-5 py-4 font-mono text-sm leading-relaxed",
+            className: "overflow-y-auto px-5 py-4 font-mono text-sm leading-relaxed",
+            style: { height: isFull ? "60vh" : "calc(100% - 41px)" },
             children: [
               lines.map((l, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
@@ -606,6 +774,17 @@ function Terminal({ onEnter }) {
                 }
               )
             ]
+          }
+        ),
+        mode === "float" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            onMouseDown: onResizeMouseDown,
+            className: "absolute bottom-0 right-0 h-4 w-4 cursor-se-resize",
+            title: "Drag to resize",
+            style: {
+              background: "linear-gradient(135deg, transparent 50%, var(--t-path) 50%, var(--t-path) 60%, transparent 60%, transparent 70%, var(--t-path) 70%, var(--t-path) 80%, transparent 80%)"
+            }
           }
         )
       ] })
@@ -1271,15 +1450,22 @@ const skills = {
   "Tools & Testing": ["Playwright", "Jest", "Supertest", "Swagger", "Git", "Docker", "WSO2"]
 };
 function Index() {
-  const [showTerminal, setShowTerminal] = reactExports.useState(false);
+  const [termMode, setTermMode] = reactExports.useState(() => {
+    if (typeof window === "undefined") return "closed";
+    try {
+      const saved = localStorage.getItem("termMode");
+      if (!saved) return "float";
+      return saved;
+    } catch {
+      return "float";
+    }
+  });
   const [mounted, setMounted] = reactExports.useState(false);
   const [gamingMode, setGamingMode] = reactExports.useState(false);
   const [terminalUser, setTerminalUser] = reactExports.useState("guest");
   reactExports.useEffect(() => {
     setMounted(true);
     try {
-      const seen = localStorage.getItem("seenTerminal");
-      if (!seen) setShowTerminal(true);
       setGamingMode(localStorage.getItem("gamingMode") !== "0");
     } catch {
     }
@@ -1300,18 +1486,36 @@ function Index() {
     window.addEventListener("usernamechange", onChange);
     return () => window.removeEventListener("usernamechange", onChange);
   }, []);
-  const closeTerminal = () => {
+  const persistMode = (m) => {
     try {
-      localStorage.setItem("seenTerminal", "1");
+      localStorage.setItem("termMode", m);
     } catch {
     }
-    setShowTerminal(false);
+  };
+  const closeTerminal = () => {
+    persistMode("closed");
+    setTermMode("closed");
+  };
+  const handleMinimize = () => {
+    persistMode("min");
+    setTermMode("min");
+  };
+  const handleRestore = () => {
+    persistMode("float");
+    setTermMode("float");
+  };
+  const handleToggleFull = () => {
+    setTermMode((m) => {
+      const next = m === "full" ? "float" : "full";
+      persistMode(next);
+      return next;
+    });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative min-h-screen bg-background text-foreground", children: [
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Starfield, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MouseGlow, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(CustomCursor, {}),
-    mounted && showTerminal && /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { onEnter: closeTerminal }),
+    mounted && termMode !== "closed" && /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { mode: termMode, onClose: closeTerminal, onMinimize: handleMinimize, onToggleFull: handleToggleFull, onRestore: handleRestore }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimer, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "relative z-10 max-w-5xl mx-auto px-6 pb-24", children: [
@@ -1522,7 +1726,7 @@ function Index() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-primary/80", children: "Hi there i love u <3 :)" })
       ] })
     ] }),
-    mounted && !showTerminal && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowTerminal(true), className: "fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group", "aria-label": "Open terminal", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto px-6 h-11 flex items-center gap-3 font-mono text-xs text-muted-foreground", children: [
+    mounted && termMode === "closed" && /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setTermMode("float"), className: "dark fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/80 backdrop-blur-md hover:bg-card/90 transition-colors group", "aria-label": "Open terminal", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-5xl mx-auto px-6 h-11 flex items-center gap-3 font-mono text-xs text-muted-foreground", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(SquareTerminal, { className: "w-4 h-4 text-primary" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-primary", children: [
         terminalUser,
