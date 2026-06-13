@@ -48,26 +48,33 @@ export function CupGame() {
         setMessage("Watch carefully…");
         const swaps = 8 + Math.floor(speed * 1.2);
         let count = 0;
+        let currentSlots = [0, 1, 2];
+
         const doSwap = () => {
           const slotA = Math.floor(Math.random() * 3);
           let slotB = Math.floor(Math.random() * 3);
           while (slotB === slotA) slotB = Math.floor(Math.random() * 3);
           const dur = randomDuration();
           setCurrentDur(dur);
-          setSlotOf((prev) => {
-            const cupA = prev.indexOf(slotA);
-            const cupB = prev.indexOf(slotB);
-            const next = [...prev];
-            next[cupA] = slotB;
-            next[cupB] = slotA;
-            setLifted([cupA, cupB]);
-            return next;
-          });
+
+          const next = [...currentSlots];
+          const cupA = next.indexOf(slotA);
+          const cupB = next.indexOf(slotB);
+          next[cupA] = slotB;
+          next[cupB] = slotA;
+
+          currentSlots = next;
+          setSlotOf(next);
+          setLifted([cupA, cupB]);
           count++;
+
           timer.current = window.setTimeout(() => {
             setLifted(null);
             if (count >= swaps) {
               timer.current = window.setTimeout(() => {
+                // Sleight of hand: instantly remap DOM elements to match final slots to defeat DevTools tracking.
+                setBallCup(currentSlots[newBall]);
+                setSlotOf([0, 1, 2]);
                 setPhase("pick");
                 setMessage("Where is the ball? Click a cup.");
               }, 250);
@@ -116,16 +123,27 @@ export function CupGame() {
           className="relative mx-auto h-56 select-none"
           style={{ width: SPACING * 2 + 96 }}
         >
-          {/* Ball — always rendered, follows ball cup. Only visible during preview/reveal/idle. */}
-          <div
-            className="absolute bottom-2 w-8 h-8 rounded-full bg-gradient-to-br from-accent to-primary shadow-[0_0_20px_var(--color-primary)]"
-            style={{
-              left: 48 - 16,
-              transform: `translateX(${slotOf[ballCup] * SPACING}px)`,
-              transition: `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
-              opacity: reveal || isPreview || phase === "idle" ? 1 : 0,
-            }}
-          />
+          {/* Render a ball under each cup to prevent inspecting a single ball element in DevTools. 
+              Only the active ball becomes visible during preview/reveal/idle. */}
+          {CUP_IDS.map((cupId) => {
+            const slot = slotOf[cupId];
+            const isBall = cupId === ballCup;
+            const showBall = isBall && (reveal || isPreview || phase === "idle");
+            return (
+              <div
+                key={`ball-${cupId}`}
+                className="absolute bottom-2 w-8 h-8 rounded-full bg-gradient-to-br from-accent to-primary shadow-[0_0_20px_var(--color-primary)]"
+                style={{
+                  left: 48 - 16,
+                  transform: `translateX(${slot * SPACING}px)`,
+                  transition: phase === "pick" || phase === "won" || phase === "lost" 
+                    ? "opacity 200ms" 
+                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
+                  opacity: showBall ? 1 : 0,
+                }}
+              />
+            );
+          })}
 
           {CUP_IDS.map((cupId) => {
             const slot = slotOf[cupId];
@@ -143,13 +161,15 @@ export function CupGame() {
                 key={cupId}
                 onClick={() => pick(cupId)}
                 disabled={phase !== "pick"}
-                aria-label={`Cup ${cupId + 1}`}
+                aria-label={`Cup ${slot + 1}`}
                 className="absolute bottom-0 group disabled:cursor-default"
                 style={{
                   left: 0,
                   width: 96,
                   transform: `translate(${slot * SPACING}px, ${liftY}px)`,
-                  transition: `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
+                  transition: phase === "pick" || phase === "won" || phase === "lost" 
+                    ? "none" 
+                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
                   zIndex: isLifted ? (liftY < 0 ? 30 : 10) : 20,
                 }}
               >
