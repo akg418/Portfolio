@@ -94,7 +94,7 @@ function Index() {
   const [termMode, setTermMode] = useState<TerminalMode | "closed">(() => {
     if (typeof window === "undefined") return "closed";
     try {
-      const saved = localStorage.getItem("termMode") as TerminalMode | "closed" | null;
+      const saved = localStorage.getItem("termMode_v2") as TerminalMode | "closed" | null;
       // first visit → open in float mode
       if (!saved) return "closed";
       return saved;
@@ -131,7 +131,7 @@ function Index() {
 
   const persistMode = (m: TerminalMode | "closed") => {
     try {
-      localStorage.setItem("termMode", m);
+      localStorage.setItem("termMode_v2", m);
     } catch {}
   };
 
