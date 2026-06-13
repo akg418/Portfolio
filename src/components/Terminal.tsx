@@ -17,6 +17,7 @@ const COMMANDS = [
   "email",
   "cv",
   "theme",
+  "sound",
   "gaming",
   "game",
   "clear",
@@ -44,6 +45,7 @@ const HELP_LINES: { cmd: string; desc: string }[] = [
   { cmd: "email", desc: "Open mail to Ahmed" },
   { cmd: "cv [-s|-c|-sc]", desc: "Open CV. -s show link · -c copy link · -sc both" },
   { cmd: "theme", desc: "Toggle light / dark mode" },
+  { cmd: "sound", desc: "Toggle terminal typing sound" },
   { cmd: "gaming", desc: "Toggle gaming mode (unlocks the cups game)" },
   { cmd: "color", desc: "list | set <key> <#hex> | reset" },
   { cmd: "alias", desc: "list | <name>=<command>   (e.g. alias ll=skills)" },
@@ -193,6 +195,25 @@ function renderInputOverlay(
   );
 }
 
+let audioCtx: AudioContext | null = null;
+function playKeystroke() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.02);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.02);
+  } catch {}
+}
+
 export function Terminal({
   mode,
   onClose,
@@ -215,6 +236,7 @@ export function Terminal({
   const [username, setUsername] = useState("user");
   const [colors, setColors] = useState<Record<ColorKey, string>>(DEFAULT_COLORS);
   const [aliases, setAliases] = useState<Record<string, string>>({});
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -260,6 +282,7 @@ export function Terminal({
     const v = getVisits() + 1;
     try {
       localStorage.setItem("visits", String(v));
+      setSoundEnabled(localStorage.getItem("term-sound") === "1");
     } catch {}
     setVisits(v);
     setUsername(getUsername());
@@ -386,6 +409,13 @@ export function Terminal({
         root.classList.toggle("dark", next === "dark");
         try { localStorage.setItem("theme", next); } catch {}
         out.push({ kind: "out", text: `Theme switched to ${next} mode.` });
+        break;
+      }
+      case "sound": {
+        const next = !soundEnabled;
+        setSoundEnabled(next);
+        try { localStorage.setItem("term-sound", next ? "1" : "0"); } catch {}
+        out.push({ kind: "out", text: `Typing sound ${next ? "ENABLED" : "DISABLED"}.` });
         break;
       }
       case "gaming":
@@ -588,6 +618,7 @@ export function Terminal({
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (soundEnabled) playKeystroke();
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (!backStack.current.length) return;

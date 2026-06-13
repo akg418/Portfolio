@@ -72,6 +72,7 @@ const COMMANDS = [
   "email",
   "cv",
   "theme",
+  "sound",
   "gaming",
   "game",
   "clear",
@@ -97,6 +98,7 @@ const HELP_LINES = [
   { cmd: "email", desc: "Open mail to Ahmed" },
   { cmd: "cv [-s|-c|-sc]", desc: "Open CV. -s show link · -c copy link · -sc both" },
   { cmd: "theme", desc: "Toggle light / dark mode" },
+  { cmd: "sound", desc: "Toggle terminal typing sound" },
   { cmd: "gaming", desc: "Toggle gaming mode (unlocks the cups game)" },
   { cmd: "color", desc: "list | set <key> <#hex> | reset" },
   { cmd: "alias", desc: "list | <name>=<command>   (e.g. alias ll=skills)" },
@@ -188,6 +190,25 @@ function renderInputOverlay(text, baseColor, cmdColor, knownCommands) {
     tail ? renderHexInline(tail, baseColor) : null
   ] });
 }
+let audioCtx = null;
+function playKeystroke() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.02);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(1e-3, audioCtx.currentTime + 0.02);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.02);
+  } catch {
+  }
+}
 function Terminal({
   mode,
   onClose,
@@ -204,6 +225,7 @@ function Terminal({
   const [username, setUsername] = reactExports.useState("user");
   const [colors, setColors] = reactExports.useState(DEFAULT_COLORS);
   const [aliases, setAliases] = reactExports.useState({});
+  const [soundEnabled, setSoundEnabled] = reactExports.useState(false);
   const inputRef = reactExports.useRef(null);
   const scrollRef = reactExports.useRef(null);
   const innerRef = reactExports.useRef(null);
@@ -249,6 +271,7 @@ function Terminal({
     const v = getVisits() + 1;
     try {
       localStorage.setItem("visits", String(v));
+      setSoundEnabled(localStorage.getItem("term-sound") === "1");
     } catch {
     }
     setVisits(v);
@@ -370,6 +393,16 @@ function Terminal({
         } catch {
         }
         out.push({ kind: "out", text: `Theme switched to ${next} mode.` });
+        break;
+      }
+      case "sound": {
+        const next = !soundEnabled;
+        setSoundEnabled(next);
+        try {
+          localStorage.setItem("term-sound", next ? "1" : "0");
+        } catch {
+        }
+        out.push({ kind: "out", text: `Typing sound ${next ? "ENABLED" : "DISABLED"}.` });
         break;
       }
       case "gaming":
@@ -576,6 +609,7 @@ function Terminal({
     return match ? match.slice(v.length) : "";
   }
   function onKeyDown(e) {
+    if (soundEnabled) playKeystroke();
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (!backStack.current.length) return;
