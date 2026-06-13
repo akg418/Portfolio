@@ -96,10 +96,10 @@ function Index() {
     try {
       const saved = localStorage.getItem("termMode") as TerminalMode | "closed" | null;
       // first visit → open in float mode
-      if (!saved) return "float";
+      if (!saved) return "closed";
       return saved;
     } catch {
-      return "float";
+      return "closed";
     }
   });
   const [mounted, setMounted] = useState(false);
