@@ -1453,11 +1453,11 @@ function Index() {
   const [termMode, setTermMode] = reactExports.useState(() => {
     if (typeof window === "undefined") return "closed";
     try {
-      const saved = localStorage.getItem("termMode");
-      if (!saved) return "float";
+      const saved = localStorage.getItem("termMode_v2");
+      if (!saved) return "closed";
       return saved;
     } catch {
-      return "float";
+      return "closed";
     }
   });
   const [mounted, setMounted] = reactExports.useState(false);
@@ -1488,7 +1488,7 @@ function Index() {
   }, []);
   const persistMode = (m) => {
     try {
-      localStorage.setItem("termMode", m);
+      localStorage.setItem("termMode_v2", m);
     } catch {
     }
   };
