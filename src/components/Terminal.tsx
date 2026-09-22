@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { experiences, links, profile, projects, skills } from "@/data/profile";
 
-export type TerminalMode = "float" | "full" | "min";
+export type TerminalMode = "float" | "min";
 
 type Line = { kind: "in" | "out" | "sys"; text: string; cmd?: string; desc?: string };
 
@@ -216,13 +216,11 @@ export function Terminal({
   mode,
   onClose,
   onMinimize,
-  onToggleFull,
   onRestore,
 }: {
   mode: TerminalMode;
   onClose: () => void;
   onMinimize: () => void;
-  onToggleFull: () => void;
   onRestore: () => void;
 }) {
   const [lines, setLines] = useState<Line[]>([
@@ -719,21 +717,20 @@ export function Terminal({
     );
   }
 
-  const isFull = mode === "full";
-  const outerClass = isFull
-    ? "dark fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
-    : "dark fixed z-50";
-  const outerStyle: React.CSSProperties = isFull
-    ? cssVars
-    : { ...cssVars, left: winPos.x, top: winPos.y, width: winSize.w, height: winSize.h };
-
-  const innerClass = isFull
-    ? "w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card/90 shadow-2xl backdrop-blur"
-    : "relative h-full w-full overflow-hidden rounded-xl border border-border bg-card/95 shadow-2xl backdrop-blur";
+  const outerStyle: React.CSSProperties = {
+    ...cssVars,
+    left: winPos.x,
+    top: winPos.y,
+    width: winSize.w,
+    height: winSize.h,
+  };
 
   return (
-    <div className={outerClass} onClick={() => inputRef.current?.focus()} style={outerStyle}>
-      <div ref={innerRef} className={innerClass}>
+    <div className="dark fixed z-50" onClick={() => inputRef.current?.focus()} style={outerStyle}>
+      <div
+        ref={innerRef}
+        className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-card/95 shadow-2xl backdrop-blur"
+      >
         <div
           className="flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5 select-none"
           onMouseDown={onHeaderMouseDown}
@@ -778,7 +775,7 @@ export function Terminal({
         <div
           ref={scrollRef}
           className="overflow-y-auto px-5 py-4 font-mono text-sm leading-relaxed"
-          style={{ height: isFull ? "60vh" : "calc(100% - 41px)" }}
+          style={{ height: "calc(100% - 41px)" }}
         >
           {lines.map((l, idx) => (
             <div

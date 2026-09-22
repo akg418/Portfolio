@@ -43,14 +43,22 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/** Terminal window mode as persisted by the page, including the closed state. */
+type WindowMode = TerminalMode | "closed";
+
+const WINDOW_MODES: readonly WindowMode[] = ["float", "min", "closed"];
+
+function isWindowMode(value: string | null): value is WindowMode {
+  return value !== null && (WINDOW_MODES as readonly string[]).includes(value);
+}
+
 function Index() {
-  const [termMode, setTermMode] = useState<TerminalMode | "closed">(() => {
+  const [termMode, setTermMode] = useState<WindowMode>(() => {
     if (typeof window === "undefined") return "closed";
     try {
-      const saved = localStorage.getItem("termMode_v2") as TerminalMode | "closed" | null;
-      // first visit → open in float mode
-      if (!saved) return "closed";
-      return saved;
+      const saved = localStorage.getItem("termMode_v2");
+      // Anything unrecognised (including the removed "full" mode) falls back to closed.
+      return isWindowMode(saved) ? saved : "closed";
     } catch {
       return "closed";
     }
@@ -82,7 +90,7 @@ function Index() {
     return () => window.removeEventListener("usernamechange", onChange as EventListener);
   }, []);
 
-  const persistMode = (m: TerminalMode | "closed") => {
+  const persistMode = (m: WindowMode) => {
     try {
       localStorage.setItem("termMode_v2", m);
     } catch {}
@@ -103,14 +111,6 @@ function Index() {
     setTermMode("float");
   };
 
-  const handleToggleFull = () => {
-    setTermMode((m) => {
-      const next = m === "full" ? "float" : "full";
-      persistMode(next);
-      return next;
-    });
-  };
-
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       {mounted && <Starfield />}
@@ -121,7 +121,6 @@ function Index() {
           mode={termMode}
           onClose={closeTerminal}
           onMinimize={handleMinimize}
-          onToggleFull={handleToggleFull}
           onRestore={handleRestore}
         />
       )}
