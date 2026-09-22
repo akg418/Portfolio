@@ -699,7 +699,7 @@ export function Terminal({
           <span className="h-3 w-3 rounded-full" style={{ background: colors.dotRed }} />
           <span className="h-3 w-3 rounded-full" style={{ background: colors.dotGreen }} />
           <span className="ml-2" style={{ color: colors.prompt }}>
-            {username}@ahmed.dev
+            {username}@{profile.domain}
           </span>
           <span>— zsh (minimized)</span>
           <span className="ml-auto opacity-60 group-hover:opacity-100">click to restore</span>
@@ -760,7 +760,7 @@ export function Terminal({
             </span>
           </button>
           <span className="ml-3 font-mono text-xs text-muted-foreground">
-            {username}@ahmed.dev — zsh
+            {username}@{profile.domain} — zsh
           </span>
         </div>
         <div
@@ -778,7 +778,9 @@ export function Terminal({
             >
               {l.kind === "in" ? (
                 <>
-                  <span style={{ color: colors.prompt }}>{username}@ahmed.dev</span>
+                  <span style={{ color: colors.prompt }}>
+                    {username}@{profile.domain}
+                  </span>
                   <span style={{ color: colors.path }}>:~$ </span>
                   {renderInputOverlay(l.text, colors.in, colors.cmd, [
                     ...COMMANDS,
@@ -802,7 +804,9 @@ export function Terminal({
             }}
             className="mt-1 flex items-center"
           >
-            <span style={{ color: colors.prompt }}>{username}@ahmed.dev</span>
+            <span style={{ color: colors.prompt }}>
+              {username}@{profile.domain}
+            </span>
             <span style={{ color: colors.path }}>:~$&nbsp;</span>
             <div className="relative flex-1">
               {/* colored overlay (command token + hex highlight) */}

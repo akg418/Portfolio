@@ -14,7 +14,17 @@ export const profile = {
   tagline:
     "Software Engineer building production-grade systems and scalable backend services for AI-driven products — APIs, microservices, and event-driven architectures with FastAPI, NestJS, TypeScript, and Kubernetes.",
   cvUrl: "https://drive.google.com/drive/folders/1f1RdcHVjX5iOhlRSjPa2McB0ZXaRS4l3?usp=sharing",
+  /** Host shown in the nav-bar wordmark and the terminal prompt. */
+  domain: "ahmed.dev",
+  /** Canonical site URL, used for SEO metadata. */
+  siteUrl: "https://ahmed.dev",
 } as const;
+
+/** The domain split at the first dot, for the two-tone nav-bar wordmark. */
+export const domainParts: readonly [string, string] = [
+  profile.domain.slice(0, profile.domain.indexOf(".")),
+  profile.domain.slice(profile.domain.indexOf(".")),
+];
 
 export const links = [
   { label: "GitHub", url: "https://github.com/akg418" },
@@ -25,7 +35,12 @@ export const links = [
 
 export type LinkLabel = (typeof links)[number]["label"];
 
-export const linkOf = (label: LinkLabel) => links.find((l) => l.label === label)!.url;
+const linkUrls = Object.fromEntries(links.map((l) => [l.label, l.url])) as Record<
+  LinkLabel,
+  string
+>;
+
+export const linkOf = (label: LinkLabel): string => linkUrls[label];
 
 export const roles = [
   "Software Engineer.",
@@ -201,3 +216,30 @@ export const education = {
   degree: "B.Sc. Computer Science",
   detail: "GPA 3.3/4.0 (Sep 2021 – Jan 2025)",
 };
+
+export type Competition = {
+  title: string;
+  detail: string;
+};
+
+export const competitions: Competition[] = [
+  {
+    title: "ECPC 2025",
+    detail: "5th at Helwan Qualifiers → ECPC Finals → Qualified to ACPC Finals.",
+  },
+  {
+    title: "ECPC 2024",
+    detail: "4th at Helwan Qualifiers → ECPC Finals.",
+  },
+  {
+    title: "ICPC Helwan Community",
+    detail: "Vice President & Problem Setting Head — designed problems accepted at ACPC level.",
+  },
+];
+
+/** Links referenced from the original problem-setting blurb on the page. */
+export const problemSetting = {
+  friendName: "MUZAN",
+  friendUrl: "https://codeforces.com/profile/MUZAN",
+  groupUrl: "https://codeforces.com/group/5EfwxVFSaS/contests",
+} as const;

@@ -31,11 +31,13 @@ import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 import { useGamingMode } from "@/hooks/useGamingMode";
 import { useUsername } from "@/hooks/useUsername";
 import {
+  competitions,
   education,
   experiences,
   linkOf,
   links,
   profile,
+  problemSetting,
   projects,
   roles,
   skills,
@@ -285,37 +287,27 @@ function Index() {
             <h2 className="text-3xl font-bold tracking-tight">Competitions & community</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-8 text-sm">
-            <div>
-              <h3 className="font-semibold mb-2">ECPC 2025</h3>
-              <p className="text-muted-foreground">
-                5th at Helwan Qualifiers → ECPC Finals → Qualified to ACPC Finals.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">ECPC 2024</h3>
-              <p className="text-muted-foreground">4th at Helwan Qualifiers → ECPC Finals.</p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">ICPC Helwan Community</h3>
-              <p className="text-muted-foreground">
-                Vice President & Problem Setting Head — designed problems accepted at ACPC level.
-              </p>
-            </div>
+            {competitions.map((c) => (
+              <div key={c.title}>
+                <h3 className="font-semibold mb-2">{c.title}</h3>
+                <p className="text-muted-foreground">{c.detail}</p>
+              </div>
+            ))}
             <div>
               <h3 className="font-semibold mb-2">Original Problem Setting</h3>
               <p className="text-muted-foreground">
                 I love crafting original competitive-programming problems. Together with my friend{" "}
                 <a
-                  href="https://codeforces.com/profile/MUZAN"
+                  href={problemSetting.friendUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="text-foreground underline underline-offset-2 hover:text-primary"
                 >
-                  MUZAN
+                  {problemSetting.friendName}
                 </a>
                 , I authored a full sheet of problems — all original — published as a{" "}
                 <a
-                  href="https://codeforces.com/group/5EfwxVFSaS/contests"
+                  href={problemSetting.groupUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="text-foreground underline underline-offset-2 hover:text-primary"
@@ -424,7 +416,9 @@ function Index() {
         >
           <div className="max-w-5xl mx-auto px-6 h-11 flex items-center gap-3 font-mono text-xs text-muted-foreground">
             <TerminalSquare className="w-4 h-4 text-primary" />
-            <span className="text-primary">{terminalUser}@ahmed.dev</span>
+            <span className="text-primary">
+              {terminalUser}@{profile.domain}
+            </span>
             <span>:~$</span>
             <span className="opacity-60 group-hover:opacity-100">
               type <span className="text-accent">command</span> to open terminal…

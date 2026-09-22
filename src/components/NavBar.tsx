@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { profile } from "@/data/profile";
+import { domainParts, profile } from "@/data/profile";
 import { useGamingMode } from "@/hooks/useGamingMode";
 
 type Item = { id: string; label: string };
@@ -78,7 +78,8 @@ export function NavBar() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/70 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <a href="#top" className="font-mono text-sm font-semibold tracking-tight">
-          ahmed<span className="text-muted-foreground">.dev</span>
+          {domainParts[0]}
+          <span className="text-muted-foreground">{domainParts[1]}</span>
         </a>
         <div
           ref={containerRef}
