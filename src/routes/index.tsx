@@ -30,6 +30,7 @@ import avatar from "@/assets/me.jpeg";
 import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 import { useGamingMode } from "@/hooks/useGamingMode";
 import { useUsername } from "@/hooks/useUsername";
+import { useVisitCount } from "@/hooks/useVisitCount";
 import {
   competitions,
   education,
@@ -66,6 +67,9 @@ function Index() {
   const [mounted, setMounted] = useState(false);
   const gamingMode = useGamingMode();
   const terminalUser = useUsername();
+  // Counts the page load itself, so a visit registers even if the terminal
+  // is never opened. The hook is latched, so the terminal reads the same value.
+  useVisitCount();
 
   useEffect(() => setMounted(true), []);
 

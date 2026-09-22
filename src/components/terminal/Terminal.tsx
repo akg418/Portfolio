@@ -3,7 +3,8 @@ import { profile } from "@/data/profile";
 import { useCommandHistory } from "@/hooks/useCommandHistory";
 import { useTerminalWindow } from "@/hooks/useTerminalWindow";
 import { getUsername } from "@/hooks/useUsername";
-import { STORAGE_KEYS, readFlag, readNumber, writeString } from "@/lib/storage";
+import { useVisitCount } from "@/hooks/useVisitCount";
+import { STORAGE_KEYS, readFlag } from "@/lib/storage";
 import { MAX_ALIAS_DEPTH, type Aliases, loadAliases } from "@/lib/terminal/aliases";
 import { playKeystroke } from "@/lib/terminal/audio";
 import { DEFAULT_COLORS, colorCssVars, loadColors } from "@/lib/terminal/colors";
@@ -40,7 +41,6 @@ export function Terminal({
 }) {
   const [lines, setLines] = useState<Line[]>(GREETING);
   const [input, setInput] = useState("");
-  const [visits, setVisits] = useState(0);
   const [username, setUsername] = useState("user");
   const [colors, setColors] = useState<TerminalColors>(DEFAULT_COLORS);
   const [aliases, setAliases] = useState<Aliases>({});
@@ -50,14 +50,12 @@ export function Terminal({
   const scrollRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const history = useCommandHistory();
+  const visits = useVisitCount();
   const win = useTerminalWindow(mode === "float");
 
   const knownCommands = [...COMMAND_NAMES, ...Object.keys(aliases)];
 
   useEffect(() => {
-    const next = readNumber(STORAGE_KEYS.visits, 0) + 1;
-    writeString(STORAGE_KEYS.visits, String(next));
-    setVisits(next);
     setSoundEnabled(readFlag(STORAGE_KEYS.termSound, false));
     setUsername(getUsername());
     setColors(loadColors());
@@ -84,21 +82,23 @@ export function Terminal({
     return () => document.removeEventListener("mousedown", onDocMouseDown);
   }, [mode, onMinimize]);
 
-  function run(raw: string, depth = 0) {
+  function run(raw: string, depth = 0, options: { record?: boolean } = {}) {
+    const record = options.record ?? true;
     const trimmed = raw.trim();
     const [name = "", ...args] = trimmed.toLowerCase().split(/\s+/);
     const rawArgs = trimmed.split(/\s+/).slice(1).join(" ").trim();
-    const out: Line[] = [{ kind: "in", text: raw }];
+    const out: Line[] = record ? [{ kind: "in", text: raw }] : [];
 
     // Aliases expand to another command line, which is then run as if typed.
     const alias = aliases[name];
     if (name && alias && depth < MAX_ALIAS_DEPTH) {
       const expanded = alias + (args.length ? ` ${args.join(" ")}` : "");
-      setLines((l) => [...l, ...out]);
+      setLines((l) => [...l, ...out, { kind: "sys", text: `→ ${expanded}` }]);
       setInput("");
       if (trimmed) history.push(raw);
-      setLines((l) => [...l, { kind: "sys", text: `→ ${expanded}` }]);
-      run(expanded, depth + 1);
+      // The expansion is echoed above but not recorded: pressing ↑ should
+      // return the alias the visitor actually typed.
+      run(expanded, depth + 1, { record: false });
       return;
     }
 
@@ -127,7 +127,7 @@ export function Terminal({
 
     setLines((l) => (result?.clearScreen ? [] : [...l, ...out]));
     setInput("");
-    if (trimmed && !result?.skipHistory) history.push(raw);
+    if (record && trimmed && !result?.skipHistory) history.push(raw);
   }
 
   /** Remaining characters of the best completion for the current input. */
