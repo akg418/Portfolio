@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-OBxlz1sm.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-uob3floT.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -804,6 +804,26 @@ function Contact() {
     ] })
   ] }) });
 }
+const LINK_CLASS = "underline-offset-4 hover:underline hover:text-primary transition-colors";
+function CompanyName({ role }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-xl font-semibold", children: [
+    role.linkedin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "a",
+      {
+        href: role.linkedin,
+        target: "_blank",
+        rel: "noreferrer",
+        className: LINK_CLASS,
+        title: `${role.company} on LinkedIn`,
+        children: role.company
+      }
+    ) : role.company,
+    role.website && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      " — ",
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: role.website.url, target: "_blank", rel: "noreferrer", className: LINK_CLASS, children: role.website.label })
+    ] })
+  ] });
+}
 function Experience() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "experience", className: "py-24", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-12", children: [
@@ -813,7 +833,7 @@ function Experience() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-12", children: experiences.map((exp) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-[200px_1fr] gap-4 sm:gap-8", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm text-muted-foreground font-mono pt-1", children: exp.period }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-semibold", children: exp.company }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CompanyName, { role: exp }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground mt-1", children: [
           exp.role,
           " — ",

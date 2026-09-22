@@ -53,8 +53,9 @@ const stats = [
 ];
 const experiences = [
   {
-    company: "Xplain AI — getXplain.ai",
+    company: "Xplain AI",
     shortName: "Xplain AI",
+    website: { label: "getXplain.ai", url: "https://getxplain.ai" },
     role: "Software Engineer",
     employment: "Full-time",
     period: "Jul 2026 – Present",
@@ -366,7 +367,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-Bdpw3w5h.mjs");
+const $$splitComponentImporter = () => import("./index-B3EcKKKo.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });

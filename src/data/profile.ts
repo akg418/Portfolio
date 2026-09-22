@@ -60,6 +60,11 @@ export type Experience = {
   company: string;
   /** Short name used in the terminal's one-line summaries. */
   shortName: string;
+  /** Company LinkedIn page. The company name links here when set, and stays
+   *  plain text when it is not, so a missing URL is never a broken link. */
+  linkedin?: string;
+  /** Public site shown next to the company name, e.g. getXplain.ai. */
+  website?: { label: string; url: string };
   role: string;
   /** Full-time / Freelance — rendered next to the role on the page. */
   employment: string;
@@ -71,8 +76,9 @@ export type Experience = {
 
 export const experiences: Experience[] = [
   {
-    company: "Xplain AI — getXplain.ai",
+    company: "Xplain AI",
     shortName: "Xplain AI",
+    website: { label: "getXplain.ai", url: "https://getxplain.ai" },
     role: "Software Engineer",
     employment: "Full-time",
     period: "Jul 2026 – Present",
