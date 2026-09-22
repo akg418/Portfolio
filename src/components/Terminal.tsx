@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { experiences, links, profile, projects, skills } from "@/data/profile";
 
 export type TerminalMode = "float" | "full" | "min";
 
@@ -228,7 +229,7 @@ export function Terminal({
   onRestore: () => void;
 }) {
   const [lines, setLines] = useState<Line[]>([
-    { kind: "sys", text: "ahmed-os v1.0.4 — © Ahmed Khaled" },
+    { kind: "sys", text: `ahmed-os v1.0.4 — © ${profile.name}` },
     { kind: "sys", text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize." },
   ]);
   const [input, setInput] = useState("");
@@ -381,8 +382,8 @@ export function Terminal({
         HELP_LINES.forEach((h) => out.push({ kind: "out", text: "", cmd: h.cmd, desc: h.desc }));
         break;
       case "whoami":
-        out.push({ kind: "out", text: "Ahmed Khaled — Backend Software Engineer." });
-        out.push({ kind: "out", text: "ACPC Finalist · 2000+ problems solved · NestJS / TypeScript." });
+        out.push({ kind: "out", text: `${profile.name} — ${profile.role} (backend & microservices).` });
+        out.push({ kind: "out", text: "ACPC Finalist · 2000+ problems solved · FastAPI / NestJS / Kubernetes." });
         break;
       case "name":
         out.push({ kind: "out", text: `You are currently: ${username}` });
@@ -502,37 +503,49 @@ export function Terminal({
         break;
       }
       case "experience":
-        out.push({ kind: "out", text: "Currently @ Rehabitaire (Nov 2025 → now)." });
-        out.push({ kind: "out", text: "~2 years of backend across NestJS, .NET, Spring Boot, Python." });
-        out.push({ kind: "out", text: "Past: ECS, Quick R, Shipd. Type `enter` for full timeline." });
+        for (const e of experiences.filter((x) => x.current)) {
+          out.push({ kind: "out", text: `Currently @ ${e.shortName} — ${e.role} (${e.period})` });
+        }
+        out.push({ kind: "out", text: "Backend across NestJS, FastAPI, Flask, .NET, Spring Boot." });
+        out.push({
+          kind: "out",
+          text: `Past: ${experiences
+            .filter((x) => !x.current)
+            .map((x) => x.shortName)
+            .join(", ")}. Type \`enter\` for full timeline.`,
+        });
         break;
       case "skills":
-        out.push({ kind: "out", text: "Languages: TypeScript, C++, Java, Python, C" });
-        out.push({ kind: "out", text: "Backend:   NestJS, Node.js, REST, WebSockets, SSE, JWT, RBAC" });
-        out.push({ kind: "out", text: "Data:      PostgreSQL, Redis, MySQL, Prisma, Hibernate" });
-        out.push({ kind: "out", text: "Tools:     Docker, Playwright, Jest, Git, BullMQ" });
+        {
+          const groups = Object.keys(skills);
+          const pad = Math.max(...groups.map((g) => g.length)) + 2;
+          for (const g of groups) {
+            out.push({ kind: "out", text: `${(g + ":").padEnd(pad)}${skills[g].join(", ")}` });
+          }
+        }
         break;
       case "projects":
-        out.push({ kind: "out", text: "• Character Simulation System — Mistral 7B + RAG (A+ grad project)" });
-        out.push({ kind: "out", text: "• Social Media Platform — Spring Boot microservices" });
-        out.push({ kind: "out", text: "• Copy for Claude — merged PR to the VS Code extension" });
+        for (const pr of projects) {
+          out.push({ kind: "out", text: `• ${pr.shortName} — ${pr.short}` });
+        }
         break;
       case "visits":
         out.push({ kind: "out", text: `This site has been visited ${visits} time${visits === 1 ? "" : "s"} from this browser.` });
         break;
       case "social":
-        out.push({ kind: "out", text: "GitHub:   https://github.com/akg418" });
-        out.push({ kind: "out", text: "LinkedIn: https://linkedin.com/in/ahmed-khaled-gom3a" });
-        out.push({ kind: "out", text: "Codeforces: https://codeforces.com/profile/gom3a_" });
-        out.push({ kind: "out", text: "LeetCode:   https://leetcode.com/u/falta_404/" });
+        {
+          const pad = Math.max(...links.map((l) => l.label.length)) + 2;
+          for (const l of links) {
+            out.push({ kind: "out", text: `${(l.label + ":").padEnd(pad)}${l.url}` });
+          }
+        }
         break;
       case "email":
-        out.push({ kind: "out", text: "Opening mail client → ahmedkhaledgomaa404@gmail.com" });
-        window.location.href = "mailto:ahmedkhaledgomaa404@gmail.com";
+        out.push({ kind: "out", text: `Opening mail client → ${profile.email}` });
+        window.location.href = `mailto:${profile.email}`;
         break;
       case "cv": {
-        const CV_URL =
-          "https://drive.google.com/drive/folders/1f1RdcHVjX5iOhlRSjPa2McB0ZXaRS4l3?usp=sharing";
+        const CV_URL = profile.cvUrl;
         // Collect flag letters from args like "-s", "-c", "-sc", "-c", "-s"
         let flags = "";
         let unknown = "";

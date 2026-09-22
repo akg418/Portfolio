@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { profile } from "@/data/profile";
 
 function NotFoundComponent() {
   return (
@@ -72,11 +73,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ahmed Khaled — Software Engineer" },
-      { name: "description", content: "Portfolio of Ahmed Khaled — Software Engineer specializing in backend systems with NestJS, TypeScript, and scalable APIs." },
-      { name: "author", content: "Ahmed Khaled" },
-      { property: "og:title", content: "Ahmed Khaled — Software Engineer" },
-      { property: "og:description", content: "Backend engineer building production-grade systems and AI-powered platforms." },
+      { title: `${profile.name} — ${profile.role}` },
+      { name: "description", content: `Portfolio of ${profile.name} — ${profile.tagline}` },
+      { name: "author", content: profile.name },
+      { property: "og:title", content: `${profile.name} — ${profile.role}` },
+      { property: "og:description", content: profile.tagline },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
