@@ -13,8 +13,7 @@ export const profile = {
   phoneDisplay: "+20 101 490 8696",
   tagline:
     "Software Engineer building production-grade systems and scalable backend services for AI-driven products — APIs, microservices, and event-driven architectures with FastAPI, NestJS, TypeScript, and Kubernetes.",
-  cvUrl:
-    "https://drive.google.com/drive/folders/1f1RdcHVjX5iOhlRSjPa2McB0ZXaRS4l3?usp=sharing",
+  cvUrl: "https://drive.google.com/drive/folders/1f1RdcHVjX5iOhlRSjPa2McB0ZXaRS4l3?usp=sharing",
 } as const;
 
 export const links = [

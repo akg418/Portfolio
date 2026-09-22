@@ -1,6 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Github, Linkedin, Mail, Phone, ArrowUpRight, Code2, Trophy, Briefcase, GraduationCap, TerminalSquare, FileText, Globe, MapPin } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Phone,
+  ArrowUpRight,
+  Code2,
+  Trophy,
+  Briefcase,
+  GraduationCap,
+  TerminalSquare,
+  FileText,
+  Globe,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Terminal, type TerminalMode } from "@/components/Terminal";
@@ -133,12 +147,12 @@ function Index() {
               />
             </div>
             <p className="mt-8 max-w-xl text-lg text-muted-foreground leading-relaxed">
-              I build production-grade systems and scalable backend services for AI-driven
-              products — APIs, microservices, and event-driven architectures with{" "}
+              I build production-grade systems and scalable backend services for AI-driven products
+              — APIs, microservices, and event-driven architectures with{" "}
               <span className="text-foreground font-medium">FastAPI</span>,{" "}
               <span className="text-foreground font-medium">NestJS</span>, and{" "}
-              <span className="text-foreground font-medium">Kubernetes</span>. 2000+ problems
-              solved on Codeforces.
+              <span className="text-foreground font-medium">Kubernetes</span>. 2000+ problems solved
+              on Codeforces.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Button asChild>
@@ -251,7 +265,9 @@ function Index() {
                   {p.title}
                   <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
                 </h3>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{p.description}</p>
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  {p.description}
+                </p>
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {p.stack.map((s) => (
                     <Badge key={s} variant="secondary" className="font-mono text-[10px]">
@@ -297,7 +313,9 @@ function Index() {
           <div className="grid sm:grid-cols-2 gap-8 text-sm">
             <div>
               <h3 className="font-semibold mb-2">ECPC 2025</h3>
-              <p className="text-muted-foreground">5th at Helwan Qualifiers → ECPC Finals → Qualified to ACPC Finals.</p>
+              <p className="text-muted-foreground">
+                5th at Helwan Qualifiers → ECPC Finals → Qualified to ACPC Finals.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">ECPC 2024</h3>
@@ -305,7 +323,9 @@ function Index() {
             </div>
             <div>
               <h3 className="font-semibold mb-2">ICPC Helwan Community</h3>
-              <p className="text-muted-foreground">Vice President & Problem Setting Head — designed problems accepted at ACPC level.</p>
+              <p className="text-muted-foreground">
+                Vice President & Problem Setting Head — designed problems accepted at ACPC level.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Original Problem Setting</h3>
@@ -394,7 +414,9 @@ function Index() {
         </section>
 
         <footer className="py-10 border-t border-border text-xs text-muted-foreground flex flex-wrap justify-between gap-4">
-          <span>© {new Date().getFullYear()} {profile.name}. Built with care.</span>
+          <span>
+            © {new Date().getFullYear()} {profile.name}. Built with care.
+          </span>
           <div className="flex gap-4">
             {links.map((l) => (
               <a
@@ -412,8 +434,8 @@ function Index() {
         <div className="pb-10 text-center text-xs text-muted-foreground">
           <p>
             Design, ideas, and implementation approach by{" "}
-            <span className="text-foreground font-medium">{profile.name}</span> — implementation made
-            by AI.
+            <span className="text-foreground font-medium">{profile.name}</span> — implementation
+            made by AI.
           </p>
           <p className="mt-2 font-mono text-primary/80">Hi there i love u &lt;3 :)</p>
         </div>

@@ -28,9 +28,12 @@ export function CupGame() {
     return Math.round(base * (0.65 + Math.random() * 0.7));
   };
 
-  useEffect(() => () => {
-    if (timer.current) window.clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) window.clearTimeout(timer.current);
+    },
+    [],
+  );
 
   const start = () => {
     const newBall = Math.floor(Math.random() * 3);
@@ -105,10 +108,7 @@ export function CupGame() {
   const dur = currentDur;
 
   return (
-    <section
-      id="game"
-      className="py-24 border-t border-border"
-    >
+    <section id="game" className="py-24 border-t border-border">
       <div className="flex items-center gap-3 mb-4">
         <Gamepad2 className="w-5 h-5 text-primary" />
         <h2 className="text-3xl font-bold tracking-tight">Gaming mode — Cups & Ball</h2>
@@ -119,10 +119,7 @@ export function CupGame() {
 
       <div className="rounded-xl border border-border bg-card p-6 sm:p-10 overflow-hidden">
         {/* Stage */}
-        <div
-          className="relative mx-auto h-56 select-none"
-          style={{ width: SPACING * 2 + 96 }}
-        >
+        <div className="relative mx-auto h-56 select-none" style={{ width: SPACING * 2 + 96 }}>
           {/* Render a ball under each cup to prevent inspecting a single ball element in DevTools. 
               Only the active ball becomes visible during preview/reveal/idle. */}
           {CUP_IDS.map((cupId) => {
@@ -136,9 +133,10 @@ export function CupGame() {
                 style={{
                   left: 48 - 16,
                   transform: `translateX(${slot * SPACING}px)`,
-                  transition: phase === "pick" || phase === "won" || phase === "lost" 
-                    ? "opacity 200ms" 
-                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
+                  transition:
+                    phase === "pick" || phase === "won" || phase === "lost"
+                      ? "opacity 200ms"
+                      : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
                   opacity: showBall ? 1 : 0,
                 }}
               />
@@ -153,7 +151,7 @@ export function CupGame() {
             const liftY = isLifted
               ? lifted![0] === cupId
                 ? -(50 + Math.random() * 30)
-                : (50 + Math.random() * 30)
+                : 50 + Math.random() * 30
               : 0;
             const isBall = cupId === ballCup;
             return (
@@ -167,9 +165,10 @@ export function CupGame() {
                   left: 0,
                   width: 96,
                   transform: `translate(${slot * SPACING}px, ${liftY}px)`,
-                  transition: phase === "pick" || phase === "won" || phase === "lost" 
-                    ? "none" 
-                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
+                  transition:
+                    phase === "pick" || phase === "won" || phase === "lost"
+                      ? "none"
+                      : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
                   zIndex: isLifted ? (liftY < 0 ? 30 : 10) : 20,
                 }}
               >

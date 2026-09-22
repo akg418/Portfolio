@@ -82,9 +82,7 @@ export function Starfield() {
         if (s.y > height) s.y = 0;
         s.tw += 0.04;
         const a = (0.4 + Math.sin(s.tw) * 0.3) * s.z;
-        ctx.fillStyle = dark
-          ? `rgba(180, 210, 255, ${a})`
-          : `rgba(60, 80, 160, ${a * 0.9})`;
+        ctx.fillStyle = dark ? `rgba(180, 210, 255, ${a})` : `rgba(60, 80, 160, ${a * 0.9})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
         ctx.fill();

@@ -55,7 +55,8 @@ export function SessionTimer() {
             </span>
           </div>
           <div className="mt-2 border-t border-border pt-2 text-muted-foreground leading-relaxed">
-            I&apos;m glad you&apos;re here — I&apos;d love it even more if you reached out. What would you like to build together?
+            I&apos;m glad you&apos;re here — I&apos;d love it even more if you reached out. What
+            would you like to build together?
           </div>
         </div>
       )}

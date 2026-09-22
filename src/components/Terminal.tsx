@@ -154,10 +154,7 @@ function renderHexInline(text: string, baseColor: string): React.ReactNode {
   const parts = text.split(/(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?![0-9a-fA-F]))/);
   return parts.map((part, i) =>
     isHex(part) ? (
-      <span
-        key={i}
-        style={{ color: part, fontWeight: 700, textShadow: `0 0 6px ${part}` }}
-      >
+      <span key={i} style={{ color: part, fontWeight: 700, textShadow: `0 0 6px ${part}` }}>
         {part}
       </span>
     ) : (
@@ -230,7 +227,10 @@ export function Terminal({
 }) {
   const [lines, setLines] = useState<Line[]>([
     { kind: "sys", text: `ahmed-os v1.0.4 — © ${profile.name}` },
-    { kind: "sys", text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize." },
+    {
+      kind: "sys",
+      text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [visits, setVisits] = useState(0);
@@ -345,8 +345,14 @@ export function Terminal({
     const startY = e.clientY;
     const startSize = { ...winSize };
     const onMove = (ev: MouseEvent) => {
-      const nw = Math.max(360, Math.min(window.innerWidth - winPos.x - 8, startSize.w + (ev.clientX - startX)));
-      const nh = Math.max(240, Math.min(window.innerHeight - winPos.y - 8, startSize.h + (ev.clientY - startY)));
+      const nw = Math.max(
+        360,
+        Math.min(window.innerWidth - winPos.x - 8, startSize.w + (ev.clientX - startX)),
+      );
+      const nh = Math.max(
+        240,
+        Math.min(window.innerHeight - winPos.y - 8, startSize.h + (ev.clientY - startY)),
+      );
       setWinSize({ w: nw, h: nh });
     };
     const onUp = () => {
@@ -382,8 +388,14 @@ export function Terminal({
         HELP_LINES.forEach((h) => out.push({ kind: "out", text: "", cmd: h.cmd, desc: h.desc }));
         break;
       case "whoami":
-        out.push({ kind: "out", text: `${profile.name} — ${profile.role} (backend & microservices).` });
-        out.push({ kind: "out", text: "ACPC Finalist · 2000+ problems solved · FastAPI / NestJS / Kubernetes." });
+        out.push({
+          kind: "out",
+          text: `${profile.name} — ${profile.role} (backend & microservices).`,
+        });
+        out.push({
+          kind: "out",
+          text: "ACPC Finalist · 2000+ problems solved · FastAPI / NestJS / Kubernetes.",
+        });
         break;
       case "name":
         out.push({ kind: "out", text: `You are currently: ${username}` });
@@ -394,7 +406,7 @@ export function Terminal({
         const clean = raw2.replace(/[^a-zA-Z0-9_\-.]/g, "").slice(0, 24);
         if (!clean) {
           out.push({ kind: "out", text: "Usage: setname <name>  (letters, numbers, _ - . only)" });
-      } else {
+        } else {
           try {
             localStorage.setItem("username", clean);
           } catch {}
@@ -408,14 +420,18 @@ export function Terminal({
         const root = document.documentElement;
         const next = root.classList.contains("dark") ? "light" : "dark";
         root.classList.toggle("dark", next === "dark");
-        try { localStorage.setItem("theme", next); } catch {}
+        try {
+          localStorage.setItem("theme", next);
+        } catch {}
         out.push({ kind: "out", text: `Theme switched to ${next} mode.` });
         break;
       }
       case "sound": {
         const next = !soundEnabled;
         setSoundEnabled(next);
-        try { localStorage.setItem("term-sound", next ? "1" : "0"); } catch {}
+        try {
+          localStorage.setItem("term-sound", next ? "1" : "0");
+        } catch {}
         out.push({ kind: "out", text: `Typing sound ${next ? "ENABLED" : "DISABLED"}.` });
         break;
       }
@@ -429,9 +445,12 @@ export function Terminal({
         } catch {}
         const now = !enabled;
         window.dispatchEvent(new CustomEvent("gamingmode", { detail: now }));
-        out.push({ kind: "out", text: now
-          ? "🎮 Gaming mode ENABLED — enter the site to find a dedicated gaming section."
-          : "Gaming mode disabled." });
+        out.push({
+          kind: "out",
+          text: now
+            ? "🎮 Gaming mode ENABLED — enter the site to find a dedicated gaming section."
+            : "Gaming mode disabled.",
+        });
         break;
       }
       case "color": {
@@ -442,7 +461,9 @@ export function Terminal({
             out.push({ kind: "out", text: `  ${k.padEnd(14)} ${colors[k]}` }),
           );
         } else if (sub === "reset") {
-          try { localStorage.removeItem("term-colors"); } catch {}
+          try {
+            localStorage.removeItem("term-colors");
+          } catch {}
           setColors({ ...DEFAULT_COLORS });
           out.push({ kind: "out", text: "Colors reset to defaults." });
         } else if (sub === "set") {
@@ -454,13 +475,18 @@ export function Terminal({
               )
             : undefined;
           if (!keyMatch) {
-            out.push({ kind: "out", text: `Unknown key. Try: ${Object.keys(DEFAULT_COLORS).join(", ")}` });
+            out.push({
+              kind: "out",
+              text: `Unknown key. Try: ${Object.keys(DEFAULT_COLORS).join(", ")}`,
+            });
           } else if (!val || !isHex(val)) {
             out.push({ kind: "out", text: "Value must be hex like #ff00aa or #f0a." });
           } else {
             const next = { ...colors, [keyMatch]: val };
             setColors(next);
-            try { localStorage.setItem("term-colors", JSON.stringify(next)); } catch {}
+            try {
+              localStorage.setItem("term-colors", JSON.stringify(next));
+            } catch {}
             out.push({ kind: "out", text: `${keyMatch} → ${val}` });
           }
         } else {
@@ -483,7 +509,9 @@ export function Terminal({
             const target = m[2].trim().toLowerCase();
             const next = { ...aliases, [name]: target };
             setAliases(next);
-            try { localStorage.setItem("term-aliases", JSON.stringify(next)); } catch {}
+            try {
+              localStorage.setItem("term-aliases", JSON.stringify(next));
+            } catch {}
             out.push({ kind: "out", text: `alias ${name} → ${target}` });
           }
         }
@@ -497,7 +525,9 @@ export function Terminal({
           const next = { ...aliases };
           delete next[name];
           setAliases(next);
-          try { localStorage.setItem("term-aliases", JSON.stringify(next)); } catch {}
+          try {
+            localStorage.setItem("term-aliases", JSON.stringify(next));
+          } catch {}
           out.push({ kind: "out", text: `Removed alias ${name}.` });
         }
         break;
@@ -506,7 +536,10 @@ export function Terminal({
         for (const e of experiences.filter((x) => x.current)) {
           out.push({ kind: "out", text: `Currently @ ${e.shortName} — ${e.role} (${e.period})` });
         }
-        out.push({ kind: "out", text: "Backend across NestJS, FastAPI, Flask, .NET, Spring Boot." });
+        out.push({
+          kind: "out",
+          text: "Backend across NestJS, FastAPI, Flask, .NET, Spring Boot.",
+        });
         out.push({
           kind: "out",
           text: `Past: ${experiences
@@ -530,7 +563,10 @@ export function Terminal({
         }
         break;
       case "visits":
-        out.push({ kind: "out", text: `This site has been visited ${visits} time${visits === 1 ? "" : "s"} from this browser.` });
+        out.push({
+          kind: "out",
+          text: `This site has been visited ${visits} time${visits === 1 ? "" : "s"} from this browser.`,
+        });
         break;
       case "social":
         {
@@ -673,7 +709,9 @@ export function Terminal({
         <div className="max-w-5xl mx-auto px-6 h-11 flex items-center gap-2 font-mono text-xs text-muted-foreground">
           <span className="h-3 w-3 rounded-full" style={{ background: colors.dotRed }} />
           <span className="h-3 w-3 rounded-full" style={{ background: colors.dotGreen }} />
-          <span className="ml-2" style={{ color: colors.prompt }}>{username}@ahmed.dev</span>
+          <span className="ml-2" style={{ color: colors.prompt }}>
+            {username}@ahmed.dev
+          </span>
           <span>— zsh (minimized)</span>
           <span className="ml-auto opacity-60 group-hover:opacity-100">click to restore</span>
         </div>
@@ -694,11 +732,7 @@ export function Terminal({
     : "relative h-full w-full overflow-hidden rounded-xl border border-border bg-card/95 shadow-2xl backdrop-blur";
 
   return (
-    <div
-      className={outerClass}
-      onClick={() => inputRef.current?.focus()}
-      style={outerStyle}
-    >
+    <div className={outerClass} onClick={() => inputRef.current?.focus()} style={outerStyle}>
       <div ref={innerRef} className={innerClass}>
         <div
           className="flex items-center gap-2 border-b border-border bg-background/40 px-4 py-2.5 select-none"
@@ -708,24 +742,34 @@ export function Terminal({
           <button
             type="button"
             data-window-btn
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
             className="group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110"
             style={{ background: colors.dotRed }}
             aria-label="Close terminal"
             title="Close"
           >
-            <span className="opacity-0 group-hover:opacity-90 text-[8px] leading-none font-bold text-black">×</span>
+            <span className="opacity-0 group-hover:opacity-90 text-[8px] leading-none font-bold text-black">
+              ×
+            </span>
           </button>
           <button
             type="button"
             data-window-btn
-            onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onMinimize();
+            }}
             className="group h-3 w-3 rounded-full flex items-center justify-center hover:brightness-110"
             style={{ background: colors.dotGreen }}
             aria-label="Minimize terminal"
             title="Minimize to bottom bar"
           >
-            <span className="opacity-0 group-hover:opacity-90 text-[10px] leading-none font-bold text-black">–</span>
+            <span className="opacity-0 group-hover:opacity-90 text-[10px] leading-none font-bold text-black">
+              –
+            </span>
           </button>
           <span className="ml-3 font-mono text-xs text-muted-foreground">
             {username}@ahmed.dev — zsh
@@ -741,12 +785,7 @@ export function Terminal({
               key={idx}
               className={l.kind === "sys" ? "font-semibold" : ""}
               style={{
-                color:
-                  l.kind === "in"
-                    ? colors.in
-                    : l.kind === "sys"
-                      ? colors.sys
-                      : colors.out,
+                color: l.kind === "in" ? colors.in : l.kind === "sys" ? colors.sys : colors.out,
               }}
             >
               {l.kind === "in" ? (
@@ -764,12 +803,7 @@ export function Terminal({
                   <span>{l.desc}</span>
                 </>
               ) : (
-                <span>
-                  {renderHexInline(
-                    l.text,
-                    l.kind === "sys" ? colors.sys : colors.out,
-                  )}
-                </span>
+                <span>{renderHexInline(l.text, l.kind === "sys" ? colors.sys : colors.out)}</span>
               )}
             </div>
           ))}

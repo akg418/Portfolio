@@ -30,9 +30,7 @@ export function Typewriter({
         setDeleting(false);
         setI((v) => v + 1);
       } else {
-        setText(
-          deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1),
-        );
+        setText(deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1));
       }
     }, delay);
     return () => clearTimeout(t);
