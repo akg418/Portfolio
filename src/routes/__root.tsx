@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { profile } from "@/data/profile";
+import { themeInitScript } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -100,11 +101,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en" className="dark">
       <head>
         <HeadContent />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark');}else{document.documentElement.classList.add('dark');}}catch(e){}})();`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         {children}

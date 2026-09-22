@@ -11,6 +11,7 @@ import {
   writeJson,
   writeString,
 } from "@/lib/storage";
+import { toggleTheme } from "@/lib/theme";
 
 export type TerminalMode = "float" | "min";
 
@@ -430,10 +431,7 @@ export function Terminal({
         break;
       }
       case "theme": {
-        const root = document.documentElement;
-        const next = root.classList.contains("dark") ? "light" : "dark";
-        root.classList.toggle("dark", next === "dark");
-        writeString(STORAGE_KEYS.theme, next);
+        const next = toggleTheme();
         out.push({ kind: "out", text: `Theme switched to ${next} mode.` });
         break;
       }
