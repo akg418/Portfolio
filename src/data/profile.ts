@@ -78,6 +78,7 @@ export const experiences: Experience[] = [
   {
     company: "Xplain AI",
     shortName: "Xplain AI",
+    linkedin: "https://www.linkedin.com/company/getxplain-ai/",
     website: { label: "getXplain.ai", url: "https://getxplain.ai" },
     role: "Software Engineer",
     employment: "Full-time",
@@ -93,6 +94,7 @@ export const experiences: Experience[] = [
   {
     company: "Shipd",
     shortName: "Shipd",
+    linkedin: "https://www.linkedin.com/company/shipd-datacurve/",
     role: "Problem Author",
     employment: "Freelance",
     period: "Aug 2024 – Present",
@@ -105,6 +107,7 @@ export const experiences: Experience[] = [
   {
     company: "Rehabitaire",
     shortName: "Rehabitaire",
+    linkedin: "https://www.linkedin.com/company/rehabitaire/",
     role: "Software Engineer",
     employment: "Full-time",
     period: "Nov 2025 – Mar 2026",
@@ -118,6 +121,7 @@ export const experiences: Experience[] = [
   {
     company: "ECS (Enterprise Consultancy Services)",
     shortName: "ECS",
+    linkedin: "https://www.linkedin.com/company/enterprise-consultancy-services/",
     role: "Backend Developer",
     employment: "Full-time",
     period: "Aug 2025 – Oct 2025",

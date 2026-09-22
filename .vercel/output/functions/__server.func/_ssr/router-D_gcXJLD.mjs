@@ -55,6 +55,7 @@ const experiences = [
   {
     company: "Xplain AI",
     shortName: "Xplain AI",
+    linkedin: "https://www.linkedin.com/company/getxplain-ai/",
     website: { label: "getXplain.ai", url: "https://getxplain.ai" },
     role: "Software Engineer",
     employment: "Full-time",
@@ -70,6 +71,7 @@ const experiences = [
   {
     company: "Shipd",
     shortName: "Shipd",
+    linkedin: "https://www.linkedin.com/company/shipd-datacurve/",
     role: "Problem Author",
     employment: "Freelance",
     period: "Aug 2024 – Present",
@@ -82,6 +84,7 @@ const experiences = [
   {
     company: "Rehabitaire",
     shortName: "Rehabitaire",
+    linkedin: "https://www.linkedin.com/company/rehabitaire/",
     role: "Software Engineer",
     employment: "Full-time",
     period: "Nov 2025 – Mar 2026",
@@ -95,6 +98,7 @@ const experiences = [
   {
     company: "ECS (Enterprise Consultancy Services)",
     shortName: "ECS",
+    linkedin: "https://www.linkedin.com/company/enterprise-consultancy-services/",
     role: "Backend Developer",
     employment: "Full-time",
     period: "Aug 2025 – Oct 2025",
@@ -367,7 +371,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-B3EcKKKo.mjs");
+const $$splitComponentImporter = () => import("./index-DThu1lqD.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
