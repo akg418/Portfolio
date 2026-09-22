@@ -95,7 +95,7 @@ export function Terminal({
       const expanded = alias + (args.length ? ` ${args.join(" ")}` : "");
       setLines((l) => [...l, ...out, { kind: "sys", text: `→ ${expanded}` }]);
       setInput("");
-      if (trimmed) history.push(raw);
+      if (record && trimmed) history.push(raw);
       // The expansion is echoed above but not recorded: pressing ↑ should
       // return the alias the visitor actually typed.
       run(expanded, depth + 1, { record: false });
