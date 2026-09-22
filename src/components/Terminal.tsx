@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { experiences, links, profile, projects, skills } from "@/data/profile";
+import {
+  STORAGE_KEYS,
+  readFlag,
+  readJson,
+  readNumber,
+  readString,
+  removeKey,
+  writeFlag,
+  writeJson,
+  writeString,
+} from "@/lib/storage";
 
 export type TerminalMode = "float" | "min";
 
@@ -58,6 +69,22 @@ const HELP_LINES: { cmd: string; desc: string }[] = [
 
 const MAX_INPUT = 50;
 
+function parsePoint(value: unknown): { x: number; y: number } | undefined {
+  if (typeof value !== "object" || value === null) return undefined;
+  const { x, y } = value as Record<string, unknown>;
+  if (typeof x !== "number" || typeof y !== "number") return undefined;
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return undefined;
+  return { x, y };
+}
+
+function parseSize(value: unknown): { w: number; h: number } | undefined {
+  if (typeof value !== "object" || value === null) return undefined;
+  const { w, h } = value as Record<string, unknown>;
+  if (typeof w !== "number" || typeof h !== "number") return undefined;
+  if (!Number.isFinite(w) || !Number.isFinite(h)) return undefined;
+  return { w, h };
+}
+
 type ColorKey =
   | "prompt"
   | "path"
@@ -83,45 +110,45 @@ const DEFAULT_COLORS: Record<ColorKey, string> = {
   cmd: "#facc15", // yellow-400
 };
 
-function loadColors(): Record<ColorKey, string> {
-  try {
-    const raw = localStorage.getItem("term-colors");
-    if (!raw) return { ...DEFAULT_COLORS };
-    const parsed = JSON.parse(raw);
-    return { ...DEFAULT_COLORS, ...parsed };
-  } catch {
-    return { ...DEFAULT_COLORS };
+/** Keeps only known keys holding valid hex strings, so corrupt storage cannot
+ *  inject arbitrary values into the color record. */
+function parseColors(value: unknown): Record<ColorKey, string> {
+  const result = { ...DEFAULT_COLORS };
+  if (typeof value !== "object" || value === null) return result;
+  for (const key of Object.keys(DEFAULT_COLORS) as ColorKey[]) {
+    const candidate = (value as Record<string, unknown>)[key];
+    if (typeof candidate === "string" && isHex(candidate)) result[key] = candidate;
   }
+  return result;
+}
+
+function loadColors(): Record<ColorKey, string> {
+  return readJson(STORAGE_KEYS.termColors, parseColors) ?? { ...DEFAULT_COLORS };
 }
 
 function isHex(v: string) {
   return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v);
 }
 
-function loadAliases(): Record<string, string> {
-  try {
-    const raw = localStorage.getItem("term-aliases");
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
+function parseAliases(value: unknown): Record<string, string> {
+  if (typeof value !== "object" || value === null) return {};
+  const result: Record<string, string> = {};
+  for (const [name, target] of Object.entries(value as Record<string, unknown>)) {
+    if (typeof target === "string") result[name] = target;
   }
+  return result;
+}
+
+function loadAliases(): Record<string, string> {
+  return readJson(STORAGE_KEYS.termAliases, parseAliases) ?? {};
 }
 
 function getVisits() {
-  try {
-    const n = Number(localStorage.getItem("visits") || "0");
-    return Number.isFinite(n) ? n : 0;
-  } catch {
-    return 0;
-  }
+  return readNumber(STORAGE_KEYS.visits, 0);
 }
 
 function getUsername() {
-  try {
-    return localStorage.getItem("username") || "guest";
-  } catch {
-    return "guest";
-  }
+  return readString(STORAGE_KEYS.username) || "guest";
 }
 
 function highlightHex(text: string): React.ReactNode {
@@ -245,10 +272,8 @@ export function Terminal({
   // Window position & size (used in float mode). Persisted in localStorage.
   const [winPos, setWinPos] = useState<{ x: number; y: number }>(() => {
     if (typeof window === "undefined") return { x: 80, y: 80 };
-    try {
-      const raw = localStorage.getItem("term-winpos");
-      if (raw) return JSON.parse(raw);
-    } catch {}
+    const saved = readJson(STORAGE_KEYS.termWindowPos, parsePoint);
+    if (saved) return saved;
     return {
       x: Math.max(24, Math.round(window.innerWidth / 2 - 360)),
       y: Math.max(24, Math.round(window.innerHeight / 2 - 260)),
@@ -256,10 +281,8 @@ export function Terminal({
   });
   const [winSize, setWinSize] = useState<{ w: number; h: number }>(() => {
     if (typeof window === "undefined") return { w: 720, h: 480 };
-    try {
-      const raw = localStorage.getItem("term-winsize");
-      if (raw) return JSON.parse(raw);
-    } catch {}
+    const saved = readJson(STORAGE_KEYS.termWindowSize, parseSize);
+    if (saved) return saved;
     return {
       w: Math.min(720, window.innerWidth - 48),
       h: Math.min(480, window.innerHeight - 96),
@@ -267,22 +290,16 @@ export function Terminal({
   });
 
   useEffect(() => {
-    try {
-      localStorage.setItem("term-winpos", JSON.stringify(winPos));
-    } catch {}
+    writeJson(STORAGE_KEYS.termWindowPos, winPos);
   }, [winPos]);
   useEffect(() => {
-    try {
-      localStorage.setItem("term-winsize", JSON.stringify(winSize));
-    } catch {}
+    writeJson(STORAGE_KEYS.termWindowSize, winSize);
   }, [winSize]);
 
   useEffect(() => {
     const v = getVisits() + 1;
-    try {
-      localStorage.setItem("visits", String(v));
-      setSoundEnabled(localStorage.getItem("term-sound") === "1");
-    } catch {}
+    writeString(STORAGE_KEYS.visits, String(v));
+    setSoundEnabled(readFlag(STORAGE_KEYS.termSound, false));
     setVisits(v);
     setUsername(getUsername());
     setColors(loadColors());
@@ -405,9 +422,7 @@ export function Terminal({
         if (!clean) {
           out.push({ kind: "out", text: "Usage: setname <name>  (letters, numbers, _ - . only)" });
         } else {
-          try {
-            localStorage.setItem("username", clean);
-          } catch {}
+          writeString(STORAGE_KEYS.username, clean);
           setUsername(clean);
           window.dispatchEvent(new CustomEvent("usernamechange", { detail: clean }));
           out.push({ kind: "out", text: `Nice to meet you, ${clean}. Saved.` });
@@ -418,29 +433,21 @@ export function Terminal({
         const root = document.documentElement;
         const next = root.classList.contains("dark") ? "light" : "dark";
         root.classList.toggle("dark", next === "dark");
-        try {
-          localStorage.setItem("theme", next);
-        } catch {}
+        writeString(STORAGE_KEYS.theme, next);
         out.push({ kind: "out", text: `Theme switched to ${next} mode.` });
         break;
       }
       case "sound": {
         const next = !soundEnabled;
         setSoundEnabled(next);
-        try {
-          localStorage.setItem("term-sound", next ? "1" : "0");
-        } catch {}
+        writeFlag(STORAGE_KEYS.termSound, next);
         out.push({ kind: "out", text: `Typing sound ${next ? "ENABLED" : "DISABLED"}.` });
         break;
       }
       case "gaming":
       case "game": {
-        let enabled = false;
-        try {
-          const v = localStorage.getItem("gamingMode");
-          enabled = v !== "0";
-          localStorage.setItem("gamingMode", enabled ? "0" : "1");
-        } catch {}
+        const enabled = readFlag(STORAGE_KEYS.gamingMode, true);
+        writeFlag(STORAGE_KEYS.gamingMode, !enabled);
         const now = !enabled;
         window.dispatchEvent(new CustomEvent("gamingmode", { detail: now }));
         out.push({
@@ -459,9 +466,7 @@ export function Terminal({
             out.push({ kind: "out", text: `  ${k.padEnd(14)} ${colors[k]}` }),
           );
         } else if (sub === "reset") {
-          try {
-            localStorage.removeItem("term-colors");
-          } catch {}
+          removeKey(STORAGE_KEYS.termColors);
           setColors({ ...DEFAULT_COLORS });
           out.push({ kind: "out", text: "Colors reset to defaults." });
         } else if (sub === "set") {
@@ -482,9 +487,7 @@ export function Terminal({
           } else {
             const next = { ...colors, [keyMatch]: val };
             setColors(next);
-            try {
-              localStorage.setItem("term-colors", JSON.stringify(next));
-            } catch {}
+            writeJson(STORAGE_KEYS.termColors, next);
             out.push({ kind: "out", text: `${keyMatch} → ${val}` });
           }
         } else {
@@ -507,9 +510,7 @@ export function Terminal({
             const target = m[2].trim().toLowerCase();
             const next = { ...aliases, [name]: target };
             setAliases(next);
-            try {
-              localStorage.setItem("term-aliases", JSON.stringify(next));
-            } catch {}
+            writeJson(STORAGE_KEYS.termAliases, next);
             out.push({ kind: "out", text: `alias ${name} → ${target}` });
           }
         }
@@ -523,9 +524,7 @@ export function Terminal({
           const next = { ...aliases };
           delete next[name];
           setAliases(next);
-          try {
-            localStorage.setItem("term-aliases", JSON.stringify(next));
-          } catch {}
+          writeJson(STORAGE_KEYS.termAliases, next);
           out.push({ kind: "out", text: `Removed alias ${name}.` });
         }
         break;

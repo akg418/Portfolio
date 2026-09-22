@@ -27,6 +27,7 @@ import { NavBar } from "@/components/NavBar";
 import { SessionTimer } from "@/components/SessionTimer";
 
 import avatar from "@/assets/me.jpeg";
+import { STORAGE_KEYS, readFlag, readString, writeString } from "@/lib/storage";
 import {
   education,
   experiences,
@@ -54,14 +55,9 @@ function isWindowMode(value: string | null): value is WindowMode {
 
 function Index() {
   const [termMode, setTermMode] = useState<WindowMode>(() => {
-    if (typeof window === "undefined") return "closed";
-    try {
-      const saved = localStorage.getItem("termMode_v2");
-      // Anything unrecognised (including the removed "full" mode) falls back to closed.
-      return isWindowMode(saved) ? saved : "closed";
-    } catch {
-      return "closed";
-    }
+    const saved = readString(STORAGE_KEYS.termMode);
+    // Anything unrecognised (including the removed "full" mode) falls back to closed.
+    return isWindowMode(saved) ? saved : "closed";
   });
   const [mounted, setMounted] = useState(false);
   const [gamingMode, setGamingMode] = useState(false);
@@ -69,9 +65,7 @@ function Index() {
 
   useEffect(() => {
     setMounted(true);
-    try {
-      setGamingMode(localStorage.getItem("gamingMode") !== "0");
-    } catch {}
+    setGamingMode(readFlag(STORAGE_KEYS.gamingMode, true));
     const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
     window.addEventListener("gamingmode", onGaming as EventListener);
     return () => window.removeEventListener("gamingmode", onGaming as EventListener);
@@ -79,10 +73,7 @@ function Index() {
 
   useEffect(() => {
     const read = () => {
-      try {
-        const u = localStorage.getItem("username") || "guest";
-        setTerminalUser(u);
-      } catch {}
+      setTerminalUser(readString(STORAGE_KEYS.username) || "guest");
     };
     read();
     const onChange = (e: Event) => setTerminalUser((e as CustomEvent).detail || "guest");
@@ -91,9 +82,7 @@ function Index() {
   }, []);
 
   const persistMode = (m: WindowMode) => {
-    try {
-      localStorage.setItem("termMode_v2", m);
-    } catch {}
+    writeString(STORAGE_KEYS.termMode, m);
   };
 
   const closeTerminal = () => {

@@ -196,8 +196,14 @@ html {
 
 /* === Terminal caret === */
 @keyframes caret-blink {
-  0%, 50% { opacity: 1; }
-  50.01%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
 }
 .caret-blink {
   animation: caret-blink 1s steps(1) infinite;
@@ -215,10 +221,14 @@ html {
   inherits: false;
 }
 @keyframes avatar-ring-spin {
-  to { --avatar-ring-angle: 360deg; }
+  to {
+    --avatar-ring-angle: 360deg;
+  }
 }
 @keyframes avatar-ring-spin-fallback {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .avatar-ring {
   position: relative;

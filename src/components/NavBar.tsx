@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { profile } from "@/data/profile";
+import { STORAGE_KEYS, readFlag } from "@/lib/storage";
 
 type Item = { id: string; label: string };
 
@@ -31,9 +32,7 @@ export function NavBar() {
 
   // Track gaming mode (initial + live updates from the terminal).
   useEffect(() => {
-    try {
-      setGamingMode(localStorage.getItem("gamingMode") !== "0");
-    } catch {}
+    setGamingMode(readFlag(STORAGE_KEYS.gamingMode, true));
     const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
     window.addEventListener("gamingmode", onGaming as EventListener);
     return () => window.removeEventListener("gamingmode", onGaming as EventListener);

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
 
 type Theme = "light" | "dark";
 
 export function applyTheme(theme: Theme) {
   const root = document.documentElement;
   root.classList.toggle("dark", theme === "dark");
-  try {
-    localStorage.setItem("theme", theme);
-  } catch {}
+  writeString(STORAGE_KEYS.theme, theme);
 }
 
 export function ThemeToggle() {
@@ -17,11 +16,8 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    let t: Theme = "dark";
-    try {
-      const stored = localStorage.getItem("theme") as Theme | null;
-      if (stored === "light" || stored === "dark") t = stored;
-    } catch {}
+    const stored = readString(STORAGE_KEYS.theme);
+    const t: Theme = stored === "light" || stored === "dark" ? stored : "dark";
     setTheme(t);
     applyTheme(t);
   }, []);
