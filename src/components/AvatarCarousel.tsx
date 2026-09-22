@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 
-export type AvatarPhoto = {
-  src: string;
-  /** Describes the photo for screen readers and if the image fails to load. */
+export type AvatarSlide = {
+  /** Describes the slide for screen readers and if an image fails to load. */
   alt: string;
+  /** A photo file… */
+  src?: string;
+  /** …or inline artwork, which can follow the site's theme colours. */
+  art?: React.ReactNode;
 };
 
 const INTERVAL_MS = 4500;
@@ -11,6 +14,27 @@ const FADE_MS = 700;
 
 /** Images fill the frame, so only the frame carries sizing and shape. */
 const IMAGE_CLASS = "absolute inset-0 h-full w-full rounded-full object-cover";
+
+/** Renders one slide: a photo, or inline artwork filling the same frame. */
+function Slide({ slide, active }: { slide: AvatarSlide; active: boolean }) {
+  if (slide.art) {
+    return (
+      <div className="absolute inset-0 overflow-hidden rounded-full" aria-hidden={!active}>
+        {slide.art}
+      </div>
+    );
+  }
+  return (
+    <img
+      src={slide.src}
+      alt={active ? slide.alt : ""}
+      aria-hidden={!active}
+      width={320}
+      height={320}
+      className={IMAGE_CLASS}
+    />
+  );
+}
 
 /**
  * Cross-fading portrait stack.
@@ -26,7 +50,7 @@ export function AvatarCarousel({
   photos,
   className,
 }: {
-  photos: AvatarPhoto[];
+  photos: AvatarSlide[];
   /** Sizing and shape of the frame, e.g. "w-56 h-56 rounded-full". */
   className: string;
 }) {
@@ -47,10 +71,9 @@ export function AvatarCarousel({
   }, [cycles, paused, photos.length]);
 
   if (!cycles) {
-    const [first] = photos;
     return (
       <div className={className}>
-        <img src={first.src} alt={first.alt} width={320} height={320} className={IMAGE_CLASS} />
+        <Slide slide={photos[0]} active />
       </div>
     );
   }
@@ -74,26 +97,20 @@ export function AvatarCarousel({
       aria-label="Show the next photo"
       title="Click for the next photo"
     >
-      {photos.map((photo, i) => {
-        const active = i === index;
-        return (
-          <img
-            key={photo.src}
-            src={photo.src}
-            alt={active ? photo.alt : ""}
-            aria-hidden={!active}
-            width={320}
-            height={320}
-            className={IMAGE_CLASS}
-            style={{
-              opacity: active ? 1 : 0,
-              transform: active ? "scale(1)" : "scale(1.06)",
-              transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
-              willChange: "opacity, transform",
-            }}
-          />
-        );
-      })}
+      {photos.map((slide, i) => (
+        <div
+          key={slide.src ?? slide.alt}
+          className="absolute inset-0"
+          style={{
+            opacity: i === index ? 1 : 0,
+            transform: i === index ? "scale(1)" : "scale(1.06)",
+            transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
+            willChange: "opacity, transform",
+          }}
+        >
+          <Slide slide={slide} active={i === index} />
+        </div>
+      ))}
     </div>
   );
 }

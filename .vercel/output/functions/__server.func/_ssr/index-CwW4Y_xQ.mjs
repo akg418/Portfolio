@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DJgJQeEK.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-BzQOn1Fz.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -887,6 +887,22 @@ function Typewriter({
 const INTERVAL_MS = 4500;
 const FADE_MS = 700;
 const IMAGE_CLASS = "absolute inset-0 h-full w-full rounded-full object-cover";
+function Slide({ slide, active }) {
+  if (slide.art) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 overflow-hidden rounded-full", "aria-hidden": !active, children: slide.art });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "img",
+    {
+      src: slide.src,
+      alt: active ? slide.alt : "",
+      "aria-hidden": !active,
+      width: 320,
+      height: 320,
+      className: IMAGE_CLASS
+    }
+  );
+}
 function AvatarCarousel({
   photos: photos2,
   className
@@ -904,8 +920,7 @@ function AvatarCarousel({
     return () => clearInterval(id);
   }, [cycles, paused, photos2.length]);
   if (!cycles) {
-    const [first] = photos2;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: first.src, alt: first.alt, width: 320, height: 320, className: IMAGE_CLASS }) });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { slide: photos2[0], active: true }) });
   }
   const next = () => setIndex((i) => (i + 1) % photos2.length);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -925,35 +940,181 @@ function AvatarCarousel({
       },
       "aria-label": "Show the next photo",
       title: "Click for the next photo",
-      children: photos2.map((photo, i) => {
-        const active = i === index;
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "img",
-          {
-            src: photo.src,
-            alt: active ? photo.alt : "",
-            "aria-hidden": !active,
-            width: 320,
-            height: 320,
-            className: IMAGE_CLASS,
-            style: {
-              opacity: active ? 1 : 0,
-              transform: active ? "scale(1)" : "scale(1.06)",
-              transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
-              willChange: "opacity, transform"
-            }
+      children: photos2.map((slide, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "absolute inset-0",
+          style: {
+            opacity: i === index ? 1 : 0,
+            transform: i === index ? "scale(1)" : "scale(1.06)",
+            transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
+            willChange: "opacity, transform"
           },
-          photo.src
-        );
-      })
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { slide, active: i === index })
+        },
+        slide.src ?? slide.alt
+      ))
     }
   );
 }
+const PRIMARY = "var(--color-primary)";
+const ACCENT = "var(--color-accent)";
+const MUTED = "var(--color-muted-foreground)";
+const SURFACE = "var(--color-background)";
+function Frame({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "svg",
+    {
+      viewBox: "0 0 320 320",
+      role: "img",
+      className: "h-full w-full",
+      xmlns: "http://www.w3.org/2000/svg",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "av-sheen", x1: "0", y1: "0", x2: "1", y2: "1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0%", stopColor: PRIMARY, stopOpacity: "0.22" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "100%", stopColor: ACCENT, stopOpacity: "0.22" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "320", height: "320", fill: "url(#av-sheen)" }),
+        children
+      ]
+    }
+  );
+}
+function TerminalArt() {
+  const line = (y, w, fill, opacity = 1, x = 78) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: w, height: 7, rx: 3.5, fill, opacity });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Frame, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: 58, y: 86, width: 204, height: 148, rx: 14, fill: SURFACE, opacity: "0.92" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "rect",
+      {
+        x: 58,
+        y: 86,
+        width: 204,
+        height: 148,
+        rx: 14,
+        fill: "none",
+        stroke: PRIMARY,
+        strokeOpacity: "0.45"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M58 106a14 14 0 0 1 14-14h176a14 14 0 0 1 14 14v6H58z",
+        fill: PRIMARY,
+        opacity: "0.14"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: 74, cy: 99, r: 4, fill: "#ef4444" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: 88, cy: 99, r: 4, fill: "#eab308" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: 102, cy: 99, r: 4, fill: "#22c55e" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: 78, y: 139, fill: PRIMARY, fontFamily: "ui-monospace, monospace", fontSize: 14, children: "$" }),
+    line(132, 84, MUTED, 0.85, 94),
+    line(158, 126, MUTED, 0.45),
+    line(178, 74, ACCENT, 0.8),
+    line(198, 104, MUTED, 0.4),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: 78, y: 222, fill: PRIMARY, fontFamily: "ui-monospace, monospace", fontSize: 14, children: "$" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: 94, y: 212, width: 9, height: 12, fill: PRIMARY })
+  ] });
+}
+function GraphArt() {
+  const nodes = [
+    { x: 160, y: 84, on: true },
+    { x: 96, y: 142, on: true },
+    { x: 224, y: 136, on: false },
+    { x: 118, y: 224, on: true },
+    { x: 206, y: 216, on: false },
+    { x: 160, y: 160, on: false }
+  ];
+  const edges = [
+    [0, 1],
+    [0, 2],
+    [1, 5],
+    [2, 5],
+    [1, 3],
+    [5, 4],
+    [3, 4],
+    [2, 4]
+  ];
+  const onPath = (a, b) => nodes[a].on && nodes[b].on;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Frame, { children: [
+    edges.map(([a, b], i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "line",
+      {
+        x1: nodes[a].x,
+        y1: nodes[a].y,
+        x2: nodes[b].x,
+        y2: nodes[b].y,
+        stroke: onPath(a, b) ? PRIMARY : MUTED,
+        strokeOpacity: onPath(a, b) ? 0.95 : 0.3,
+        strokeWidth: onPath(a, b) ? 3 : 1.5,
+        strokeLinecap: "round"
+      },
+      i
+    )),
+    nodes.map((n, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: n.x, cy: n.y, r: n.on ? 19 : 15, fill: SURFACE }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "circle",
+        {
+          cx: n.x,
+          cy: n.y,
+          r: n.on ? 19 : 15,
+          fill: n.on ? PRIMARY : "none",
+          fillOpacity: n.on ? 0.2 : 0,
+          stroke: n.on ? PRIMARY : MUTED,
+          strokeOpacity: n.on ? 1 : 0.45,
+          strokeWidth: n.on ? 3 : 2
+        }
+      )
+    ] }, i))
+  ] });
+}
+function BalloonsArt() {
+  const balloons = [
+    { x: 116, y: 118, r: 25, fill: "#ef4444" },
+    { x: 168, y: 96, r: 29, fill: "#eab308" },
+    { x: 214, y: 128, r: 24, fill: "#22c55e" },
+    { x: 137, y: 168, r: 22, fill: ACCENT },
+    { x: 192, y: 174, r: 21, fill: PRIMARY }
+  ];
+  const knot = { x: 163, y: 262 };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Frame, { children: [
+    balloons.map((b, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: `M${b.x} ${b.y + b.r} Q ${b.x + (i % 2 ? 16 : -16)} ${(b.y + knot.y) / 2} ${knot.x} ${knot.y}`,
+        fill: "none",
+        stroke: MUTED,
+        strokeOpacity: "0.5",
+        strokeWidth: "1.5"
+      },
+      `s${i}`
+    )),
+    balloons.map((b, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: b.x, cy: b.y, rx: b.r, ry: b.r * 1.16, fill: b.fill, opacity: "0.92" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "ellipse",
+        {
+          cx: b.x - b.r * 0.32,
+          cy: b.y - b.r * 0.42,
+          rx: b.r * 0.2,
+          ry: b.r * 0.3,
+          fill: "#fff",
+          opacity: "0.45",
+          transform: `rotate(-20 ${b.x - b.r * 0.32} ${b.y - b.r * 0.42})`
+        }
+      )
+    ] }, i)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: knot.x, cy: knot.y, r: 5, fill: MUTED, opacity: "0.7" })
+  ] });
+}
 const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
-const portrait = "/assets/me-DrlTZ2Ih.jpeg";
 const photos = [
   { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" },
-  { src: portrait, alt: "Ahmed Khaled" }
+  { art: /* @__PURE__ */ jsxRuntimeExports.jsx(TerminalArt, {}), alt: "Illustration of a terminal window" },
+  { art: /* @__PURE__ */ jsxRuntimeExports.jsx(GraphArt, {}), alt: "Illustration of a traversal over a graph" },
+  { art: /* @__PURE__ */ jsxRuntimeExports.jsx(BalloonsArt, {}), alt: "Illustration of contest balloons" }
 ];
 function Hero() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center", children: [

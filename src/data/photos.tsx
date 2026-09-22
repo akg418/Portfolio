@@ -1,0 +1,19 @@
+import type { AvatarSlide } from "@/components/AvatarCarousel";
+import { BalloonsArt, GraphArt, TerminalArt } from "@/components/avatar-art";
+import acpc from "@/assets/me-acpc.jpeg";
+
+/**
+ * Slides cycled by the hero portrait, in order. The first one is what visitors
+ * see first and what social cards and search results pick up, so the photo
+ * leads and the artwork follows.
+ *
+ * To add another photo, drop the file in src/assets, import it here and append
+ * `{ src, alt }`. The carousel takes any number and falls back to a single
+ * static image when there is one.
+ */
+export const photos: AvatarSlide[] = [
+  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" },
+  { art: <TerminalArt />, alt: "Illustration of a terminal window" },
+  { art: <GraphArt />, alt: "Illustration of a traversal over a graph" },
+  { art: <BalloonsArt />, alt: "Illustration of contest balloons" },
+];
