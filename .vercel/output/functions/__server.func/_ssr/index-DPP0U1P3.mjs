@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-D_gcXJLD.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, i as projects, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DJgJQeEK.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -884,7 +884,77 @@ function Typewriter({
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" })
   ] });
 }
-const avatar = "/assets/me-DrlTZ2Ih.jpeg";
+const INTERVAL_MS = 4500;
+const FADE_MS = 700;
+const IMAGE_CLASS = "absolute inset-0 h-full w-full rounded-full object-cover";
+function AvatarCarousel({
+  photos: photos2,
+  className
+}) {
+  const [index, setIndex] = reactExports.useState(0);
+  const [paused, setPaused] = reactExports.useState(false);
+  const [reduceMotion, setReduceMotion] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  const cycles = photos2.length > 1 && !reduceMotion;
+  reactExports.useEffect(() => {
+    if (!cycles || paused) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % photos2.length), INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [cycles, paused, photos2.length]);
+  if (!cycles) {
+    const [first] = photos2;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className, children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: first.src, alt: first.alt, width: 320, height: 320, className: IMAGE_CLASS }) });
+  }
+  const next = () => setIndex((i) => (i + 1) % photos2.length);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: `${className} cursor-pointer`,
+      onMouseEnter: () => setPaused(true),
+      onMouseLeave: () => setPaused(false),
+      onClick: next,
+      role: "button",
+      tabIndex: 0,
+      onKeyDown: (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          next();
+        }
+      },
+      "aria-label": "Show the next photo",
+      title: "Click for the next photo",
+      children: photos2.map((photo, i) => {
+        const active = i === index;
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
+          {
+            src: photo.src,
+            alt: active ? photo.alt : "",
+            "aria-hidden": !active,
+            width: 320,
+            height: 320,
+            className: IMAGE_CLASS,
+            style: {
+              opacity: active ? 1 : 0,
+              transform: active ? "scale(1)" : "scale(1.06)",
+              transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
+              willChange: "opacity, transform"
+            }
+          },
+          photo.src
+        );
+      })
+    }
+  );
+}
+const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
+const portrait = "/assets/me-DrlTZ2Ih.jpeg";
+const photos = [
+  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" },
+  { src: portrait, alt: "Ahmed Khaled" }
+];
 function Hero() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -945,13 +1015,10 @@ function Hero() {
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative justify-self-center md:justify-self-end", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative rounded-full p-[3px] avatar-ring", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "img",
+        AvatarCarousel,
         {
-          src: avatar,
-          alt: profile.name,
-          width: 320,
-          height: 320,
-          className: "rounded-full w-56 h-56 sm:w-72 sm:h-72 object-cover bg-card relative z-10"
+          photos,
+          className: "relative z-10 w-56 h-56 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-card"
         }
       ) })
     ] })

@@ -2,7 +2,8 @@ import { ArrowUpRight, Code2, FileText, Github, Linkedin, Trophy } from "lucide-
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/Typewriter";
 import { linkOf, profile, roles } from "@/data/profile";
-import avatar from "@/assets/me.jpeg";
+import { AvatarCarousel } from "@/components/AvatarCarousel";
+import { photos } from "@/data/photos";
 
 export function Hero() {
   return (
@@ -72,12 +73,9 @@ export function Hero() {
         <div className="relative justify-self-center md:justify-self-end">
           <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl" />
           <div className="relative rounded-full p-[3px] avatar-ring">
-            <img
-              src={avatar}
-              alt={profile.name}
-              width={320}
-              height={320}
-              className="rounded-full w-56 h-56 sm:w-72 sm:h-72 object-cover bg-card relative z-10"
+            <AvatarCarousel
+              photos={photos}
+              className="relative z-10 w-56 h-56 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-card"
             />
           </div>
         </div>
