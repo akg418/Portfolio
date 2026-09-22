@@ -9,8 +9,9 @@ export function Starfield() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    // Sized by resize() below; these are placeholders until it runs.
+    let width = 0;
+    let height = 0;
     const dpr = window.devicePixelRatio || 1;
 
     const resize = () => {
@@ -48,15 +49,20 @@ export function Starfield() {
       hue: [200, 280, 320][i],
     }));
 
+    // Visitors who ask for reduced motion get one static frame instead of the drift.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let raf = 0;
-    const render = (t: number) => {
+    const render = () => {
       ctx.clearRect(0, 0, width, height);
       const dark = isDark();
 
       // soft nebula planets
       for (const p of planets) {
-        p.x += p.vx;
-        p.y += p.vy;
+        if (!reduceMotion) {
+          p.x += p.vx;
+          p.y += p.vy;
+        }
         if (p.x < -p.r) p.x = width + p.r;
         if (p.x > width + p.r) p.x = -p.r;
         if (p.y < -p.r) p.y = height + p.r;
@@ -74,13 +80,15 @@ export function Starfield() {
 
       // stars
       for (const s of stars) {
-        s.x += s.vx * s.z;
-        s.y += s.vy * s.z;
-        if (s.x < 0) s.x = width;
-        if (s.x > width) s.x = 0;
-        if (s.y < 0) s.y = height;
-        if (s.y > height) s.y = 0;
-        s.tw += 0.04;
+        if (!reduceMotion) {
+          s.x += s.vx * s.z;
+          s.y += s.vy * s.z;
+          if (s.x < 0) s.x = width;
+          if (s.x > width) s.x = 0;
+          if (s.y < 0) s.y = height;
+          if (s.y > height) s.y = 0;
+          s.tw += 0.04;
+        }
         const a = (0.4 + Math.sin(s.tw) * 0.3) * s.z;
         ctx.fillStyle = dark ? `rgba(180, 210, 255, ${a})` : `rgba(60, 80, 160, ${a * 0.9})`;
         ctx.beginPath();
@@ -88,7 +96,7 @@ export function Starfield() {
         ctx.fill();
       }
 
-      raf = requestAnimationFrame(render);
+      if (!reduceMotion) raf = requestAnimationFrame(render);
     };
     raf = requestAnimationFrame(render);
 
