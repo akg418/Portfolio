@@ -7,11 +7,24 @@ type Phase = "idle" | "preview" | "shuffling" | "pick" | "won" | "lost";
 const SPACING = 110; // px between cup centers
 const CUP_IDS = [0, 1, 2];
 
+/** A pair of cups mid-swap and the vertical offset each takes, so the two
+ *  visibly cross rather than sliding through one another. */
+type Swap = { cups: [number, number]; offsets: [number, number] };
+
+/** Lift height, randomised a little so the shuffle looks organic. */
+const liftOffset = () => 50 + Math.random() * 30;
+
+function makeSwap(cupA: number, cupB: number): Swap {
+  return { cups: [cupA, cupB], offsets: [-liftOffset(), liftOffset()] };
+}
+
 export function CupGame() {
   // slotOf[cupId] = which slot (0..2) this cup is currently sitting in.
   const [slotOf, setSlotOf] = useState<number[]>([0, 1, 2]);
-  // which two cups are currently mid-swap (lifted), if any.
-  const [lifted, setLifted] = useState<[number, number] | null>(null);
+  // The two cups currently mid-swap, with the vertical offset each one takes.
+  // Offsets live in state because rolling them during render would re-roll on
+  // every re-render and make the cups jump mid-animation.
+  const [lifted, setLifted] = useState<Swap | null>(null);
   // the cup currently lifted by itself (preview / reveal)
   const [singleLift, setSingleLift] = useState<number | null>(null);
   const [ballCup, setBallCup] = useState(0);
@@ -68,7 +81,7 @@ export function CupGame() {
 
           currentSlots = next;
           setSlotOf(next);
-          setLifted([cupA, cupB]);
+          setLifted(makeSwap(cupA, cupB));
           count++;
 
           timer.current = window.setTimeout(() => {
@@ -145,14 +158,9 @@ export function CupGame() {
 
           {CUP_IDS.map((cupId) => {
             const slot = slotOf[cupId];
-            const isLifted = lifted?.includes(cupId);
-            // alternate lift direction so the two swapping cups visibly cross,
-            // with a touch of randomness in lift height
-            const liftY = isLifted
-              ? lifted![0] === cupId
-                ? -(50 + Math.random() * 30)
-                : 50 + Math.random() * 30
-              : 0;
+            const liftIndex = lifted?.cups.indexOf(cupId) ?? -1;
+            const isLifted = liftIndex !== -1;
+            const liftY = isLifted ? lifted!.offsets[liftIndex] : 0;
             const isBall = cupId === ballCup;
             return (
               <button
