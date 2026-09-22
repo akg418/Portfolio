@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Terminal, type TerminalMode } from "@/components/Terminal";
+import { Terminal, type TerminalMode } from "@/components/terminal/Terminal";
 import { MouseGlow } from "@/components/MouseGlow";
 import { CustomCursor } from "@/components/CustomCursor";
 import { Typewriter } from "@/components/Typewriter";
