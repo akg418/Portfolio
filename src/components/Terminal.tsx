@@ -12,6 +12,8 @@ import {
   writeString,
 } from "@/lib/storage";
 import { toggleTheme } from "@/lib/theme";
+import { toggleGamingMode } from "@/hooks/useGamingMode";
+import { getUsername, setStoredUsername } from "@/hooks/useUsername";
 
 export type TerminalMode = "float" | "min";
 
@@ -146,10 +148,6 @@ function loadAliases(): Record<string, string> {
 
 function getVisits() {
   return readNumber(STORAGE_KEYS.visits, 0);
-}
-
-function getUsername() {
-  return readString(STORAGE_KEYS.username) || "guest";
 }
 
 function highlightHex(text: string): React.ReactNode {
@@ -423,9 +421,8 @@ export function Terminal({
         if (!clean) {
           out.push({ kind: "out", text: "Usage: setname <name>  (letters, numbers, _ - . only)" });
         } else {
-          writeString(STORAGE_KEYS.username, clean);
+          setStoredUsername(clean);
           setUsername(clean);
-          window.dispatchEvent(new CustomEvent("usernamechange", { detail: clean }));
           out.push({ kind: "out", text: `Nice to meet you, ${clean}. Saved.` });
         }
         break;
@@ -444,10 +441,7 @@ export function Terminal({
       }
       case "gaming":
       case "game": {
-        const enabled = readFlag(STORAGE_KEYS.gamingMode, true);
-        writeFlag(STORAGE_KEYS.gamingMode, !enabled);
-        const now = !enabled;
-        window.dispatchEvent(new CustomEvent("gamingmode", { detail: now }));
+        const now = toggleGamingMode();
         out.push({
           kind: "out",
           text: now

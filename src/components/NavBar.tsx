@@ -3,7 +3,7 @@ import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { profile } from "@/data/profile";
-import { STORAGE_KEYS, readFlag } from "@/lib/storage";
+import { useGamingMode } from "@/hooks/useGamingMode";
 
 type Item = { id: string; label: string };
 
@@ -19,7 +19,7 @@ export function NavBar() {
   const [active, setActive] = useState<string>("experience");
   const [hover, setHover] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [gamingMode, setGamingMode] = useState(false);
+  const gamingMode = useGamingMode();
   const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, opacity: 0 });
@@ -29,14 +29,6 @@ export function NavBar() {
     () => (gamingMode ? [BASE_ITEMS[0], GAMING_ITEM, ...BASE_ITEMS.slice(1)] : BASE_ITEMS),
     [gamingMode],
   );
-
-  // Track gaming mode (initial + live updates from the terminal).
-  useEffect(() => {
-    setGamingMode(readFlag(STORAGE_KEYS.gamingMode, true));
-    const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
-    window.addEventListener("gamingmode", onGaming as EventListener);
-    return () => window.removeEventListener("gamingmode", onGaming as EventListener);
-  }, []);
 
   // Scroll progress + active section detection
   useEffect(() => {

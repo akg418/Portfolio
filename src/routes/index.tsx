@@ -27,7 +27,9 @@ import { NavBar } from "@/components/NavBar";
 import { SessionTimer } from "@/components/SessionTimer";
 
 import avatar from "@/assets/me.jpeg";
-import { STORAGE_KEYS, readFlag, readString, writeString } from "@/lib/storage";
+import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
+import { useGamingMode } from "@/hooks/useGamingMode";
+import { useUsername } from "@/hooks/useUsername";
 import {
   education,
   experiences,
@@ -60,26 +62,10 @@ function Index() {
     return isWindowMode(saved) ? saved : "closed";
   });
   const [mounted, setMounted] = useState(false);
-  const [gamingMode, setGamingMode] = useState(false);
-  const [terminalUser, setTerminalUser] = useState("guest");
+  const gamingMode = useGamingMode();
+  const terminalUser = useUsername();
 
-  useEffect(() => {
-    setMounted(true);
-    setGamingMode(readFlag(STORAGE_KEYS.gamingMode, true));
-    const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
-    window.addEventListener("gamingmode", onGaming as EventListener);
-    return () => window.removeEventListener("gamingmode", onGaming as EventListener);
-  }, []);
-
-  useEffect(() => {
-    const read = () => {
-      setTerminalUser(readString(STORAGE_KEYS.username) || "guest");
-    };
-    read();
-    const onChange = (e: Event) => setTerminalUser((e as CustomEvent).detail || "guest");
-    window.addEventListener("usernamechange", onChange as EventListener);
-    return () => window.removeEventListener("usernamechange", onChange as EventListener);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   const persistMode = (m: WindowMode) => {
     writeString(STORAGE_KEYS.termMode, m);
