@@ -1,24 +1,55 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
+/**
+ * Cursor-following backdrop glow.
+ *
+ * The position is written straight to the element inside a rAF instead of
+ * going through state: a pointer move fires far more often than a frame, and
+ * re-rendering a full-viewport element on each one was pure waste.
+ */
 export function MouseGlow() {
-  const [mounted, setMounted] = useState(false);
-  const [pos, setPos] = useState({ x: -200, y: -200 });
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
-    const onMove = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    const el = ref.current;
+    if (!el) return;
+
+    let frame = 0;
+    let x = -200;
+    let y = -200;
+
+    const paint = () => {
+      frame = 0;
+      el.style.setProperty("--glow-x", `${x}px`);
+      el.style.setProperty("--glow-y", `${y}px`);
+    };
+
+    const onMove = (e: MouseEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
-  if (!mounted) return null;
   return (
     <div
+      ref={ref}
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 transition-[background] duration-100"
-      style={{
-        background: `radial-gradient(600px circle at ${pos.x}px ${pos.y}px, oklch(0.68 0.22 305 / 0.18), transparent 45%), radial-gradient(900px circle at ${pos.x}px ${pos.y}px, oklch(0.78 0.17 200 / 0.10), transparent 60%)`,
-      }}
+      style={
+        {
+          ["--glow-x" as string]: "-200px",
+          ["--glow-y" as string]: "-200px",
+          background:
+            "radial-gradient(600px circle at var(--glow-x) var(--glow-y), oklch(0.68 0.22 305 / 0.18), transparent 45%), radial-gradient(900px circle at var(--glow-x) var(--glow-y), oklch(0.78 0.17 200 / 0.10), transparent 60%)",
+        } as React.CSSProperties
+      }
     />
   );
 }

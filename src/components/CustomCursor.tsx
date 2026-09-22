@@ -1,23 +1,51 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+const DOT_SIZE = 12;
+const HOVER_SIZE = 44;
+const INTERACTIVE = "a,button,input,textarea,[role=button]";
+
+/**
+ * Replaces the system cursor with a ring and a dot.
+ *
+ * Position is written to CSS custom properties inside a rAF rather than held
+ * in state, so pointer movement does not re-render. Only the hover and pressed
+ * states — which change rarely — go through React.
+ */
 export function CustomCursor() {
   const [mounted, setMounted] = useState(false);
-  const [pos, setPos] = useState({ x: -100, y: -100 });
   const [hover, setHover] = useState(false);
   const [down, setDown] = useState(false);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     setMounted(true);
     document.body.classList.add("custom-cursor");
+
+    let frame = 0;
+    let x = -100;
+    let y = -100;
+
+    const paint = () => {
+      frame = 0;
+      for (const el of [ringRef.current, dotRef.current]) {
+        el?.style.setProperty("--cursor-x", `${x}px`);
+        el?.style.setProperty("--cursor-y", `${y}px`);
+      }
+    };
+
     const onMove = (e: MouseEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
-      const t = e.target as HTMLElement | null;
-      setHover(!!t?.closest("a,button,input,textarea,[role=button]"));
+      x = e.clientX;
+      y = e.clientY;
+      if (!frame) frame = requestAnimationFrame(paint);
+      const target = e.target as HTMLElement | null;
+      setHover(!!target?.closest(INTERACTIVE));
     };
     const onDown = () => setDown(true);
     const onUp = () => setDown(false);
-    window.addEventListener("mousemove", onMove);
+
+    window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
     return () => {
@@ -25,33 +53,43 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
+      if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 
   if (!mounted) return null;
-  const size = hover ? 44 : 12;
+
+  const size = hover ? HOVER_SIZE : DOT_SIZE;
+  const base: React.CSSProperties = {
+    ["--cursor-x" as string]: "-100px",
+    ["--cursor-y" as string]: "-100px",
+  };
+
   return (
     <>
       <div
+        ref={ringRef}
         aria-hidden
-        className="pointer-events-none fixed z-[100] rounded-full transition-[width,height,background,border-color] duration-150"
+        className="pointer-events-none fixed left-0 top-0 z-[100] rounded-full transition-[width,height,background,border-color] duration-150"
         style={{
+          ...base,
           width: size,
           height: size,
-          left: pos.x - size / 2,
-          top: pos.y - size / 2,
           border: "1.5px solid oklch(0.78 0.17 200)",
           background: hover ? "oklch(0.78 0.17 200 / 0.15)" : "transparent",
-          transform: down ? "scale(0.85)" : "scale(1)",
+          transform: `translate(var(--cursor-x), var(--cursor-y)) translate(-50%, -50%) scale(${
+            down ? 0.85 : 1
+          })`,
         }}
       />
       <div
+        ref={dotRef}
         aria-hidden
-        className="pointer-events-none fixed z-[100] h-1 w-1 rounded-full"
+        className="pointer-events-none fixed left-0 top-0 z-[100] h-1 w-1 rounded-full"
         style={{
-          left: pos.x - 2,
-          top: pos.y - 2,
+          ...base,
           background: "oklch(0.97 0.01 250)",
+          transform: "translate(var(--cursor-x), var(--cursor-y)) translate(-50%, -50%)",
         }}
       />
     </>
