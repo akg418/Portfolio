@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, RotateCw } from "lucide-react";
+import { ArrowUpRight, Gamepad2, RotateCw } from "lucide-react";
 
 type Phase = "idle" | "preview" | "shuffling" | "pick" | "won" | "lost";
 
@@ -126,9 +126,19 @@ export function CupGame() {
         <Gamepad2 className="w-5 h-5 text-primary" />
         <h2 className="text-3xl font-bold tracking-tight">Gaming mode — Cups & Ball</h2>
       </div>
-      <p className="text-sm text-muted-foreground mb-10">
+      <p className="text-sm text-muted-foreground mb-4">
         Find the cup hiding the ball after the shuffle. Adjust the speed to your reflexes.
       </p>
+      {/* The other game on this site: Snake, written in C and shipped as a Windows build. */}
+      <a
+        href="https://gom3a.itch.io/snake-game"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="mb-10 inline-flex items-center gap-1 text-sm font-mono text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
+      >
+        Or play my Snake game in C on itch.io
+        <ArrowUpRight className="w-3.5 h-3.5" />
+      </a>
 
       <div className="rounded-xl border border-border bg-card p-6 sm:p-10 overflow-hidden">
         {/* Stage */}

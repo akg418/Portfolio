@@ -252,3 +252,39 @@ html {
     z-index: 0;
   }
 }
+
+/* The projects deck. Cards ride the arc from left to right, fade out at the
+   right end and come back in on the left. Both animations use the independent
+   `rotate`, `translate` and `scale` properties rather than `transform`, so the
+   two can run on one card at once and the hover scale can still be set inline
+   through `transform`. */
+@keyframes deck-orbit {
+  0% {
+    rotate: -50deg;
+    opacity: 0;
+    scale: 0.88;
+  }
+  6% {
+    opacity: 1;
+    scale: 1;
+  }
+  94% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    rotate: 50deg;
+    opacity: 0;
+    scale: 0.88;
+  }
+}
+
+@keyframes deck-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
