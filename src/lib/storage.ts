@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   username: "username",
   visits: "visits",
   gamingMode: "gamingMode",
+  robots: "robots",
   termMode: "termMode_v2",
   termColors: "term-colors",
   termAliases: "term-aliases",
