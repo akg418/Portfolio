@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-BCnzBmyU.css";
+const appCss = "/assets/styles-DGMrMUSK.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -314,6 +314,7 @@ const STORAGE_KEYS = {
   username: "username",
   visits: "visits",
   gamingMode: "gamingMode",
+  robots: "robots",
   termMode: "termMode_v2",
   termColors: "term-colors",
   termAliases: "term-aliases",
@@ -474,7 +475,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-BWXbqh3W.mjs");
+const $$splitComponentImporter = () => import("./index-D3VOWbdP.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -500,19 +501,19 @@ export {
   STORAGE_KEYS as S,
   THEME_EVENT as T,
   applyTheme as a,
-  problemSetting as b,
-  competitions as c,
+  readJson as b,
+  writeJson as c,
   domainParts as d,
-  education as e,
-  experiences as f,
+  competitions as e,
+  problemSetting as f,
   getStoredTheme as g,
-  roles as h,
-  projects as i,
-  links as j,
-  stats as k,
+  education as h,
+  experiences as i,
+  roles as j,
+  projects as k,
   linkOf as l,
-  readJson as m,
-  writeJson as n,
+  links as m,
+  stats as n,
   readString as o,
   profile as p,
   writeString as q,

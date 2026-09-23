@@ -5,6 +5,7 @@ import { CupGame } from "@/components/CupGame";
 import { CustomCursor } from "@/components/CustomCursor";
 import { MouseGlow } from "@/components/MouseGlow";
 import { NavBar } from "@/components/NavBar";
+import { RobotWorld } from "@/components/robots/RobotWorld";
 import { SessionTimer } from "@/components/SessionTimer";
 import { Starfield } from "@/components/Starfield";
 import { Achievements } from "@/components/sections/Achievements";
@@ -59,6 +60,9 @@ function Index() {
       {mounted && <Starfield />}
       {mounted && <MouseGlow />}
       {mounted && <CustomCursor />}
+      {/* The walkway is the top edge of whatever bar is pinned to the bottom,
+          so it is gone exactly while the terminal window is floating. */}
+      {mounted && <RobotWorld walkway={termMode !== "float"} />}
       {mounted && termMode !== "closed" && (
         <Terminal
           mode={termMode}

@@ -288,3 +288,136 @@ html {
     translate: 0 -9px;
   }
 }
+
+/* The little robot that paces along the bottom of the page. Legs and arms only
+   swing while it is walking; the blink and the antenna keep going either way,
+   so a standing robot still looks alive. */
+@keyframes robot-step-a {
+  0%,
+  100% {
+    transform: rotate(13deg);
+  }
+  50% {
+    transform: rotate(-13deg);
+  }
+}
+
+@keyframes robot-step-b {
+  0%,
+  100% {
+    transform: rotate(-13deg);
+  }
+  50% {
+    transform: rotate(13deg);
+  }
+}
+
+@keyframes robot-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1.5px;
+  }
+}
+
+@keyframes robot-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes robot-antenna {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.robot-limb,
+.robot-eye {
+  transform-box: fill-box;
+}
+
+.robot-limb {
+  transform-origin: 50% 0%;
+}
+
+.robot-eye {
+  transform-origin: 50% 50%;
+  animation: robot-blink 5.5s ease-in-out infinite;
+}
+
+.robot-antenna {
+  animation: robot-antenna 2.8s ease-in-out infinite;
+}
+
+.robot-walking {
+  animation: robot-bob 0.62s ease-in-out infinite;
+}
+
+.robot-walking .robot-limb-a {
+  animation: robot-step-a 0.62s ease-in-out infinite;
+}
+
+.robot-walking .robot-limb-b {
+  animation: robot-step-b 0.62s ease-in-out infinite;
+}
+
+/* Alice and Bob: the poses the walk cycle above does not cover. */
+@keyframes robot-flail {
+  0%,
+  100% {
+    rotate: -8deg;
+  }
+  50% {
+    rotate: 8deg;
+  }
+}
+
+@keyframes robot-kick {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  45% {
+    transform: rotate(-52deg);
+  }
+}
+
+@keyframes ball-hop {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -20px;
+  }
+}
+
+.robot-flailing {
+  animation: robot-flail 0.18s ease-in-out infinite;
+}
+
+/* Arms go up in a panic, and forward when shoving the ball along. */
+.robot-flailing .robot-arm {
+  transform: rotate(165deg);
+}
+
+.robot-pushing .robot-arm {
+  animation: none;
+  transform: rotate(-78deg);
+}
+
+.robot-kicking .robot-leg-front {
+  animation: robot-kick 0.36s ease-out;
+}

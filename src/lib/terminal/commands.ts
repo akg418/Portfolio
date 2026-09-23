@@ -2,6 +2,7 @@ import { experiences, links, profile, projects, skills } from "@/data/profile";
 import { STORAGE_KEYS, writeFlag } from "@/lib/storage";
 import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
+import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
 import { COLOR_KEYS, DEFAULT_COLORS, clearStoredColors, isHex, saveColors } from "./colors";
 import { saveAliases } from "./aliases";
@@ -240,6 +241,35 @@ export const commands: Command[] = [
           ? "🎮 Gaming mode ENABLED — enter the site to find a dedicated gaming section."
           : "Gaming mode disabled.",
       );
+    },
+  },
+  {
+    name: "robots",
+    aliases: ["robot"],
+    usage: "robots [alice|bob] [on|off]",
+    description: "Alice and Bob, who play ball at the bottom of the page",
+    run: ({ args, print }) => {
+      const name = ROBOT_NAMES.find((n) => n === args[0]);
+      const wanted = name ? args[1] : args[0];
+
+      if (!wanted) {
+        const state = readRobots();
+        for (const n of ROBOT_NAMES) {
+          print(`${n.padEnd(6)} ${state[n] ? "online" : "powered down"}`);
+        }
+        print("Use `robots off`, `robots alice off`, `robots bob on`.");
+        return;
+      }
+
+      if (wanted !== "on" && wanted !== "off") {
+        print("Usage: robots [alice|bob] [on|off]");
+        return;
+      }
+
+      const on = wanted === "on";
+      setRobots((name as RobotName | undefined) ?? "both", on);
+      if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
+      else print(on ? "Alice and Bob are back." : "Both robots powered down.");
     },
   },
   {

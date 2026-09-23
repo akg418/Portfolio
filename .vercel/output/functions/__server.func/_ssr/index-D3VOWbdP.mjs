@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, h as roles, l as linkOf, k as stats, f as experiences, s as skills, c as competitions, b as problemSetting, e as education, j as links, m as readJson, n as writeJson, i as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-B9Q7SHZq.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, j as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, m as links, b as readJson, c as writeJson, k as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-puhbc--v.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -575,6 +575,424 @@ function NavBar() {
         }
       }
     ) })
+  ] });
+}
+const ROBOT_W = 34;
+const ROBOT_H = 42;
+const EYE = {
+  alice: "var(--color-primary)",
+  bob: "var(--color-accent)"
+};
+const POSE_CLASS = {
+  stand: "",
+  walk: "robot-walking",
+  push: "robot-walking robot-pushing",
+  kick: "robot-kicking",
+  flail: "robot-flailing"
+};
+function RobotSprite({ name, pose }) {
+  const eye = EYE[name];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "svg",
+    {
+      width: ROBOT_W,
+      height: ROBOT_H,
+      viewBox: "0 0 34 42",
+      fill: "none",
+      className: POSE_CLASS[pose],
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("line", { x1: "17", y1: "11", x2: "17", y2: "6", stroke: "var(--color-border)", strokeWidth: "1.2" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "circle",
+          {
+            cx: "17",
+            cy: "4.4",
+            r: "2.1",
+            fill: eye,
+            className: "robot-antenna",
+            style: { filter: `drop-shadow(0 0 4px ${eye})` }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "12",
+            y: "33",
+            width: "3",
+            height: "7",
+            rx: "1.5",
+            fill: "var(--color-muted-foreground)",
+            className: "robot-limb robot-limb-a robot-leg-front"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "19",
+            y: "33",
+            width: "3",
+            height: "7",
+            rx: "1.5",
+            fill: "var(--color-muted-foreground)",
+            className: "robot-limb robot-limb-b"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "6.5",
+            y: "25",
+            width: "2.6",
+            height: "7",
+            rx: "1.3",
+            fill: "var(--color-muted-foreground)",
+            className: "robot-limb robot-limb-b robot-arm"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "24.9",
+            y: "25",
+            width: "2.6",
+            height: "7",
+            rx: "1.3",
+            fill: "var(--color-muted-foreground)",
+            className: "robot-limb robot-limb-a robot-arm"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "9.5",
+            y: "24",
+            width: "15",
+            height: "10",
+            rx: "3.4",
+            fill: "var(--color-card)",
+            stroke: "var(--color-border)"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "17", cy: "29", r: "1.3", fill: eye, opacity: "0.9" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "6",
+            y: "10.5",
+            width: "22",
+            height: "14",
+            rx: "5",
+            fill: "var(--color-card)",
+            stroke: "var(--color-border)"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "9", y: "14.5", width: "16", height: "6.5", rx: "3.2", fill: "#0a0e1c" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "13.6", cy: "17.7", r: "1.6", fill: eye, className: "robot-eye" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "20.4", cy: "17.7", r: "1.6", fill: eye, className: "robot-eye" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "17", cy: "41", rx: "9", ry: "1.4", fill: eye, opacity: "0.12" })
+      ]
+    }
+  );
+}
+const ROBOTS_EVENT = "robots";
+const ROBOT_NAMES = ["alice", "bob"];
+const BOTH_ON = { alice: true, bob: true };
+function parse(value) {
+  if (typeof value !== "object" || value === null) return void 0;
+  const raw = value;
+  return {
+    alice: raw.alice !== false,
+    bob: raw.bob !== false
+  };
+}
+function readRobots() {
+  return readJson(STORAGE_KEYS.robots, parse) ?? { ...BOTH_ON };
+}
+function setRobots(which, on) {
+  const next = which === "both" ? { alice: on, bob: on } : { ...readRobots(), [which]: on };
+  writeJson(STORAGE_KEYS.robots, next);
+  window.dispatchEvent(new CustomEvent(ROBOTS_EVENT, { detail: next }));
+  return next;
+}
+function useRobots() {
+  const [switches, setSwitches] = reactExports.useState(BOTH_ON);
+  reactExports.useEffect(() => {
+    setSwitches(readRobots());
+    const onChange = (e) => setSwitches(e.detail);
+    window.addEventListener(ROBOTS_EVENT, onChange);
+    return () => window.removeEventListener(ROBOTS_EVENT, onChange);
+  }, []);
+  return switches;
+}
+const SPEED = { wander: 28, fetch: 58, push: 34, ball: 330 };
+const PAUSE_MS = [2200, 6e3];
+const LINE_PX = 44;
+const FLOOR_PX = 4;
+const BALL_PX = 11;
+const EDGE_PX = 18;
+const rand = (min, max) => min + Math.random() * (max - min);
+const other = (name) => name === "alice" ? "bob" : "alice";
+const mover = (x) => ({
+  x,
+  facing: 1,
+  pose: "stand",
+  ms: 0,
+  grounded: false,
+  fallen: false,
+  hidden: false
+});
+function RobotWorld({ walkway }) {
+  const robots = useRobots();
+  const world = reactExports.useRef({
+    alice: mover(0),
+    bob: mover(0),
+    ball: { x: 0, ms: 0, hops: 0, visible: false }
+  });
+  const [, paint] = reactExports.useReducer((n) => n + 1, 0);
+  const ready = reactExports.useRef(false);
+  const live = ROBOT_NAMES.filter((n) => robots[n]);
+  reactExports.useEffect(() => {
+    const running = ROBOT_NAMES.filter((n) => robots[n]);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!ready.current) {
+      const w = window.innerWidth;
+      world.current.alice.x = w * 0.28;
+      world.current.bob.x = w * 0.68;
+      world.current.ball.x = w * 0.28 + ROBOT_W + 6;
+      if (!walkway) for (const n of ROBOT_NAMES) world.current[n].grounded = true;
+      ready.current = true;
+      paint();
+    }
+    let cancelled = false;
+    const timers = [];
+    const sleep = (ms) => new Promise((resolve) => {
+      timers.push(window.setTimeout(resolve, Math.max(0, ms)));
+    });
+    const set = (edit) => {
+      if (cancelled) return;
+      edit(world.current);
+      paint();
+    };
+    const span = () => ({
+      min: EDGE_PX,
+      max: Math.max(EDGE_PX + 40, window.innerWidth - ROBOT_W - EDGE_PX)
+    });
+    const home = (name) => {
+      const { min, max } = span();
+      return name === "alice" ? min + (max - min) * 0.22 : min + (max - min) * 0.78;
+    };
+    const walk = async (name, to, speed, pose = "walk") => {
+      const from = world.current[name].x;
+      const ms = Math.abs(to - from) / speed * 1e3;
+      set((w) => {
+        w[name] = { ...w[name], x: to, ms, pose, facing: to >= from ? 1 : -1 };
+      });
+      await sleep(ms + 40);
+      set((w) => {
+        w[name] = { ...w[name], pose: "stand" };
+      });
+    };
+    const pushBall = async (name, to) => {
+      const w0 = world.current;
+      const from = w0[name].x;
+      const gap = w0.ball.x - from;
+      const ms = Math.abs(to - from) / SPEED.push * 1e3;
+      set((w) => {
+        w[name] = { ...w[name], x: to, ms, pose: "push", facing: to >= from ? 1 : -1 };
+        w.ball = { ...w.ball, x: to + gap, ms, hops: 0 };
+      });
+      await sleep(ms + 40);
+      set((w) => {
+        w[name] = { ...w[name], pose: "stand" };
+      });
+    };
+    const kick = async (name) => {
+      const { min, max } = span();
+      const from = world.current.ball.x;
+      const mid = (min + max) / 2;
+      const target = name === "alice" ? rand(mid, max - BALL_PX) : rand(min, mid);
+      const distance = Math.abs(target - from);
+      const ms = distance / SPEED.ball * 1e3;
+      set((w) => {
+        w[name] = { ...w[name], pose: "kick", facing: target >= from ? 1 : -1 };
+      });
+      await sleep(180);
+      set((w) => {
+        w.ball = { ...w.ball, x: target, ms, hops: Math.max(1, Math.round(distance / 150)) };
+      });
+      await sleep(ms + 60);
+      set((w) => {
+        w[name] = { ...w[name], pose: "stand" };
+        w.ball = { ...w.ball, hops: 0 };
+      });
+      return target;
+    };
+    const wander = async (name) => {
+      while (!cancelled) {
+        const { min, max } = span();
+        await walk(name, rand(min, max), SPEED.wander);
+        await sleep(rand(...PAUSE_MS));
+      }
+    };
+    const fallOver = async () => {
+      set((w) => {
+        w.ball = { ...w.ball, visible: false, hops: 0 };
+        for (const n of ROBOT_NAMES) w[n] = { ...w[n], pose: "flail", ms: 0 };
+      });
+      await sleep(700);
+      set((w) => {
+        for (const n of ROBOT_NAMES)
+          w[n] = { ...w[n], pose: "stand", fallen: true, grounded: true };
+      });
+      await sleep(950);
+      set((w) => {
+        for (const n of ROBOT_NAMES) w[n] = { ...w[n], hidden: true };
+      });
+      await sleep(500);
+      const { min, max } = span();
+      set((w) => {
+        for (const n of ROBOT_NAMES) {
+          w[n] = {
+            ...w[n],
+            x: rand(min, max),
+            ms: 0,
+            fallen: false,
+            hidden: false,
+            grounded: true
+          };
+        }
+      });
+      await sleep(400);
+    };
+    async function routine() {
+      if (!walkway) {
+        await fallOver();
+        await Promise.all(running.map(wander));
+        return;
+      }
+      set((w) => {
+        for (const n of ROBOT_NAMES) w[n] = { ...w[n], grounded: false, fallen: false };
+      });
+      await sleep(540);
+      await Promise.all(running.map((n) => walk(n, home(n), SPEED.wander)));
+      if (running.length < 2) {
+        await Promise.all(running.map(wander));
+        return;
+      }
+      set((w) => {
+        w.ball = { ...w.ball, x: w.alice.x + ROBOT_W + 4, ms: 0, visible: true };
+      });
+      await sleep(600);
+      let striker = "alice";
+      while (!cancelled) {
+        const landed = await kick(striker);
+        const fetcher = other(striker);
+        const goingLeft = home(fetcher) < landed;
+        await walk(fetcher, goingLeft ? landed + 10 : landed - ROBOT_W + 2, SPEED.fetch);
+        await sleep(300);
+        await pushBall(fetcher, home(fetcher));
+        await sleep(700);
+        striker = fetcher;
+      }
+    }
+    routine();
+    return () => {
+      cancelled = true;
+      for (const t of timers) window.clearTimeout(t);
+    };
+  }, [walkway, robots]);
+  if (!ready.current) return null;
+  const { ball } = world.current;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "aria-hidden": true, className: "pointer-events-none fixed inset-0 z-20 overflow-hidden", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "absolute left-0 right-0 origin-center transition-all duration-700 ease-out",
+        style: {
+          bottom: LINE_PX,
+          height: 1,
+          background: "linear-gradient(to right, transparent, color-mix(in oklab, var(--color-primary) 45%, transparent), transparent)",
+          boxShadow: walkway ? "0 0 12px -2px var(--color-primary)" : "none",
+          transform: walkway ? "scaleX(1)" : "scaleX(0)",
+          opacity: walkway ? 1 : 0
+        }
+      }
+    ),
+    live.map((name) => {
+      const r = world.current[name];
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "absolute left-0 will-change-transform",
+          style: {
+            bottom: r.grounded ? FLOOR_PX : LINE_PX,
+            transform: `translateX(${r.x}px)`,
+            transitionProperty: "transform, bottom, opacity",
+            transitionDuration: `${r.ms}ms, 520ms, 400ms`,
+            transitionTimingFunction: "linear, cubic-bezier(.4,1.4,.6,1), ease",
+            opacity: r.hidden ? 0 : 1
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "transition-transform duration-500",
+                style: {
+                  transform: `scaleX(${r.facing}) rotate(${r.fallen ? 78 : 0}deg)`,
+                  transformOrigin: "50% 100%"
+                },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(RobotSprite, { name, pose: r.pose })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                className: "absolute -top-3 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-widest text-muted-foreground/50 transition-opacity duration-300",
+                style: { opacity: r.fallen || r.hidden ? 0 : 1 },
+                children: name
+              }
+            )
+          ]
+        },
+        name
+      );
+    }),
+    ball.visible && live.length === 2 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "absolute left-0",
+        style: {
+          bottom: LINE_PX,
+          transform: `translateX(${ball.x}px)`,
+          transitionProperty: "transform",
+          transitionDuration: `${ball.ms}ms`,
+          transitionTimingFunction: "linear"
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            style: ball.hops ? {
+              animationName: "ball-hop",
+              animationDuration: `${ball.ms / ball.hops}ms`,
+              animationIterationCount: ball.hops,
+              animationTimingFunction: "cubic-bezier(.3,0,.7,1)"
+            } : void 0,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "rounded-full",
+                style: {
+                  width: BALL_PX,
+                  height: BALL_PX,
+                  background: "radial-gradient(circle at 32% 30%, #fff, var(--color-accent) 60%, color-mix(in oklab, var(--color-accent) 60%, black) 100%)",
+                  boxShadow: "0 0 10px -1px var(--color-accent)"
+                }
+              }
+            )
+          }
+        )
+      }
+    )
   ] });
 }
 function fmt(sec) {
@@ -1808,6 +2226,32 @@ const commands = [
     }
   },
   {
+    name: "robots",
+    aliases: ["robot"],
+    usage: "robots [alice|bob] [on|off]",
+    description: "Alice and Bob, who play ball at the bottom of the page",
+    run: ({ args, print }) => {
+      const name = ROBOT_NAMES.find((n) => n === args[0]);
+      const wanted = name ? args[1] : args[0];
+      if (!wanted) {
+        const state = readRobots();
+        for (const n of ROBOT_NAMES) {
+          print(`${n.padEnd(6)} ${state[n] ? "online" : "powered down"}`);
+        }
+        print("Use `robots off`, `robots alice off`, `robots bob on`.");
+        return;
+      }
+      if (wanted !== "on" && wanted !== "off") {
+        print("Usage: robots [alice|bob] [on|off]");
+        return;
+      }
+      const on = wanted === "on";
+      setRobots(name ?? "both", on);
+      if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
+      else print(on ? "Alice and Bob are back." : "Both robots powered down.");
+    }
+  },
+  {
     name: "color",
     description: "list | set <key> <#hex> | reset",
     run: runColor
@@ -2244,6 +2688,7 @@ function Index() {
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Starfield, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MouseGlow, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(CustomCursor, {}),
+    mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(RobotWorld, { walkway: termMode !== "float" }),
     mounted && termMode !== "closed" && /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { mode: termMode, onClose: () => changeMode("closed"), onMinimize: () => changeMode("min"), onRestore: () => changeMode("float") }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimer, {}),
