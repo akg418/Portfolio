@@ -418,11 +418,6 @@ var Route = class extends BaseRoute {
 function createRoute(options) {
   return new Route(options);
 }
-function createRootRouteWithContext() {
-  return (options) => {
-    return createRootRoute(options);
-  };
-}
 var RootRoute = class extends BaseRootRoute {
   /**
   * @deprecated `RootRoute` is now an internal implementation detail. Use `createRootRoute()` instead.
@@ -1169,7 +1164,7 @@ export {
   Outlet as O,
   RouterProvider as R,
   Scripts as S,
-  createRootRouteWithContext as a,
+  createRootRoute as a,
   createFileRoute as b,
   createRouter as c,
   lazyRouteComponent as l,

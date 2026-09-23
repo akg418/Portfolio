@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { domainParts, profile } from "@/data/profile";
+import { useGamingMode } from "@/hooks/useGamingMode";
 
 type Item = { id: string; label: string };
 
@@ -17,7 +19,7 @@ export function NavBar() {
   const [active, setActive] = useState<string>("experience");
   const [hover, setHover] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [gamingMode, setGamingMode] = useState(false);
+  const gamingMode = useGamingMode();
   const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0, opacity: 0 });
@@ -27,16 +29,6 @@ export function NavBar() {
     () => (gamingMode ? [BASE_ITEMS[0], GAMING_ITEM, ...BASE_ITEMS.slice(1)] : BASE_ITEMS),
     [gamingMode],
   );
-
-  // Track gaming mode (initial + live updates from the terminal).
-  useEffect(() => {
-    try {
-      setGamingMode(localStorage.getItem("gamingMode") !== "0");
-    } catch {}
-    const onGaming = (e: Event) => setGamingMode(!!(e as CustomEvent).detail);
-    window.addEventListener("gamingmode", onGaming as EventListener);
-    return () => window.removeEventListener("gamingmode", onGaming as EventListener);
-  }, []);
 
   // Scroll progress + active section detection
   useEffect(() => {
@@ -86,7 +78,8 @@ export function NavBar() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/70 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <a href="#top" className="font-mono text-sm font-semibold tracking-tight">
-          ahmed<span className="text-muted-foreground">.dev</span>
+          {domainParts[0]}
+          <span className="text-muted-foreground">{domainParts[1]}</span>
         </a>
         <div
           ref={containerRef}
@@ -126,7 +119,7 @@ export function NavBar() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Button asChild size="sm" variant="outline">
-            <a href="mailto:ahmedkhaledgomaa404@gmail.com">
+            <a href={`mailto:${profile.email}`}>
               <Mail />
               <span className="hidden sm:inline">Get in touch</span>
             </a>

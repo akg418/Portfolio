@@ -1,14 +1,15 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouter,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { profile } from "@/data/profile";
+import { themeInitScript } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -67,25 +68,26 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ahmed Khaled — Software Engineer" },
-      { name: "description", content: "Portfolio of Ahmed Khaled — Software Engineer specializing in backend systems with NestJS, TypeScript, and scalable APIs." },
-      { name: "author", content: "Ahmed Khaled" },
-      { property: "og:title", content: "Ahmed Khaled — Software Engineer" },
-      { property: "og:description", content: "Backend engineer building production-grade systems and AI-powered platforms." },
-      { property: "og:type", content: "website" },
+      { title: `${profile.name} — ${profile.role}` },
+      { name: "description", content: `Portfolio of ${profile.name} — ${profile.tagline}` },
+      { name: "author", content: profile.name },
+      { property: "og:title", content: `${profile.name} — ${profile.role}` },
+      { property: "og:description", content: profile.tagline },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: profile.siteUrl },
+      { property: "og:site_name", content: profile.domain },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: `${profile.name} — ${profile.role}` },
+      { name: "twitter:description", content: profile.tagline },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: profile.siteUrl },
     ],
   }),
   shellComponent: RootShell,
@@ -99,11 +101,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en" className="dark">
       <head>
         <HeadContent />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark');}else{document.documentElement.classList.add('dark');}}catch(e){}})();`,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         {children}
@@ -114,11 +112,5 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
-  );
+  return <Outlet />;
 }

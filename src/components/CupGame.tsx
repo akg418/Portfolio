@@ -1,17 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, RotateCw } from "lucide-react";
+import { ArrowUpRight, Gamepad2, RotateCw } from "lucide-react";
 
 type Phase = "idle" | "preview" | "shuffling" | "pick" | "won" | "lost";
 
 const SPACING = 110; // px between cup centers
 const CUP_IDS = [0, 1, 2];
 
+/** A pair of cups mid-swap and the vertical offset each takes, so the two
+ *  visibly cross rather than sliding through one another. */
+type Swap = { cups: [number, number]; offsets: [number, number] };
+
+/** Lift height, randomised a little so the shuffle looks organic. */
+const liftOffset = () => 50 + Math.random() * 30;
+
+function makeSwap(cupA: number, cupB: number): Swap {
+  return { cups: [cupA, cupB], offsets: [-liftOffset(), liftOffset()] };
+}
+
 export function CupGame() {
   // slotOf[cupId] = which slot (0..2) this cup is currently sitting in.
   const [slotOf, setSlotOf] = useState<number[]>([0, 1, 2]);
-  // which two cups are currently mid-swap (lifted), if any.
-  const [lifted, setLifted] = useState<[number, number] | null>(null);
+  // The two cups currently mid-swap, with the vertical offset each one takes.
+  // Offsets live in state because rolling them during render would re-roll on
+  // every re-render and make the cups jump mid-animation.
+  const [lifted, setLifted] = useState<Swap | null>(null);
   // the cup currently lifted by itself (preview / reveal)
   const [singleLift, setSingleLift] = useState<number | null>(null);
   const [ballCup, setBallCup] = useState(0);
@@ -28,9 +41,12 @@ export function CupGame() {
     return Math.round(base * (0.65 + Math.random() * 0.7));
   };
 
-  useEffect(() => () => {
-    if (timer.current) window.clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) window.clearTimeout(timer.current);
+    },
+    [],
+  );
 
   const start = () => {
     const newBall = Math.floor(Math.random() * 3);
@@ -65,7 +81,7 @@ export function CupGame() {
 
           currentSlots = next;
           setSlotOf(next);
-          setLifted([cupA, cupB]);
+          setLifted(makeSwap(cupA, cupB));
           count++;
 
           timer.current = window.setTimeout(() => {
@@ -105,24 +121,28 @@ export function CupGame() {
   const dur = currentDur;
 
   return (
-    <section
-      id="game"
-      className="py-24 border-t border-border"
-    >
+    <section id="game" className="py-24 border-t border-border">
       <div className="flex items-center gap-3 mb-4">
         <Gamepad2 className="w-5 h-5 text-primary" />
         <h2 className="text-3xl font-bold tracking-tight">Gaming mode — Cups & Ball</h2>
       </div>
-      <p className="text-sm text-muted-foreground mb-10">
+      <p className="text-sm text-muted-foreground mb-4">
         Find the cup hiding the ball after the shuffle. Adjust the speed to your reflexes.
       </p>
+      {/* The other game on this site: Snake, written in C and shipped as a Windows build. */}
+      <a
+        href="https://gom3a.itch.io/snake-game"
+        target="_blank"
+        rel="noreferrer noopener"
+        className="mb-10 inline-flex items-center gap-1 text-sm font-mono text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground"
+      >
+        Or play my Snake game in C on itch.io
+        <ArrowUpRight className="w-3.5 h-3.5" />
+      </a>
 
       <div className="rounded-xl border border-border bg-card p-6 sm:p-10 overflow-hidden">
         {/* Stage */}
-        <div
-          className="relative mx-auto h-56 select-none"
-          style={{ width: SPACING * 2 + 96 }}
-        >
+        <div className="relative mx-auto h-56 select-none" style={{ width: SPACING * 2 + 96 }}>
           {/* Render a ball under each cup to prevent inspecting a single ball element in DevTools. 
               Only the active ball becomes visible during preview/reveal/idle. */}
           {CUP_IDS.map((cupId) => {
@@ -136,9 +156,10 @@ export function CupGame() {
                 style={{
                   left: 48 - 16,
                   transform: `translateX(${slot * SPACING}px)`,
-                  transition: phase === "pick" || phase === "won" || phase === "lost" 
-                    ? "opacity 200ms" 
-                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
+                  transition:
+                    phase === "pick" || phase === "won" || phase === "lost"
+                      ? "opacity 200ms"
+                      : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95), opacity 200ms`,
                   opacity: showBall ? 1 : 0,
                 }}
               />
@@ -147,14 +168,9 @@ export function CupGame() {
 
           {CUP_IDS.map((cupId) => {
             const slot = slotOf[cupId];
-            const isLifted = lifted?.includes(cupId);
-            // alternate lift direction so the two swapping cups visibly cross,
-            // with a touch of randomness in lift height
-            const liftY = isLifted
-              ? lifted![0] === cupId
-                ? -(50 + Math.random() * 30)
-                : (50 + Math.random() * 30)
-              : 0;
+            const liftIndex = lifted?.cups.indexOf(cupId) ?? -1;
+            const isLifted = liftIndex !== -1;
+            const liftY = isLifted ? lifted!.offsets[liftIndex] : 0;
             const isBall = cupId === ballCup;
             return (
               <button
@@ -167,9 +183,10 @@ export function CupGame() {
                   left: 0,
                   width: 96,
                   transform: `translate(${slot * SPACING}px, ${liftY}px)`,
-                  transition: phase === "pick" || phase === "won" || phase === "lost" 
-                    ? "none" 
-                    : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
+                  transition:
+                    phase === "pick" || phase === "won" || phase === "lost"
+                      ? "none"
+                      : `transform ${dur}ms cubic-bezier(.5,.05,.5,.95)`,
                   zIndex: isLifted ? (liftY < 0 ? 30 : 10) : 20,
                 }}
               >

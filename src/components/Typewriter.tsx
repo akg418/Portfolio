@@ -12,14 +12,18 @@ export function Typewriter({
   pause?: number;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [i, setI] = useState(0);
   const [text, setText] = useState("");
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || reduceMotion) return;
     const current = words[i % words.length];
     const done = !deleting && text === current;
     const cleared = deleting && text === "";
@@ -30,17 +34,15 @@ export function Typewriter({
         setDeleting(false);
         setI((v) => v + 1);
       } else {
-        setText(
-          deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1),
-        );
+        setText(deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1));
       }
     }, delay);
     return () => clearTimeout(t);
-  }, [text, deleting, i, mounted, words, speed, pause]);
+  }, [text, deleting, i, mounted, reduceMotion, words, speed, pause]);
 
   return (
     <span className={className}>
-      {mounted ? text : words[0]}
+      {mounted && !reduceMotion ? text : words[0]}
       <span className="caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" />
     </span>
   );
