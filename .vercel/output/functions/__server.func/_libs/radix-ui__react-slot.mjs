@@ -119,5 +119,6 @@ var createSlottableError = (ownerName) => {
 };
 var use = React[" use ".trim().toString()];
 export {
-  Slot as S
+  Slot as S,
+  createSlot as c
 };

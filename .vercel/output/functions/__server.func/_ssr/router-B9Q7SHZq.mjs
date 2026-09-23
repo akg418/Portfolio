@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-B90E37jI.css";
+const appCss = "/assets/styles-BCnzBmyU.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -122,6 +122,47 @@ const experiences = [
 ];
 const projects = [
   {
+    title: "getXplain.ai — AI Learning Platform",
+    shortName: "getXplain.ai",
+    short: "23-service AI learning platform, live in production",
+    tag: "Production · 23 services",
+    accent: true,
+    role: "Backend Engineer",
+    description: "An AI learning platform for kids that turns any question — typed, spoken or photographed — into a structured bilingual EN/AR lesson with narrated audio and AI-generated illustrations, serving 15,000+ users in production.",
+    stack: [
+      "Python",
+      "FastAPI",
+      "Flask",
+      "Django",
+      "PostgreSQL",
+      "pgvector",
+      "Redis",
+      "ARQ",
+      "S3",
+      "Docker",
+      "Kubernetes",
+      "ArgoCD",
+      "Gemini",
+      "WorkOS",
+      "Stripe",
+      "Flutter"
+    ],
+    patterns: ["Microservices", "Event-driven pipeline", "GitOps", "API versioning"],
+    highlights: [
+      "23 services in production: ~20 Python services and Flutter Web on a Kubernetes cluster (Hetzner Cloud) synced by ArgoCD GitOps, plus the marketing site and Teacher GPT on Cloudflare Workers.",
+      "Microservice architecture rather than one backend: an API hub, five pipeline workers, a similarity checker, a worlds navigator, a URL shortener and a set of marketing services, each deployed from its own repo and Docker image.",
+      "The FastAPI hub owns everything user-facing — WorkOS + JWT auth, learner profiles, lessons, XP, squads, 1v1 challenges, leaderboards, search, notifications and the RevenueCat / Stripe / Customer.io webhooks — and coordinates the pipeline by enqueueing jobs instead of doing inference itself.",
+      "Event-driven lesson pipeline over Redis and ARQ queues: question-enricher → lesson-builder (a 13-step Gemini pipeline) → images-manager (Gemini image generation + Pillow) and audio-manager (Gemini TTS), each writing its output to S3 and patching status back to the hub.",
+      "lesson-similarity-checker embeds every incoming question with Gemini and searches pgvector in PostgreSQL, so a lesson that already exists is reused instead of rebuilt.",
+      "My work on the backend: fixed a revenue leak where users downgrading from Premium kept Premium access by deriving entitlement from live subscription state; built the 1v1 challenge lifecycle (offer TTLs, deadline-accurate XP settlement, age-matched invites); and resolved account-wide timezones synced to Customer.io.",
+      "Every change is shipped behind API versioning so mobile builds already installed on phones keep working, and Docker images go to a private Harbor registry that ArgoCD rolls out.",
+      "Clients: a Flutter iOS/Android app, a Next.js admin dashboard, a Flask + Jinja worlds navigator and a Django teachers portal."
+    ],
+    links: [{ label: "getxplain.ai", url: "https://getxplain.ai/" }],
+    privateRepo: true,
+    privateNote: "Private repo · live in production · app available to install"
+  },
+  {
     title: "Character Simulation System",
     shortName: "Character Simulation System",
     short: "Mistral 7B + RAG (A+ grad project)",
@@ -144,6 +185,54 @@ const projects = [
     tag: "Open Source Contribution",
     description: "Contributed a pull request that was reviewed and merged into the Copy for Claude VS Code extension.",
     stack: ["TypeScript", "VS Code API", "Open Source"]
+  },
+  {
+    title: "3l sari3 — Real-time Ephemeral Chat",
+    shortName: "3l sari3",
+    short: "self-destructing real-time chat channels",
+    tag: "Full-stack · Real-time",
+    description: "Temporary chat channels that live 1–60 minutes, then self-destruct with all their messages — with live countdowns, presence, attachments and instant expiry broadcasts over WebSockets.",
+    stack: ["Node.js", "Express", "MongoDB", "WebSocket", "React", "Vite", "Zod"],
+    patterns: ["Repository", "Dependency Injection", "Observer (domain events)"],
+    highlights: [
+      "Layered backend (routes → validators → controllers → services → repositories) with dependency injection; REST and WebSocket share the same services so rules are enforced once.",
+      "Race-proof per-user channel cap enforced by a unique DB index; UUIDv7 message IDs for correct ordering and keyset pagination; domain-event bus drives expiry notifications.",
+      "Resilient React client: reconnect with exponential backoff + jitter, subscription replay, optimistic sends reconciled by correlation ID, server-clock-synced countdowns; ~68 kB gzipped bundle, no CSS framework."
+    ],
+    repo: "https://github.com/akg418/3l-sari3-backend",
+    repoLabel: "Backend repo",
+    links: [{ label: "Frontend repo", url: "https://github.com/akg418/3l-sari3-frontend" }]
+  },
+  {
+    title: "Database Backup CLI",
+    shortName: "Database Backup CLI",
+    short: "backup/restore CLI built on classic design patterns",
+    tag: "Low-Level Design · CLI",
+    description: "Extensible CLI to back up, restore and schedule backups for MySQL and PostgreSQL (local or Dockerized), with Gzip compression and email notifications.",
+    stack: ["TypeScript", "Node.js", "MySQL", "PostgreSQL", "Docker", "Cron", "Winston"],
+    patterns: ["Factory", "Adapter", "Template Method", "Command", "Strategy"],
+    highlights: [
+      "Built to practice LLD: Factory, Adapter, Template Method, Command and Strategy patterns, with SOLID throughout.",
+      "Adding a new database, compression, storage (e.g. S3) or notification channel means one new class + one factory case — no existing code changes."
+    ],
+    repo: "https://github.com/akg418/databaseBackup"
+  },
+  {
+    title: "Snake Game in C",
+    shortName: "Snake Game in C",
+    short: "the classic, from scratch in C, shipped on itch.io",
+    tag: "Game · C",
+    description: "The classic Snake game written from scratch in C: steer with the arrow keys, eat food to grow, and don't hit the walls or your own tail — published on itch.io as a playable Windows build.",
+    stack: ["C", "Game Loop", "Console Graphics"],
+    highlights: [
+      "Built from scratch in plain C: game loop, keyboard input, collision detection, and a snake that grows each time it eats.",
+      "Shipped as a downloadable .exe on itch.io, with a video demo."
+    ],
+    repo: "https://github.com/akg418/snake-game-in-c",
+    links: [
+      { label: "Play on itch.io", url: "https://gom3a.itch.io/snake-game" },
+      { label: "Demo video", url: "https://www.loom.com/share/3eebb538eaff4d10ac58308bd3a7d318" }
+    ]
   }
 ];
 const skills = {
@@ -151,17 +240,31 @@ const skills = {
   Backend: [
     "Node.js",
     "NestJS",
+    "Express",
+    "Fastify",
     "FastAPI",
     "Flask",
     "REST APIs",
     "WebSockets",
     "SSE",
     "JWT",
+    "Google OAuth",
     "RBAC",
+    "Zod",
     "BullMQ/Queues",
     "Microservices"
   ],
-  "Databases & ORM": ["PostgreSQL", "Redis", "MySQL", "Oracle PL/SQL", "Prisma", "Hibernate"],
+  "Databases & ORM": [
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "MySQL",
+    "Oracle PL/SQL",
+    "Prisma",
+    "Mongoose",
+    "Hibernate"
+  ],
+  Frontend: ["React", "Vite", "Tailwind CSS"],
   "DevOps & Tools": [
     "Docker",
     "Kubernetes",
@@ -371,7 +474,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-CwW4Y_xQ.mjs");
+const $$splitComponentImporter = () => import("./index-BWXbqh3W.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
