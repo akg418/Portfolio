@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from "react";
-import { ROBOT_W, RobotSprite, type Pose } from "@/components/robots/RobotSprite";
-import { ROBOT_NAMES, useRobots, type RobotName } from "@/hooks/useRobots";
+import { Akm, ROBOT_H, ROBOT_W, RobotSprite, type Pose } from "@/components/robots/RobotSprite";
+import { ROBOT_NAMES, useRobots, type RobotName, type RobotSwitches } from "@/hooks/useRobots";
 
 /**
  * Alice and Bob, who live along the bottom of the page.
@@ -11,6 +11,11 @@ import { ROBOT_NAMES, useRobots, type RobotName } from "@/hooks/useRobots";
  * the terminal takes the walkway away: the line wipes out, the two of them
  * wobble, fall to the floor, pick themselves up somewhere else and just pace
  * about until the walkway returns.
+ *
+ * Switching one of them off while both are out is not a quiet power-down: the
+ * survivor stops, waits for the other to turn its back, draws an AKM and
+ * settles it. The victim drops with its lights out and fades away, and the
+ * survivor carries on alone.
  *
  * The routine is one async function per situation rather than a per-frame
  * simulation: every move is a CSS transition whose duration is distance over
@@ -23,13 +28,22 @@ import { ROBOT_NAMES, useRobots, type RobotName } from "@/hooks/useRobots";
  */
 
 /** Pixels per second. */
-const SPEED = { wander: 28, fetch: 58, push: 34, ball: 330 };
+const SPEED = { wander: 28, fetch: 58, push: 34, ball: 330, stalk: 150 };
 const PAUSE_MS = [2200, 6000] as const;
 /** The bottom bar is 44px tall, so its top edge is the walkway. */
 const LINE_PX = 44;
 const FLOOR_PX = 4;
 const BALL_PX = 11;
 const EDGE_PX = 18;
+/** Tall enough for a robot on the walkway, its name tag, a bubble and a hopping ball. */
+const STRIP_PX = LINE_PX + ROBOT_H + 56;
+/** How far apart the shooter stands, and the burst it fires. */
+const STANDOFF_PX = 150;
+const BURST = 7;
+const SHOT_GAP_MS = 95;
+const ROUND_MS = 110;
+/** Height of the gun above a robot's feet, for tracers. */
+const MUZZLE_Y = 17;
 
 type Mover = {
   x: number;
@@ -41,11 +55,25 @@ type Mover = {
   /** Lying over on their side. */
   fallen: boolean;
   hidden: boolean;
+  /** Lights out: crossed eyes, no glow. */
+  dead: boolean;
+  /** Seen from behind. */
+  back: boolean;
+  gun: "none" | "low" | "aim";
+  flash: boolean;
+  /** Speech bubble, if any. */
+  say: string | null;
+  /** Bumped per hit, so the spark animation restarts. */
+  hits: number;
 };
+type Shot = { id: number; x: number; to: number; bottom: number; ms: number };
 type World = {
   alice: Mover;
   bob: Mover;
   ball: { x: number; ms: number; hops: number; visible: boolean };
+  /** A robot switched off but still on stage for its final scene. */
+  dying: RobotName | null;
+  shots: Shot[];
 };
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -58,6 +86,12 @@ const mover = (x: number): Mover => ({
   grounded: false,
   fallen: false,
   hidden: false,
+  dead: false,
+  back: false,
+  gun: "none",
+  flash: false,
+  say: null,
+  hits: 0,
 });
 
 export function RobotWorld({ walkway }: { walkway: boolean }) {
@@ -66,16 +100,37 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
     alice: mover(0),
     bob: mover(0),
     ball: { x: 0, ms: 0, hops: 0, visible: false },
+    dying: null,
+    shots: [],
   });
   const [, paint] = useReducer((n: number) => n + 1, 0);
   const ready = useRef(false);
+  /** The switches as of the last run, to tell a fresh power-down from a reload. */
+  const before = useRef<RobotSwitches | null>(null);
 
   /** Recomputed in the effect too, so the routine never closes over a stale set. */
-  const live = ROBOT_NAMES.filter((n) => robots[n]);
+  const live = ROBOT_NAMES.filter((n) => robots[n] || world.current.dying === n);
 
   useEffect(() => {
     const running = ROBOT_NAMES.filter((n) => robots[n]);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    // One of a pair just went off, with the other still on: that is a hit.
+    const prev = before.current;
+    before.current = robots;
+    const victim =
+      ready.current && prev && prev.alice && prev.bob && running.length === 1
+        ? other(running[0])
+        : null;
+    // Any scene cut short by a later change is over; tidy up after it.
+    world.current.dying = victim;
+    world.current.shots = [];
+    for (const n of ROBOT_NAMES) {
+      const r = world.current[n];
+      world.current[n] = { ...r, gun: "none", flash: false, say: null, back: false };
+      if (robots[n] && r.dead)
+        world.current[n] = { ...world.current[n], dead: false, fallen: false, hidden: false };
+    }
     if (!ready.current) {
       const w = window.innerWidth;
       world.current.alice.x = w * 0.28;
@@ -87,6 +142,7 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
     }
 
     let cancelled = false;
+    let shotId = 0;
     const timers: number[] = [];
     const sleep = (ms: number) =>
       new Promise<void>((resolve) => {
@@ -202,9 +258,139 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
       await sleep(400);
     };
 
+    const face = (from: RobotName, to: RobotName): 1 | -1 =>
+      world.current[to].x >= world.current[from].x ? 1 : -1;
+    const say = (name: RobotName, text: string | null) =>
+      set((w) => {
+        w[name].say = text;
+      });
+
+    /**
+     * The hit. The shooter squares up at a distance and waits; the victim,
+     * none the wiser, turns its back and strolls off whistling; only then does
+     * the AKM come out. A burst of tracers, sparks where they land, and the
+     * victim goes down with its lights out.
+     */
+    const execute = async (victim: RobotName, shooter: RobotName) => {
+      set((w) => {
+        w.ball = { ...w.ball, visible: false, hops: 0 };
+        for (const n of ROBOT_NAMES) w[n] = { ...w[n], ms: 0, pose: "stand", fallen: false };
+      });
+      await sleep(300);
+
+      // Stand off at a distance, on whichever side of the victim has room.
+      const { min, max } = span();
+      const vx = world.current[victim].x;
+      const left = world.current[shooter].x <= vx;
+      let spot = left ? vx - STANDOFF_PX : vx + STANDOFF_PX;
+      if (spot < min || spot > max) spot = left ? vx + STANDOFF_PX : vx - STANDOFF_PX;
+      await walk(shooter, Math.max(min, Math.min(max, spot)), SPEED.stalk);
+      set((w) => {
+        w[shooter].facing = face(shooter, victim);
+        w[victim].facing = face(victim, shooter);
+      });
+      await sleep(500);
+      say(victim, "?");
+      await sleep(900);
+      say(victim, null);
+      say(shooter, "…");
+      await sleep(1100);
+      say(shooter, null);
+
+      // It turns its back.
+      const away = -face(victim, shooter) as 1 | -1;
+      set((w) => {
+        w[victim].back = true;
+      });
+      say(victim, "♪");
+      const stroll = Math.max(min, Math.min(max, world.current[victim].x + away * 50));
+      await walk(victim, stroll, SPEED.wander);
+      set((w) => {
+        w[victim].facing = away;
+      });
+      await sleep(600);
+
+      // Now.
+      set((w) => {
+        w[shooter].facing = face(shooter, victim);
+        w[shooter].gun = "low";
+      });
+      await sleep(450);
+      set((w) => {
+        w[shooter].gun = "aim";
+      });
+      await sleep(380);
+      say(victim, null);
+      say(shooter, "RATATAT");
+
+      for (let i = 0; i < BURST; i++) {
+        const s = world.current[shooter];
+        const v = world.current[victim];
+        const id = ++shotId;
+        const shot: Shot = {
+          id,
+          x: s.x + (s.facing === 1 ? ROBOT_W + 22 : -22),
+          to: v.x + ROBOT_W / 2 + rand(-4, 4),
+          bottom: (s.grounded ? FLOOR_PX : LINE_PX) + MUZZLE_Y,
+          ms: 0,
+        };
+        set((w) => {
+          w[shooter].flash = true;
+          w.shots = [...w.shots, shot];
+        });
+        await sleep(30);
+        set((w) => {
+          w[shooter].flash = false;
+          w.shots = w.shots.map((t) => (t.id === id ? { ...t, x: t.to, ms: ROUND_MS } : t));
+        });
+        timers.push(
+          window.setTimeout(
+            () =>
+              set((w) => {
+                w.shots = w.shots.filter((t) => t.id !== id);
+                w[victim] = { ...w[victim], pose: "hit", hits: w[victim].hits + 1 };
+              }),
+            ROUND_MS,
+          ),
+        );
+        await sleep(SHOT_GAP_MS - 30);
+      }
+      await sleep(ROUND_MS + 150);
+
+      set((w) => {
+        w[shooter].say = null;
+        // Rolls over as it drops, so the crossed-out eyes show.
+        w[victim] = { ...w[victim], pose: "stand", dead: true, fallen: true, back: false };
+      });
+      await sleep(700);
+      set((w) => {
+        w[shooter].gun = "low";
+      });
+      say(shooter, "gg");
+      await sleep(1400);
+      say(shooter, null);
+      set((w) => {
+        w[shooter].gun = "none";
+      });
+      await sleep(400);
+      set((w) => {
+        w[victim].hidden = true;
+      });
+      await sleep(600);
+      set((w) => {
+        w.dying = null;
+      });
+    };
+
     async function routine() {
+      if (victim) {
+        await execute(victim, other(victim));
+        if (cancelled) return;
+      }
+
       if (!walkway) {
-        await fallOver();
+        // Only topple if they were up on the walkway when it went.
+        if (running.some((n) => !world.current[n].grounded)) await fallOver();
         await Promise.all(running.map(wander));
         return;
       }
@@ -250,7 +436,14 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
   const { ball } = world.current;
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-20 overflow-hidden">
+    // A strip pinned to the bottom edge, exactly like the bar it walks on. A
+    // full-viewport layer (inset-0) drifts off the bar on mobile, where the
+    // viewport height changes as the browser toolbar hides and shows on scroll.
+    <div
+      aria-hidden
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-20 overflow-hidden"
+      style={{ height: STRIP_PX }}
+    >
       {/* The walkway. It wipes out from the middle when the terminal takes it. */}
       <div
         className="absolute left-0 right-0 origin-center transition-all duration-700 ease-out"
@@ -287,17 +480,65 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
                 transformOrigin: "50% 100%",
               }}
             >
-              <RobotSprite name={name} pose={r.pose} />
+              <RobotSprite name={name} pose={r.pose} dead={r.dead} back={r.back} />
+              {r.gun !== "none" && (
+                // Held in the front hand; pointed at the ground until it aims.
+                <div
+                  className="absolute transition-transform duration-200"
+                  style={{
+                    left: 17.5,
+                    top: 23,
+                    transformOrigin: "8.5px 6px",
+                    transform: `rotate(${r.gun === "aim" ? 0 : 58}deg)`,
+                  }}
+                >
+                  <Akm flash={r.flash} />
+                </div>
+              )}
             </div>
-            <span
-              className="absolute -top-3 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-widest text-muted-foreground/50 transition-opacity duration-300"
-              style={{ opacity: r.fallen || r.hidden ? 0 : 1 }}
-            >
-              {name}
-            </span>
+            {r.hits > 0 && !r.dead && (
+              <span
+                key={r.hits}
+                className="robot-spark absolute left-1/2 h-3 w-3 rounded-full"
+                style={{
+                  bottom: 20,
+                  background: "radial-gradient(circle, #fff, #fde047 40%, transparent 70%)",
+                }}
+              />
+            )}
+            {r.say ? (
+              <span
+                key={r.say}
+                className="robot-say absolute left-1/2 whitespace-nowrap rounded-md border border-border bg-card px-1.5 py-0.5 font-mono text-[9px] font-bold text-foreground"
+                style={{ bottom: ROBOT_H + 4 }}
+              >
+                {r.say}
+              </span>
+            ) : (
+              <span
+                className="absolute -top-3 left-1/2 -translate-x-1/2 font-mono text-[8px] uppercase tracking-widest text-muted-foreground/50 transition-opacity duration-300"
+                style={{ opacity: r.fallen || r.hidden ? 0 : 1 }}
+              >
+                {name}
+              </span>
+            )}
           </div>
         );
       })}
+
+      {world.current.shots.map((s) => (
+        <div
+          key={s.id}
+          className="absolute left-0 h-[2px] w-2.5 rounded-full"
+          style={{
+            bottom: s.bottom,
+            transform: `translateX(${s.x}px)`,
+            transition: `transform ${s.ms}ms linear`,
+            background: "linear-gradient(90deg, transparent, #fde047, #fff)",
+            boxShadow: "0 0 6px #f59e0b",
+          }}
+        />
+      ))}
 
       {ball.visible && live.length === 2 && (
         <div

@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/fx/CountUp";
 import { stats } from "@/data/profile";
 
 export function Stats() {
@@ -5,8 +6,10 @@ export function Stats() {
     <>
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border border border-border rounded-lg overflow-hidden">
         {stats.map((s) => (
-          <div key={s.label} className="bg-card p-6">
-            <div className="text-2xl font-bold tracking-tight">{s.value}</div>
+          <div key={s.label} className="spotlight bg-card p-6">
+            <div className="text-2xl font-bold tracking-tight">
+              <CountUp value={s.value} />
+            </div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
           </div>
         ))}

@@ -261,7 +261,10 @@ export const projects: Project[] = [
     ],
     repo: "https://github.com/akg418/3l-sari3-backend",
     repoLabel: "Backend repo",
-    links: [{ label: "Frontend repo", url: "https://github.com/akg418/3l-sari3-frontend" }],
+    links: [
+      { label: "Live demo", url: "https://3l-sari3-frontend.vercel.app/login" },
+      { label: "Frontend repo", url: "https://github.com/akg418/3l-sari3-frontend" },
+    ],
   },
   {
     title: "Database Backup CLI",
