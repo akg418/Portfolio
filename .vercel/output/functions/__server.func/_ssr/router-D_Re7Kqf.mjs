@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-DGMrMUSK.css";
+const appCss = "/assets/styles-x7PpKgOk.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -201,7 +201,10 @@ const projects = [
     ],
     repo: "https://github.com/akg418/3l-sari3-backend",
     repoLabel: "Backend repo",
-    links: [{ label: "Frontend repo", url: "https://github.com/akg418/3l-sari3-frontend" }]
+    links: [
+      { label: "Live demo", url: "https://3l-sari3-frontend.vercel.app/login" },
+      { label: "Frontend repo", url: "https://github.com/akg418/3l-sari3-frontend" }
+    ]
   },
   {
     title: "Database Backup CLI",
@@ -475,7 +478,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-D3VOWbdP.mjs");
+const $$splitComponentImporter = () => import("./index-B5CU1krs.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });

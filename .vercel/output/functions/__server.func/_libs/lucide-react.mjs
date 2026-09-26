@@ -75,11 +75,16 @@ const createLucideIcon = (iconName, iconNode) => {
   Component.displayName = toPascalCase(iconName);
   return Component;
 };
-const __iconNode$i = [
+const __iconNode$j = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$i);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$j);
+const __iconNode$i = [
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
+];
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$i);
 const __iconNode$h = [
   ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
   ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
@@ -239,7 +244,7 @@ const __iconNode = [
 ];
 const X = createLucideIcon("x", __iconNode);
 export {
-  ArrowUpRight as A,
+  ArrowUp as A,
   Briefcase as B,
   Clock as C,
   FileText as F,
@@ -251,11 +256,12 @@ export {
   SquareTerminal as S,
   Trophy as T,
   X,
-  CodeXml as a,
-  Gamepad2 as b,
-  GraduationCap as c,
-  MapPin as d,
-  Globe as e,
-  Sun as f,
-  Moon as g
+  ArrowUpRight as a,
+  CodeXml as b,
+  Gamepad2 as c,
+  GraduationCap as d,
+  MapPin as e,
+  Globe as f,
+  Sun as g,
+  Moon as h
 };
