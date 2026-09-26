@@ -267,8 +267,12 @@ export const commands: Command[] = [
       }
 
       const on = wanted === "on";
+      const was = readRobots();
       setRobots((name as RobotName | undefined) ?? "both", on);
-      if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
+      const survivor = ROBOT_NAMES.find((n) => n !== name);
+      if (name && !on && was.alice && was.bob && survivor)
+        print(`${survivor} has been waiting for this. Watch the bottom of the page…`);
+      else if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
       else print(on ? "Alice and Bob are back." : "Both robots powered down.");
     },
   },

@@ -1,3 +1,4 @@
+import { Scramble } from "@/components/fx/Scramble";
 import { GraduationCap, Trophy } from "lucide-react";
 import { competitions, education, problemSetting } from "@/data/profile";
 
@@ -7,7 +8,9 @@ export function Achievements() {
       <section className="py-24 border-t border-border">
         <div className="flex items-center gap-3 mb-12">
           <Trophy className="w-5 h-5 text-muted-foreground" />
-          <h2 className="text-3xl font-bold tracking-tight">Competitions & community</h2>
+          <h2 className="text-3xl font-bold tracking-tight">
+            <Scramble text="Competitions & community" />
+          </h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-8 text-sm">
           {competitions.map((c) => (

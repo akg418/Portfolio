@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { CommandBar } from "@/components/CommandBar";
 import { CupGame } from "@/components/CupGame";
 import { CustomCursor } from "@/components/CustomCursor";
+import { BackToTop } from "@/components/fx/BackToTop";
+import { Preloader } from "@/components/fx/Preloader";
+import { ScrollMarquee } from "@/components/fx/ScrollMarquee";
 import { MouseGlow } from "@/components/MouseGlow";
 import { NavBar } from "@/components/NavBar";
 import { RobotWorld } from "@/components/robots/RobotWorld";
@@ -18,6 +21,8 @@ import { Skills } from "@/components/sections/Skills";
 import { Stats } from "@/components/sections/Stats";
 import { Terminal, type TerminalMode } from "@/components/terminal/Terminal";
 import { useGamingMode } from "@/hooks/useGamingMode";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useSpotlight } from "@/hooks/useSpotlight";
 import { useUsername } from "@/hooks/useUsername";
 import { useVisitCount } from "@/hooks/useVisitCount";
 import { STORAGE_KEYS, readString, writeString } from "@/lib/storage";
@@ -47,6 +52,8 @@ function Index() {
   // Counts the page load itself, so a visit registers even if the terminal
   // is never opened. The hook is latched, so the terminal reads the same value.
   useVisitCount();
+  useScrollReveal();
+  useSpotlight();
 
   useEffect(() => setMounted(true), []);
 
@@ -56,7 +63,9 @@ function Index() {
   };
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen overflow-x-clip bg-background text-foreground">
+      {mounted && <Preloader />}
+      <div aria-hidden className="grain" />
       {mounted && <Starfield />}
       {mounted && <MouseGlow />}
       {mounted && <CustomCursor />}
@@ -74,6 +83,7 @@ function Index() {
 
       <NavBar />
       {mounted && <SessionTimer />}
+      {mounted && <BackToTop />}
 
       <main id="top" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
         <Hero />
@@ -81,6 +91,7 @@ function Index() {
         <Experience />
         {gamingMode && <CupGame />}
         <Projects />
+        <ScrollMarquee />
         <Skills />
         <Achievements />
         <Contact />

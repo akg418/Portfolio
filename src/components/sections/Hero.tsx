@@ -1,14 +1,53 @@
+import { useEffect, useRef } from "react";
 import { ArrowUpRight, Code2, FileText, Github, Linkedin, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/Typewriter";
+import { FluidCanvas } from "@/components/fx/FluidCanvas";
+import { Magnetic } from "@/components/fx/Magnetic";
 import { linkOf, profile, roles } from "@/data/profile";
 import { AvatarCarousel } from "@/components/AvatarCarousel";
 import { photos } from "@/data/photos";
 
+/**
+ * As the visitor scrolls away, the hero sinks back: it shrinks a little,
+ * fades and blurs, so the next section seems to slide over it.
+ */
+function useSinkOnScroll() {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const t = Math.min(1, Math.max(0, window.scrollY / (el.offsetHeight || 1)));
+      el.style.transform = t ? `translateY(${t * 80}px) scale(${1 - t * 0.08})` : "";
+      el.style.opacity = String(1 - t * 0.7);
+      el.style.filter = t ? `blur(${t * 4}px)` : "";
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+  return ref;
+}
+
 export function Hero() {
+  const ref = useSinkOnScroll();
   return (
     <>
-      <section className="py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center">
+      <section
+        ref={ref}
+        className="py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center origin-top will-change-transform"
+      >
+        {/* Stirrable ink behind the hero, bleeding out to the window edges. */}
+        <FluidCanvas className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 h-full w-screen -translate-x-1/2" />
         <div>
           <div className="flex items-center gap-2 mb-6 text-xs font-mono text-muted-foreground">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -32,12 +71,14 @@ export function Hero() {
             on Codeforces.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Button asChild>
-              <a href="#projects">
-                <span>View my work</span>
-                <ArrowUpRight />
-              </a>
-            </Button>
+            <Magnetic>
+              <Button asChild>
+                <a href="#projects">
+                  <span>View my work</span>
+                  <ArrowUpRight />
+                </a>
+              </Button>
+            </Magnetic>
             <Button asChild variant="ghost">
               <a href={linkOf("GitHub")} target="_blank" rel="noreferrer">
                 <Github />
