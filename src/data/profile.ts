@@ -144,6 +144,9 @@ export const experiences: Experience[] = [
   },
 ];
 
+/** The illustrated covers the project index can draw. */
+export type Motif = "neural" | "services" | "editor" | "chat" | "cli" | "snake";
+
 export type Project = {
   title: string;
   /** Short name + one-liner used in the terminal's `projects` output. */
@@ -171,8 +174,10 @@ export type Project = {
   privateNote?: string;
   /** My part in it, when the project is not a solo build. */
   role?: string;
-  /** Marks the one card that should stand out in the deck with its own colour. */
+  /** Marks the flagship, shown as the live system map rather than in the index. */
   accent?: boolean;
+  /** Which illustrated cover the project index draws for it. */
+  motif?: Motif;
 };
 
 export const projects: Project[] = [
@@ -220,6 +225,7 @@ export const projects: Project[] = [
   },
   {
     title: "Character Simulation System",
+    motif: "neural",
     shortName: "Character Simulation System",
     short: "Mistral 7B + RAG (A+ grad project)",
     tag: "Graduation Project — A+ (98/100)",
@@ -229,6 +235,7 @@ export const projects: Project[] = [
   },
   {
     title: "Social Media Platform",
+    motif: "services",
     shortName: "Social Media Platform",
     short: "Spring Boot microservices",
     tag: "May 2024",
@@ -238,6 +245,7 @@ export const projects: Project[] = [
   },
   {
     title: "Copy for Claude — VS Code Extension",
+    motif: "editor",
     shortName: "Copy for Claude",
     short: "merged PR to the VS Code extension",
     tag: "Open Source Contribution",
@@ -247,6 +255,7 @@ export const projects: Project[] = [
   },
   {
     title: "3l sari3 — Real-time Ephemeral Chat",
+    motif: "chat",
     shortName: "3l sari3",
     short: "self-destructing real-time chat channels",
     tag: "Full-stack · Real-time",
@@ -268,6 +277,7 @@ export const projects: Project[] = [
   },
   {
     title: "Database Backup CLI",
+    motif: "cli",
     shortName: "Database Backup CLI",
     short: "backup/restore CLI built on classic design patterns",
     tag: "Low-Level Design · CLI",
@@ -283,6 +293,7 @@ export const projects: Project[] = [
   },
   {
     title: "Snake Game in C",
+    motif: "snake",
     shortName: "Snake Game in C",
     short: "the classic, from scratch in C, shipped on itch.io",
     tag: "Game · C",

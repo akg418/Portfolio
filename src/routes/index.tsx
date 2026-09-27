@@ -5,7 +5,6 @@ import { CupGame } from "@/components/CupGame";
 import { CustomCursor } from "@/components/CustomCursor";
 import { BackToTop } from "@/components/fx/BackToTop";
 import { Preloader } from "@/components/fx/Preloader";
-import { ScrollMarquee } from "@/components/fx/ScrollMarquee";
 import { MouseGlow } from "@/components/MouseGlow";
 import { NavBar } from "@/components/NavBar";
 import { RobotWorld } from "@/components/robots/RobotWorld";
@@ -91,7 +90,6 @@ function Index() {
         <Experience />
         {gamingMode && <CupGame />}
         <Projects />
-        <ScrollMarquee />
         <Skills />
         <Achievements />
         <Contact />

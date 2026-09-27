@@ -13,10 +13,11 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-x7PpKgOk.css";
+const appCss = "/assets/styles-BSL8HNT3.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
+  location: "Cairo, Egypt",
   email: "ahmedkhaledgomaa404@gmail.com",
   phone: "+201014908696",
   phoneDisplay: "+20 101 490 8696",
@@ -164,6 +165,7 @@ const projects = [
   },
   {
     title: "Character Simulation System",
+    motif: "neural",
     shortName: "Character Simulation System",
     short: "Mistral 7B + RAG (A+ grad project)",
     tag: "Graduation Project — A+ (98/100)",
@@ -172,6 +174,7 @@ const projects = [
   },
   {
     title: "Social Media Platform",
+    motif: "services",
     shortName: "Social Media Platform",
     short: "Spring Boot microservices",
     tag: "May 2024",
@@ -180,6 +183,7 @@ const projects = [
   },
   {
     title: "Copy for Claude — VS Code Extension",
+    motif: "editor",
     shortName: "Copy for Claude",
     short: "merged PR to the VS Code extension",
     tag: "Open Source Contribution",
@@ -188,6 +192,7 @@ const projects = [
   },
   {
     title: "3l sari3 — Real-time Ephemeral Chat",
+    motif: "chat",
     shortName: "3l sari3",
     short: "self-destructing real-time chat channels",
     tag: "Full-stack · Real-time",
@@ -208,6 +213,7 @@ const projects = [
   },
   {
     title: "Database Backup CLI",
+    motif: "cli",
     shortName: "Database Backup CLI",
     short: "backup/restore CLI built on classic design patterns",
     tag: "Low-Level Design · CLI",
@@ -222,6 +228,7 @@ const projects = [
   },
   {
     title: "Snake Game in C",
+    motif: "snake",
     shortName: "Snake Game in C",
     short: "the classic, from scratch in C, shipped on itch.io",
     tag: "Game · C",
@@ -478,7 +485,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-B5CU1krs.mjs");
+const $$splitComponentImporter = () => import("./index-68NryKN4.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -512,10 +519,10 @@ export {
   getStoredTheme as g,
   education as h,
   experiences as i,
-  roles as j,
-  projects as k,
+  links as j,
+  roles as k,
   linkOf as l,
-  links as m,
+  projects as m,
   stats as n,
   readString as o,
   profile as p,

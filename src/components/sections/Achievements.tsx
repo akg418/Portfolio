@@ -1,5 +1,6 @@
 import { Scramble } from "@/components/fx/Scramble";
 import { GraduationCap, Trophy } from "lucide-react";
+import { AcpcMoments } from "@/components/fx/AcpcMoments";
 import { competitions, education, problemSetting } from "@/data/profile";
 
 export function Achievements() {
@@ -12,6 +13,7 @@ export function Achievements() {
             <Scramble text="Competitions & community" />
           </h2>
         </div>
+        <AcpcMoments />
         <div className="grid sm:grid-cols-2 gap-8 text-sm">
           {competitions.map((c) => (
             <div key={c.title}>

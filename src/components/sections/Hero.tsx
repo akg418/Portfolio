@@ -2,15 +2,15 @@ import { useEffect, useRef } from "react";
 import { ArrowUpRight, Code2, FileText, Github, Linkedin, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/Typewriter";
-import { FluidCanvas } from "@/components/fx/FluidCanvas";
+import { LanyardBadge } from "@/components/fx/LanyardBadge";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { linkOf, profile, roles } from "@/data/profile";
-import { AvatarCarousel } from "@/components/AvatarCarousel";
 import { photos } from "@/data/photos";
 
 /**
- * As the visitor scrolls away, the hero sinks back: it shrinks a little,
- * fades and blurs, so the next section seems to slide over it.
+ * As the visitor scrolls away, the hero sinks back: it shrinks a little and
+ * fades, so the next section seems to slide over it. No blur: it smears the
+ * photo, and filtering a layer this size every frame stutters on phones.
  */
 function useSinkOnScroll() {
   const ref = useRef<HTMLElement>(null);
@@ -23,7 +23,6 @@ function useSinkOnScroll() {
       const t = Math.min(1, Math.max(0, window.scrollY / (el.offsetHeight || 1)));
       el.style.transform = t ? `translateY(${t * 80}px) scale(${1 - t * 0.08})` : "";
       el.style.opacity = String(1 - t * 0.7);
-      el.style.filter = t ? `blur(${t * 4}px)` : "";
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -46,8 +45,6 @@ export function Hero() {
         ref={ref}
         className="py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center origin-top will-change-transform"
       >
-        {/* Stirrable ink behind the hero, bleeding out to the window edges. */}
-        <FluidCanvas className="pointer-events-none absolute inset-y-0 left-1/2 -z-10 h-full w-screen -translate-x-1/2" />
         <div>
           <div className="flex items-center gap-2 mb-6 text-xs font-mono text-muted-foreground">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -111,14 +108,8 @@ export function Hero() {
             </Button>
           </div>
         </div>
-        <div className="relative justify-self-center md:justify-self-end">
-          <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl" />
-          <div className="relative rounded-full p-[3px] avatar-ring">
-            <AvatarCarousel
-              photos={photos}
-              className="relative z-10 w-56 h-56 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-card"
-            />
-          </div>
+        <div className="relative w-full justify-self-center md:w-auto md:justify-self-end">
+          <LanyardBadge photo={photos[0]?.src} photoAlt={photos[0]?.alt ?? profile.name} />
         </div>
       </section>
     </>
