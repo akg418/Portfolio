@@ -33,12 +33,12 @@ function time(s: number) {
 }
 
 /**
- * The balloons, with the contest behind them. At rest the photos drift past,
- * blurred and dim, behind the bunch. Press play and the music starts: the
- * balloons fall back, the photos come sharp and cycle with a slow zoom that
- * swells with the bass, and an equaliser dances by the controls. Pause it, or
- * let it finish, and the balloons come back to the front. The track can be
- * downloaded.
+ * The balloons, with the contest behind them. The photos drift past behind
+ * the bunch, blurred and dim, and the balloons always stay in front to play
+ * with. Press play and the music starts: the blur eases off, the photos cycle
+ * faster with a slow zoom that swells with the bass, and an equaliser dances
+ * by the controls. Pause it, or let it finish, and the blur settles back. The
+ * track can be downloaded.
  *
  * The beat is read live from the audio through a Web Audio analyser, set up on
  * the first play (browsers only allow audio to start from a click).
@@ -152,30 +152,36 @@ export function AcpcMoments() {
   };
 
   const backdrop = (
-    <div
-      ref={photosRef}
-      aria-hidden={!playing}
-      className="absolute inset-0 transition-[filter] duration-1000"
-      style={{
-        filter: playing ? "none" : "blur(7px) brightness(0.42) saturate(1.15)",
-      }}
-    >
-      {MOMENTS.map((m, i) => (
-        <img
-          key={m.src}
-          src={m.src}
-          alt={playing && i === slide ? m.alt : ""}
-          draggable={false}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] ease-out"
-          style={{
-            opacity: i === slide ? 1 : 0,
-            // A slow zoom while it is on, swelling with the bass.
-            transform: `scale(calc(${i === slide ? 1.12 : 1.04} + var(--beat, 0) * 0.04))`,
-            transitionDuration: `1200ms, ${playing ? PLAY_SLIDE_MS : IDLE_SLIDE_MS}ms`,
-          }}
-        />
-      ))}
+    <>
+      <div
+        ref={photosRef}
+        aria-hidden={!playing}
+        className="absolute inset-0 transition-[filter] duration-1000"
+        style={{
+          // Always behind the balloons; the music only clears the blur a little.
+          filter: playing
+            ? "blur(2.5px) brightness(0.68) saturate(1.2)"
+            : "blur(7px) brightness(0.42) saturate(1.15)",
+        }}
+      >
+        {MOMENTS.map((m, i) => (
+          <img
+            key={m.src}
+            src={m.src}
+            alt={playing && i === slide ? m.alt : ""}
+            draggable={false}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-[opacity,transform] ease-out"
+            style={{
+              opacity: i === slide ? 1 : 0,
+              // A slow zoom while it is on, swelling with the bass.
+              transform: `scale(calc(${i === slide ? 1.12 : 1.04} + var(--beat, 0) * 0.04))`,
+              transitionDuration: `1200ms, ${playing ? PLAY_SLIDE_MS : IDLE_SLIDE_MS}ms`,
+            }}
+          />
+        ))}
+      </div>
+      {/* Outside the filtered layer, so the caption stays sharp. */}
       <div
         className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-3 font-mono text-[11px] text-white transition-opacity duration-700"
         style={{ opacity: playing ? 1 : 0 }}
@@ -185,7 +191,7 @@ export function AcpcMoments() {
           {slide + 1}/{MOMENTS.length}
         </span>
       </div>
-    </div>
+    </>
   );
 
   const controls = (
@@ -249,5 +255,5 @@ export function AcpcMoments() {
     </div>
   );
 
-  return <ContestBalloons backdrop={backdrop} quiet={playing} controls={controls} />;
+  return <ContestBalloons backdrop={backdrop} controls={controls} />;
 }
