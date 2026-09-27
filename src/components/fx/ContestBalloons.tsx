@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * ICPC hands out a balloon for every problem a team solves. Here is a bunch
@@ -18,6 +18,9 @@ import { useEffect, useRef, useState } from "react";
  *
  * Rendered as SVG and updated in place each frame; nothing re-renders. Paused
  * off screen, and still with reduced motion.
+ *
+ * A `backdrop` is drawn behind the balloons, and while `quiet` the balloons
+ * fade back and blur and ignore the pointer, so the backdrop can take over.
  */
 
 const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -65,7 +68,16 @@ type Shred = {
   c: string;
 };
 
-export function ContestBalloons() {
+export function ContestBalloons({
+  backdrop,
+  quiet = false,
+  controls,
+}: {
+  backdrop?: ReactNode;
+  quiet?: boolean;
+  /** Shown between the box and its caption. */
+  controls?: ReactNode;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [pops, setPops] = useState(0);
@@ -364,6 +376,7 @@ export function ContestBalloons() {
   };
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (quiet) return;
     const target = (e.target as Element).closest("[data-balloon]");
     if (!target || e.button !== 0) return;
     const i = Number(target.getAttribute("data-balloon"));
@@ -403,12 +416,28 @@ export function ContestBalloons() {
         onPointerLeave={() => {
           state.current.pointer = null;
         }}
-        data-cursor="Pop"
+        data-cursor={quiet ? undefined : "Pop"}
         className="relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground"
         style={{ height: HEIGHT }}
       >
-        <svg ref={svgRef} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden />
+        {backdrop}
+        <svg
+          ref={svgRef}
+          aria-hidden
+          className="absolute inset-0 h-full w-full overflow-visible transition-[opacity,filter,transform] duration-700 ease-out"
+          style={
+            quiet
+              ? {
+                  opacity: 0.14,
+                  filter: "blur(3px)",
+                  transform: "scale(0.96)",
+                  pointerEvents: "none",
+                }
+              : undefined
+          }
+        />
       </div>
+      {controls}
       <p className="mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
         <span>At ICPC every solved problem earns a balloon · grab one, or click to pop</span>
         <span aria-live="polite">{pops > 0 ? `popped: ${pops}` : ""}</span>
