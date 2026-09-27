@@ -582,3 +582,12 @@ button:hover > svg .btt-spin {
 main > section {
   position: relative;
 }
+
+/* Lanyard badge: two faces back to back. */
+.badge-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.badge-back {
+  transform: rotateY(180deg);
+}

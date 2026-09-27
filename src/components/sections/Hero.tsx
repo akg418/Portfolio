@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import { ArrowUpRight, Code2, FileText, Github, Linkedin, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typewriter } from "@/components/Typewriter";
+import { LanyardBadge } from "@/components/fx/LanyardBadge";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { linkOf, profile, roles } from "@/data/profile";
-import { AvatarCarousel } from "@/components/AvatarCarousel";
 import { photos } from "@/data/photos";
 
 /**
@@ -108,14 +108,8 @@ export function Hero() {
             </Button>
           </div>
         </div>
-        <div className="relative justify-self-center md:justify-self-end">
-          <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl" />
-          <div className="relative rounded-full p-[3px] avatar-ring">
-            <AvatarCarousel
-              photos={photos}
-              className="relative z-10 w-56 h-56 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-card"
-            />
-          </div>
+        <div className="relative w-full justify-self-center md:w-auto md:justify-self-end">
+          <LanyardBadge photo={photos[0]?.src} photoAlt={photos[0]?.alt ?? profile.name} />
         </div>
       </section>
     </>
