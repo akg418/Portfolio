@@ -2,20 +2,21 @@ import { Briefcase, Code2, Globe, Mail, MapPin, Phone, Trophy } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { LocalTime } from "@/components/fx/LocalTime";
 import { Magnetic } from "@/components/fx/Magnetic";
+import { ParticleHeading } from "@/components/fx/ParticleHeading";
 import { ScrollLit } from "@/components/fx/ScrollLit";
 import { linkOf, profile } from "@/data/profile";
+
+/** Stable across renders, so the particles are not rebuilt on every one. */
+const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 
 export function Contact() {
   return (
     <>
       <section id="contact" className="py-24 border-t border-border">
-        <h2 className="text-5xl sm:text-7xl font-black tracking-tighter leading-[0.95]">
-          Let's build
-          <br />
-          <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            something.
-          </span>
-        </h2>
+        <ParticleHeading
+          lines={HEADING}
+          className="text-5xl sm:text-7xl font-black tracking-tighter leading-[0.95]"
+        />
         <div className="mt-6">
           <LocalTime />
         </div>
