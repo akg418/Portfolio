@@ -261,17 +261,99 @@ html {
   }
 }
 
-/* The projects deck's gentle bob. The orbit itself is driven from script so
-   it can be dragged; it uses the independent `rotate` and `scale` properties,
-   this uses `translate`, and the hover scale goes through `transform`, so none
-   of the three fight. */
-@keyframes deck-float {
+/* Project covers: each scene moves only while its cover is showing. */
+.cover-live .cover-flow {
+  animation: cover-flow 2.4s linear infinite;
+}
+@keyframes cover-flow {
+  from {
+    stroke-dashoffset: 206;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.cover-live .cover-typing {
+  animation: cover-typing 1.1s ease-in-out infinite;
+}
+@keyframes cover-typing {
   0%,
   100% {
-    translate: 0 0;
+    opacity: 0.35;
+    transform: translateY(0);
   }
   50% {
-    translate: 0 -9px;
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+.cover-live .cover-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cover-ping 2s ease-out infinite;
+}
+@keyframes cover-ping {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+.cover-live .cover-caret {
+  animation: caret-blink 1s steps(1) infinite;
+}
+.cover-live .cover-countdown {
+  animation: cover-countdown 6s linear infinite;
+}
+@keyframes cover-countdown {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 138;
+  }
+}
+.cover-live .cover-progress {
+  transform-box: fill-box;
+  transform-origin: left;
+  animation: cover-progress 3s ease-in-out infinite;
+}
+@keyframes cover-progress {
+  from {
+    transform: scaleX(0.05);
+  }
+  80%,
+  to {
+    transform: scaleX(1);
+  }
+}
+.cover-live .cover-snake {
+  animation: cover-snake 3.2s linear infinite;
+}
+@keyframes cover-snake {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: -330;
+  }
+}
+.cover-live .cover-food {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cover-food 0.8s ease-in-out infinite alternate;
+}
+@keyframes cover-food {
+  to {
+    transform: scale(0.7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cover-live * {
+    animation: none !important;
   }
 }
 
