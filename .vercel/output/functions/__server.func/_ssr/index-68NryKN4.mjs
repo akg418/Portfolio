@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-C_KLriFw.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DPMhfLp1.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -744,7 +744,7 @@ const POSE_CLASS = {
 };
 function RobotSprite({
   name,
-  pose: pose2,
+  pose,
   dead = false,
   back = false
 }) {
@@ -756,7 +756,7 @@ function RobotSprite({
       height: ROBOT_H,
       viewBox: "0 0 34 42",
       fill: "none",
-      className: POSE_CLASS[pose2],
+      className: POSE_CLASS[pose],
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("line", { x1: "17", y1: "11", x2: "17", y2: "6", stroke: "var(--color-border)", strokeWidth: "1.2" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -1003,11 +1003,11 @@ function RobotWorld({ walkway }) {
       const { min, max } = span();
       return name === "alice" ? min + (max - min) * 0.22 : min + (max - min) * 0.78;
     };
-    const walk = async (name, to, speed, pose2 = "walk") => {
+    const walk = async (name, to, speed, pose = "walk") => {
       const from = world.current[name].x;
       const ms = Math.abs(to - from) / speed * 1e3;
       set((w) => {
-        w[name] = { ...w[name], x: to, ms, pose: pose2, facing: to >= from ? 1 : -1 };
+        w[name] = { ...w[name], x: to, ms, pose, facing: to >= from ? 1 : -1 };
       });
       await sleep(ms + 40);
       set((w) => {
@@ -1615,7 +1615,7 @@ const ITERATIONS$2 = 6;
 const RADIUS = 26;
 const BLOW_RADIUS = 90;
 const BLOW_FORCE = 1400;
-const DRAG_PX$2 = 5;
+const DRAG_PX$1 = 5;
 const REINFLATE_MS = 3500;
 const INFLATE_MS = 650;
 const HEIGHT = 280;
@@ -1903,7 +1903,7 @@ function ContestBalloons({
     if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
     g.x = p.x;
     g.y = p.y;
-    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$2) g.moved = true;
+    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$1) g.moved = true;
   };
   const onUp = () => {
     const s = state.current;
@@ -3179,8 +3179,8 @@ const STRAP_MASS = 1;
 const HOLE_MASS = 4;
 const CARD_MASS = 7;
 const HOLE_PX = 16;
-const MAX_TILT = 38;
-const DRAG_PX$1 = 5;
+const MAX_TILT$1 = 38;
+const DRAG_PX = 5;
 const REST_SPEED$1 = 4;
 const DESKTOP = { cardW: 210, cardH: 300, strap: 270, anchorY: -130, height: 520 };
 const MOBILE = { cardW: 176, cardH: 252, strap: 170, anchorY: -16, height: 440 };
@@ -3324,7 +3324,7 @@ function LanyardBadge({ photo, photoAlt }) {
       const b = s.pts[STRAP_POINTS];
       const vx = (b.x - b.px) / dt;
       const vy = (b.y - b.py) / dt;
-      const target = Math.max(-MAX_TILT, Math.min(MAX_TILT, vx * 0.035));
+      const target = Math.max(-MAX_TILT$1, Math.min(MAX_TILT$1, vx * 0.035));
       s.tilt += (target - s.tilt) * 0.12;
       paint();
       const still = s.pts.every((p) => Math.hypot(p.x - p.px, p.y - p.py) / dt < REST_SPEED$1);
@@ -3382,7 +3382,7 @@ function LanyardBadge({ photo, photoAlt }) {
     const [x, y] = local(e);
     g.tx = x;
     g.ty = y;
-    if (Math.hypot(x - g.startX, y - g.startY) > DRAG_PX$1) g.moved = true;
+    if (Math.hypot(x - g.startX, y - g.startY) > DRAG_PX) g.moved = true;
   };
   reactExports.useEffect(() => {
     const drop = () => {
@@ -3796,218 +3796,634 @@ function ProjectDialog({
     }
   ) });
 }
-const ORBIT_SECONDS = 54;
-const SWEEP_DEG = 100;
-const FADE = 0.06;
-const DRAG_PX = 6;
-function shuffled(count) {
-  const a = Array.from({ length: count }, (_, i) => i);
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+const C = {
+  cyan: "#22d3ee",
+  violet: "#a78bfa",
+  amber: "#fbbf24",
+  green: "#34d399",
+  pink: "#f472b6",
+  ink: "#e2e8f0",
+  dim: "#334155"
+};
+function Cover({ motif, active = true }) {
+  const Scene = SCENES[motif];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "svg",
+    {
+      viewBox: "0 0 320 200",
+      className: `h-full w-full ${active ? "cover-live" : ""}`,
+      "aria-hidden": true,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: `cover-bg-${motif}`, x1: "0", y1: "0", x2: "1", y2: "1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0", stopColor: "#0b1224" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "#171433" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: `cover-dots-${motif}`, width: "14", height: "14", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "0.8", fill: "#fff", opacity: "0.07" }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "320", height: "200", fill: `url(#cover-bg-${motif})` }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "320", height: "200", fill: `url(#cover-dots-${motif})` }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Scene, {})
+      ]
+    }
+  );
 }
-const inOrder = projects.map((_, i) => i);
-function loopPos(phase, slot) {
-  const t = (phase + slot / projects.length) % 1;
-  return t < 0 ? t + 1 : t;
+function Neural() {
+  const layers = [
+    [50, 70, 100, 130, 150],
+    [70, 100, 130],
+    [55, 85, 115, 145]
+  ];
+  const xs = [70, 150, 230];
+  const pts = layers.map((ys, i) => ys.map((y) => ({ x: xs[i], y })));
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    pts.slice(0, -1).flatMap(
+      (col, i) => col.flatMap(
+        (a, j) => pts[i + 1].map((b, k) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "line",
+          {
+            x1: a.x,
+            y1: a.y,
+            x2: b.x,
+            y2: b.y,
+            stroke: C.violet,
+            strokeOpacity: 0.18
+          },
+          `${i}${j}${k}`
+        ))
+      )
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: "M70 100 L150 70 L230 115",
+        fill: "none",
+        stroke: C.cyan,
+        strokeWidth: 2,
+        strokeDasharray: "6 200",
+        className: "cover-flow"
+      }
+    ),
+    pts.flat().map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "circle",
+      {
+        cx: p.x,
+        cy: p.y,
+        r: 5,
+        fill: "#0b1224",
+        stroke: i % 4 === 0 ? C.cyan : C.violet,
+        strokeWidth: 1.5
+      },
+      i
+    )),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { transform: "translate(250 30)", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "54", height: "26", rx: "13", fill: C.violet, opacity: 0.9 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M12 26 l-4 8 l10 -8z", fill: C.violet, opacity: 0.9 }),
+      [16, 27, 38].map((x, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "circle",
+        {
+          cx: x,
+          cy: 13,
+          r: 2.6,
+          fill: "#0b1224",
+          className: "cover-typing",
+          style: { animationDelay: `${i * 0.18}s` }
+        },
+        x
+      ))
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "186",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "mistral 7b · rag · faiss · lora"
+      }
+    )
+  ] });
 }
-function pose(t) {
-  const fade = Math.min(1, t / FADE, (1 - t) / FADE);
-  return {
-    rotate: `${-SWEEP_DEG / 2 + SWEEP_DEG * t}deg`,
-    opacity: String(fade),
-    scale: String(0.88 + 0.12 * fade)
-  };
+function Services() {
+  const hex = (cx, cy, r2) => Array.from({ length: 6 }, (_, i) => {
+    const a = Math.PI / 3 * i + Math.PI / 6;
+    return `${cx + r2 * Math.cos(a)},${cy + r2 * Math.sin(a)}`;
+  }).join(" ");
+  const r = 30;
+  const w = r * Math.sqrt(3);
+  const cells = [
+    { x: 160, y: 100, label: "spring", c: C.cyan },
+    { x: 160 - w, y: 100, label: "jwt", c: C.violet },
+    { x: 160 + w, y: 100, label: "jpa", c: C.violet },
+    { x: 160 - w / 2, y: 100 - r * 1.5, label: "", c: C.violet },
+    { x: 160 + w / 2, y: 100 - r * 1.5, label: "", c: C.violet },
+    { x: 160 - w / 2, y: 100 + r * 1.5, label: "", c: C.violet },
+    { x: 160 + w / 2, y: 100 + r * 1.5, label: "", c: C.violet }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "160", cy: "100", r: "30", fill: "none", stroke: C.cyan, className: "cover-ping" }),
+    cells.map((h, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "polygon",
+        {
+          points: hex(h.x, h.y, r - 2),
+          fill: i === 0 ? "rgba(34,211,238,.14)" : "rgba(167,139,250,.08)",
+          stroke: h.c,
+          strokeOpacity: i === 0 ? 0.9 : 0.45
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "text",
+        {
+          x: h.x,
+          y: h.y + 3,
+          textAnchor: "middle",
+          fontSize: "8.5",
+          fontFamily: "ui-monospace, monospace",
+          fill: C.ink,
+          opacity: 0.75,
+          children: h.label
+        }
+      )
+    ] }, i)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "186",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "spring boot · jwt · jpa"
+      }
+    )
+  ] });
 }
-function ProjectsFan({ onSelect }) {
+function Editor() {
+  const lines = [
+    [0, 120],
+    [14, 90],
+    [14, 150, "add"],
+    [14, 130, "add"],
+    [28, 80],
+    [14, 110, "del"],
+    [0, 60]
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "rect",
+      {
+        x: "30",
+        y: "24",
+        width: "260",
+        height: "152",
+        rx: "10",
+        fill: "#0e1528",
+        stroke: "#fff",
+        strokeOpacity: 0.08
+      }
+    ),
+    [C.pink, C.amber, C.green].map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: 46 + i * 12, cy: 38, r: 3.5, fill: c, opacity: 0.8 }, c)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "96",
+        y: "41",
+        fontSize: "8.5",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.45,
+        children: "extension.ts"
+      }
+    ),
+    lines.map(([indent, w, kind], i) => {
+      const y = 58 + i * 15;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+        kind && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: "34",
+            y: y - 6,
+            width: "252",
+            height: "13",
+            fill: kind === "add" ? "rgba(52,211,153,.12)" : "rgba(244,114,182,.1)"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "text",
+          {
+            x: "40",
+            y: y + 3,
+            fontSize: "8",
+            fontFamily: "ui-monospace, monospace",
+            fill: kind === "add" ? C.green : kind === "del" ? C.pink : C.dim,
+            children: kind === "add" ? "+" : kind === "del" ? "−" : i + 1
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: 56 + indent,
+            y: y - 2.5,
+            width: w,
+            height: 5,
+            rx: 2.5,
+            fill: kind === "add" ? C.green : kind === "del" ? C.pink : i % 2 ? C.violet : C.cyan,
+            opacity: kind ? 0.7 : 0.45
+          }
+        )
+      ] }, i);
+    }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "192", y: "146", width: "84", height: "20", rx: "10", fill: C.amber }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "234",
+        y: "159",
+        textAnchor: "middle",
+        fontSize: "8.5",
+        fontWeight: "700",
+        fontFamily: "ui-monospace, monospace",
+        fill: "#111827",
+        children: "Copy for Claude"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "160", y: "102", width: "1.5", height: "10", fill: C.ink, className: "cover-caret" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "192",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "merged · open source"
+      }
+    )
+  ] });
+}
+function Chat() {
+  const bubbles = [
+    { x: 34, y: 44, w: 110, me: false, o: 0.18 },
+    { x: 150, y: 70, w: 120, me: true, o: 0.35 },
+    { x: 34, y: 98, w: 140, me: false, o: 0.6 },
+    { x: 130, y: 126, w: 140, me: true, o: 1 }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    bubbles.map((b, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: b.o, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "rect",
+        {
+          x: b.x,
+          y: b.y,
+          width: b.w,
+          height: 20,
+          rx: 10,
+          fill: b.me ? C.cyan : "#1e293b",
+          opacity: b.me ? 0.85 : 1
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "rect",
+        {
+          x: b.x + 12,
+          y: b.y + 8,
+          width: b.w - 40,
+          height: 4,
+          rx: 2,
+          fill: b.me ? "#0b1224" : C.ink,
+          opacity: 0.5
+        }
+      )
+    ] }, i)),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { transform: "translate(262 40)", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { r: "22", fill: "none", stroke: C.dim, strokeWidth: 3 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "circle",
+        {
+          r: "22",
+          fill: "none",
+          stroke: C.pink,
+          strokeWidth: 3,
+          strokeLinecap: "round",
+          strokeDasharray: "138",
+          className: "cover-countdown",
+          transform: "rotate(-90)"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "text",
+        {
+          y: "3",
+          textAnchor: "middle",
+          fontSize: "9",
+          fontWeight: "700",
+          fontFamily: "ui-monospace, monospace",
+          fill: C.ink,
+          children: "0:59"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "34",
+        y: "168",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.pink,
+        opacity: 0.8,
+        children: "channel self-destructs in 59s"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "190",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "websockets · presence · expiry events"
+      }
+    )
+  ] });
+}
+function Cli() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "rect",
+      {
+        x: "24",
+        y: "30",
+        width: "196",
+        height: "140",
+        rx: "10",
+        fill: "#0a0f1d",
+        stroke: "#fff",
+        strokeOpacity: 0.08
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { fontSize: "8.5", fontFamily: "ui-monospace, monospace", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("text", { x: "36", y: "54", fill: C.green, children: [
+        "$ ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tspan", { fill: C.ink, children: "backup \\" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "48", y: "68", fill: C.ink, opacity: 0.7, children: "--db postgres --gzip" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "36", y: "88", fill: C.ink, opacity: 0.5, children: "▸ dumping schema…" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "36", y: "102", fill: C.ink, opacity: 0.5, children: "▸ compressing (gzip)" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: "36", y: "136", fill: C.ink, opacity: 0.5, children: "▸ notify: email sent" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "36", y: "112", width: "170", height: "7", rx: "3.5", fill: C.dim }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "rect",
+      {
+        x: "36",
+        y: "112",
+        width: "170",
+        height: "7",
+        rx: "3.5",
+        fill: C.cyan,
+        className: "cover-progress"
+      }
+    ),
+    [
+      { y: 46, c: C.cyan, l: "PostgreSQL" },
+      { y: 104, c: C.amber, l: "MySQL" }
+    ].map((d) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { transform: `translate(262 ${d.y})`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "0", cy: "0", rx: "24", ry: "7", fill: d.c, opacity: 0.85 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: `M-24 0 v26 a24 7 0 0 0 48 0 v-26`, fill: d.c, opacity: 0.35 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "0", cy: "13", rx: "24", ry: "7", fill: "none", stroke: d.c, strokeOpacity: 0.6 }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "text",
+        {
+          y: "48",
+          textAnchor: "middle",
+          fontSize: "8",
+          fontFamily: "ui-monospace, monospace",
+          fill: C.ink,
+          opacity: 0.6,
+          children: d.l
+        }
+      )
+    ] }, d.l)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "190",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "factory · adapter · strategy · command"
+      }
+    )
+  ] });
+}
+function Snake() {
+  const cell = 14;
+  const path = "M42 142 H140 V86 H210 V58 H280";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+    Array.from(
+      { length: 21 },
+      (_, x) => Array.from({ length: 12 }, (_2, y) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "rect",
+        {
+          x: 16 + x * cell,
+          y: 16 + y * cell,
+          width: 2,
+          height: 2,
+          fill: "#fff",
+          opacity: 0.08
+        },
+        `${x}-${y}`
+      ))
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: path,
+        fill: "none",
+        stroke: C.green,
+        strokeOpacity: 0.12,
+        strokeWidth: 10,
+        strokeLinecap: "square"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: path,
+        fill: "none",
+        stroke: C.green,
+        strokeWidth: 10,
+        strokeLinecap: "square",
+        strokeDasharray: "120 400",
+        className: "cover-snake"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "276", y: "52", width: "12", height: "12", rx: "3", fill: C.pink, className: "cover-food" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: "22",
+        y: "190",
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: C.ink,
+        opacity: 0.4,
+        children: "score: 012 · itch.io"
+      }
+    )
+  ] });
+}
+const SCENES = {
+  neural: Neural,
+  services: Services,
+  editor: Editor,
+  chat: Chat,
+  cli: Cli,
+  snake: Snake
+};
+const FOLLOW = 0.16;
+const MAX_TILT = 9;
+function ProjectIndex({
+  projects: projects2,
+  onSelect
+}) {
   const [active, setActive] = reactExports.useState(null);
-  const [reduceMotion, setReduceMotion] = reactExports.useState(false);
-  const [slots, setSlots] = reactExports.useState(inOrder);
-  const [layer, setLayer] = reactExports.useState(inOrder);
-  const [dragging, setDragging] = reactExports.useState(false);
-  const deckRef = reactExports.useRef(null);
-  const cardRefs = reactExports.useRef([]);
-  const phase = reactExports.useRef(0);
-  const velocity = reactExports.useRef(0);
-  const hovering = reactExports.useRef(false);
-  const drag = reactExports.useRef(null);
-  const swallowClick = reactExports.useRef(false);
+  const [finePointer, setFinePointer] = reactExports.useState(false);
+  const previewRef = reactExports.useRef(null);
+  const target = reactExports.useRef({ x: 0, y: 0 });
   reactExports.useEffect(() => {
-    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    setSlots(shuffled(projects.length));
-    setLayer(shuffled(projects.length));
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const set = () => setFinePointer(mq.matches);
+    set();
+    mq.addEventListener("change", set);
+    return () => mq.removeEventListener("change", set);
   }, []);
   reactExports.useEffect(() => {
+    if (!finePointer) return;
     let raf = 0;
-    let last = performance.now();
-    const frame = (now2) => {
-      const dt = Math.min(0.05, (now2 - last) / 1e3);
-      last = now2;
-      if (!drag.current?.active) {
-        if (Math.abs(velocity.current) > 2e-3) {
-          phase.current += velocity.current * dt;
-          velocity.current *= Math.exp(-3.2 * dt);
-        } else {
-          velocity.current = 0;
-          if (!hovering.current && !reduceMotion) phase.current += dt / ORBIT_SECONDS;
-        }
-      }
-      cardRefs.current.forEach((el, i) => {
-        if (el) Object.assign(el.style, pose(loopPos(phase.current, slots[i])));
-      });
+    let x = target.current.x;
+    let y = target.current.y;
+    let tilt = 0;
+    let lift = -115;
+    const frame = () => {
       raf = requestAnimationFrame(frame);
+      const el = previewRef.current;
+      if (!el) return;
+      const dx = target.current.x - x;
+      x += dx * FOLLOW;
+      y += (target.current.y - y) * FOLLOW;
+      tilt += (Math.max(-MAX_TILT, Math.min(MAX_TILT, dx * 0.08)) - tilt) * 0.2;
+      lift += ((y < 300 ? 18 : -115) - lift) * 0.2;
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, ${lift}%) rotate(${tilt}deg)`;
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [slots, reduceMotion]);
-  const loopsPerPx = () => {
-    const radius = Math.min(440, Math.max(230, window.innerWidth * 0.4));
-    const cardH = cardRefs.current[0]?.offsetHeight ?? 200;
-    const pxPerDeg = (radius + cardH / 2) * Math.PI / 180;
-    return 1 / (pxPerDeg * SWEEP_DEG);
+  }, [finePointer]);
+  const track = (e) => {
+    target.current = { x: e.clientX, y: e.clientY };
   };
-  const onPointerDown = (e) => {
-    if (e.button !== 0) return;
-    drag.current = {
-      id: e.pointerId,
-      startX: e.clientX,
-      lastX: e.clientX,
-      lastT: performance.now(),
-      active: false
-    };
-  };
-  const onPointerMove = (e) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId) return;
-    if (!d.active) {
-      if (Math.abs(e.clientX - d.startX) < DRAG_PX) return;
-      d.active = true;
-      velocity.current = 0;
-      deckRef.current?.setPointerCapture(e.pointerId);
-      setDragging(true);
-    }
-    const now2 = performance.now();
-    const dPhase = (e.clientX - d.lastX) * loopsPerPx();
-    phase.current += dPhase;
-    const dt = Math.max(1, now2 - d.lastT) / 1e3;
-    velocity.current = velocity.current * 0.6 + dPhase / dt * 0.4;
-    d.lastX = e.clientX;
-    d.lastT = now2;
-  };
-  const endDrag = (e) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId) return;
-    if (d.active) {
-      swallowClick.current = true;
-      if (performance.now() - d.lastT > 90) velocity.current = 0;
-      velocity.current = Math.max(-1.5, Math.min(1.5, velocity.current));
-      setDragging(false);
-    }
-    drag.current = null;
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      ref: deckRef,
-      "data-cursor": "Drag",
-      onPointerDown,
-      onPointerMove,
-      onPointerUp: endDrag,
-      onPointerCancel: endDrag,
-      onPointerEnter: (e) => {
-        if (e.pointerType === "mouse") hovering.current = true;
-      },
-      onPointerLeave: (e) => {
-        if (e.pointerType === "mouse") hovering.current = false;
-      },
-      onClickCapture: (e) => {
-        if (!swallowClick.current) return;
-        swallowClick.current = false;
-        e.stopPropagation();
-        e.preventDefault();
-      },
-      onKeyDown: (e) => {
-        if (e.key === "ArrowLeft") velocity.current = -0.25;
-        if (e.key === "ArrowRight") velocity.current = 0.25;
-      },
-      onDragStart: (e) => e.preventDefault(),
-      className: `group/deck relative left-1/2 flex w-screen max-w-none -translate-x-1/2 touch-pan-y select-none justify-center overflow-hidden ${dragging ? "cursor-grabbing" : "cursor-grab"}`,
-      style: {
-        "--fan-w": "clamp(118px, 14.5vw, 176px)",
-        "--fan-r": "clamp(230px, 40vw, 440px)",
-        height: "clamp(300px, 33vw, 400px)"
-      },
-      children: projects.map((p, i) => {
-        const lifted = active === p.title;
-        const slot = slots[i];
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            ref: (el) => {
-              cardRefs.current[i] = el;
-            },
-            type: "button",
-            "data-cursor": dragging ? "Drag" : "Open",
-            onMouseEnter: () => setActive(p.title),
-            onMouseLeave: () => setActive(null),
-            onFocus: () => setActive(p.title),
-            onBlur: () => setActive(null),
-            onClick: () => onSelect(p),
-            "aria-label": `Open ${p.title}`,
-            className: "group absolute left-1/2 overflow-hidden rounded-xl border bg-card text-left transition-[transform,box-shadow,border-color] duration-300 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary group-hover/deck:[animation-play-state:paused] motion-reduce:transition-none",
-            style: {
-              width: "var(--fan-w)",
-              aspectRatio: "4 / 6",
-              bottom: "calc(var(--fan-r) * 0.17)",
-              marginLeft: "calc(var(--fan-w) / -2)",
-              transformOrigin: "50% calc(100% + var(--fan-r))",
-              zIndex: lifted ? 30 : layer[i] + 1,
-              transform: lifted ? "scale(1.06)" : void 0,
-              // Where it sits on the loop before the frame loop takes over.
-              ...pose(loopPos(0, slot)),
-              // A gentle bob on top of the orbit. Longhands, not the
-              // `animation` shorthand, which would set animation-play-state
-              // inline and outrank the class that pauses on hover.
-              ...reduceMotion ? {} : {
-                animationName: "deck-float",
-                animationDuration: `${6 + slot % 3 * 0.9}s`,
-                animationDelay: `${slot * 0.45}s`,
-                animationTimingFunction: "ease-in-out",
-                animationIterationCount: "infinite"
-              },
-              ...cardEdge(p, lifted ? "lifted" : "rest")
-            },
-            children: [
+  const shown = active === null ? null : projects2[active];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", onPointerMove: track, onPointerLeave: () => setActive(null), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ol", { className: "group/index border-t border-border", children: projects2.map((p, i) => {
+      const isActive = active === i;
+      return /* @__PURE__ */ jsxRuntimeExports.jsx("li", { className: "border-b border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => onSelect(p),
+          onPointerEnter: (e) => {
+            if (e.pointerType === "mouse") {
+              target.current = { x: e.clientX, y: e.clientY };
+              setActive(i);
+            }
+          },
+          onFocus: () => setActive(i),
+          onBlur: () => setActive(null),
+          "data-cursor": "Open",
+          className: `group/row relative grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-x-3 overflow-hidden py-5 text-left transition-opacity duration-300 sm:grid-cols-[3rem_minmax(0,1fr)_minmax(0,14rem)_2.5rem] sm:gap-x-6 sm:py-6 ${active !== null && !isActive ? "opacity-35" : "opacity-100"}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                "aria-hidden": true,
+                className: "absolute inset-0 origin-left bg-gradient-to-r from-primary/10 via-accent/5 to-transparent transition-transform duration-500 ease-out",
+                style: { transform: isActive ? "scaleX(1)" : "scaleX(0)" }
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "relative self-start pt-2 font-mono text-xs tabular-nums text-muted-foreground sm:self-center sm:pt-0", children: String(i + 2).padStart(2, "0") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
                 {
-                  "aria-hidden": true,
-                  className: `absolute inset-0 rounded-xl bg-gradient-to-br opacity-70 transition-opacity duration-500 group-hover:opacity-100 ${p.accent ? "from-amber-400/30 via-transparent to-amber-200/10" : "from-primary/25 via-transparent to-accent/20"}`
+                  className: `block text-2xl font-bold leading-tight tracking-tight transition-transform duration-500 ease-out sm:text-4xl ${isActive ? "translate-x-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : ""}`,
+                  children: p.shortName
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative flex h-full flex-col justify-between p-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-start justify-between gap-2", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "span",
-                    {
-                      className: `max-w-[70%] font-mono text-[8px] uppercase tracking-widest ${p.accent ? "text-amber-300" : "text-muted-foreground"}`,
-                      children: p.accent ? "Live" : p.tag.split("—")[0].split("·")[0].trim()
-                    }
-                  ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-[9px] text-muted-foreground/60", children: String(i + 1).padStart(2, "0") })
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-[86%] text-[11px] font-semibold leading-tight break-words", children: p.shortName }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-[86%]", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block rounded border border-border/70 px-1 py-0.5 font-mono text-[8px] text-muted-foreground", children: p.stack[0] }) })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-1 block text-sm text-muted-foreground", children: p.short }),
+              !finePointer && p.motif && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-3 block aspect-[16/10] w-full max-w-sm overflow-hidden rounded-lg border border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Cover, { motif: p.motif }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative hidden min-w-0 text-right sm:block", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block truncate font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: p.tag }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-1 block truncate font-mono text-[11px] text-foreground/70", children: p.stack.slice(0, 3).join(" · ") })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                className: `relative flex h-9 w-9 items-center justify-center self-start rounded-full border transition-all duration-300 sm:self-center ${isActive ? "rotate-45 border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground"}`,
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "h-4 w-4" })
+              }
+            )
+          ]
+        }
+      ) }, p.title);
+    }) }),
+    finePointer && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: previewRef,
+        "aria-hidden": true,
+        className: "pointer-events-none fixed left-0 top-0 z-40 w-[300px]",
+        style: { transform: "translate3d(-1000px,-1000px,0)" },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "overflow-hidden rounded-xl border border-white/10 bg-background shadow-[0_30px_60px_-20px_rgba(0,0,0,0.85)] transition-[opacity,transform] duration-300 ease-out",
+            style: {
+              opacity: shown ? 1 : 0,
+              transform: shown ? "scale(1)" : "scale(0.85)"
+            },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative aspect-[16/10]", children: projects2.map(
+                (p, i) => p.motif ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "div",
+                  {
+                    className: "absolute inset-0 transition-opacity duration-300",
+                    style: { opacity: active === i ? 1 : 0 },
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Cover, { motif: p.motif, active: active === i })
+                  },
+                  p.title
+                ) : null
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2 px-3 py-2 font-mono text-[10px] text-muted-foreground", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: shown?.tag }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "shrink-0 text-primary", children: "open ↗" })
               ] })
             ]
-          },
-          p.title
-        );
-      })
-    }
-  );
+          }
+        )
+      }
+    )
+  ] });
 }
 const NODES = [
   {
@@ -5343,18 +5759,51 @@ function TracePanel({ trace, now: now2 }) {
     }) })
   ] });
 }
+const flagship = projects.find((p) => p.accent);
+const rest = projects.filter((p) => !p.accent);
 function Projects() {
   const [selected, setSelected] = reactExports.useState(null);
   const close = reactExports.useCallback(() => setSelected(null), []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "projects", className: "py-24 border-t border-border", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex items-center gap-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10 flex items-center gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CodeXml, { className: "w-5 h-5 text-muted-foreground" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scramble, { text: "Selected projects" }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SystemMap, {}) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-10 text-sm text-muted-foreground", children: "Pick a card for the full story. Drag or swipe to spin the deck — give it a flick." }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectsFan, { onSelect: setSelected }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TierLabel, { n: "01", label: "Flagship", note: "in production · 15,000+ users" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(SystemMap, {}),
+    flagship && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        type: "button",
+        onClick: () => setSelected(flagship),
+        className: "group mt-3 inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-primary",
+        children: [
+          "Read the full story of ",
+          flagship.shortName,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-20", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TierLabel,
+        {
+          n: "02",
+          label: "More work",
+          note: `${rest.length} projects · open any for the full story`
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectIndex, { projects: rest, onSelect: setSelected })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectDialog, { project: selected, onClose: close })
+  ] });
+}
+function TierLabel({ n, label, note }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.2em]", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: n }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: label }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-px flex-1 translate-y-[-3px] bg-border" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "normal-case tracking-normal text-muted-foreground", children: note })
   ] });
 }
 function SiteFooter() {
@@ -5681,10 +6130,10 @@ function SkillsPlayground({ groups }) {
   const chipRefs = reactExports.useRef([]);
   const bodies = reactExports.useRef([]);
   const grab = reactExports.useRef(null);
-  const rest = reactExports.useRef({ calm: 0, asleep: false });
+  const rest2 = reactExports.useRef({ calm: 0, asleep: false });
   const [dragging, setDragging] = reactExports.useState(null);
   const wake = () => {
-    rest.current = { calm: 0, asleep: false };
+    rest2.current = { calm: 0, asleep: false };
   };
   reactExports.useEffect(() => {
     const pit = pitRef.current;
@@ -5744,7 +6193,7 @@ function SkillsPlayground({ groups }) {
         size = { W, H };
         wake();
       }
-      if (rest.current.asleep && !grab.current) return;
+      if (rest2.current.asleep && !grab.current) return;
       const dt = elapsed / SUBSTEPS;
       for (let s = 0; s < SUBSTEPS; s++) step(bodies.current, W, H, dt, grab.current);
       separate(bodies.current, W, H);
@@ -5752,8 +6201,8 @@ function SkillsPlayground({ groups }) {
       const moving = bodies.current.some(
         (b) => Math.hypot(b.vx, b.vy) > REST_SPEED || Math.abs(b.w) > REST_SPIN
       );
-      rest.current.calm = moving || grab.current ? 0 : rest.current.calm + elapsed;
-      if (rest.current.calm > REST_SECONDS) rest.current.asleep = true;
+      rest2.current.calm = moving || grab.current ? 0 : rest2.current.calm + elapsed;
+      if (rest2.current.calm > REST_SECONDS) rest2.current.asleep = true;
     };
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -5805,7 +6254,7 @@ function SkillsPlayground({ groups }) {
     const release = () => {
       if (!grab.current) return;
       grab.current = null;
-      rest.current = { calm: 0, asleep: false };
+      rest2.current = { calm: 0, asleep: false };
       setDragging(null);
     };
     const onVisibility = () => document.hidden && release();
