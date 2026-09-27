@@ -1,11 +1,10 @@
 import { Briefcase, Code2, Globe, Mail, MapPin, Phone, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AsciiPortrait } from "@/components/fx/AsciiPortrait";
+import { DotGlobe } from "@/components/fx/DotGlobe";
 import { LocalTime } from "@/components/fx/LocalTime";
 import { Magnetic } from "@/components/fx/Magnetic";
 import { ParticleHeading } from "@/components/fx/ParticleHeading";
 import { ScrollLit } from "@/components/fx/ScrollLit";
-import { photos } from "@/data/photos";
 import { linkOf, profile } from "@/data/profile";
 
 /** Stable across renders, so the particles are not rebuilt on every one. */
@@ -16,7 +15,7 @@ export function Contact() {
     <>
       <section
         id="contact"
-        className="py-24 border-t border-border grid gap-12 lg:grid-cols-[1fr_300px] lg:items-center"
+        className="py-24 border-t border-border grid gap-10 lg:grid-cols-[1fr_340px] lg:items-center"
       >
         <div className="min-w-0">
           <ParticleHeading
@@ -79,17 +78,12 @@ export function Contact() {
             </Magnetic>
           </div>
         </div>
-        {photos[0]?.src && (
-          <figure className="relative mx-auto w-full max-w-[300px]">
-            <AsciiPortrait
-              src={photos[0].src}
-              className="block h-[380px] w-full rounded-xl border border-border bg-background/40"
-            />
-            <figcaption className="mt-2 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              ./me --ascii · hover to look closer
-            </figcaption>
-          </figure>
-        )}
+        <figure className="mx-auto w-full max-w-[340px] select-none">
+          <DotGlobe className="block aspect-square w-full" />
+          <figcaption className="mt-1 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            Cairo → anywhere · drag to spin
+          </figcaption>
+        </figure>
       </section>
     </>
   );
