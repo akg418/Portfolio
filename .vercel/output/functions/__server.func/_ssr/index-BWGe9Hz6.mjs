@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, j as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, m as links, b as readJson, c as writeJson, k as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-D_Re7Kqf.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, j as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, m as links, b as readJson, c as writeJson, k as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-CVTA2SJh.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -1979,429 +1979,6 @@ function Typewriter({
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" })
   ] });
 }
-const SIM_RES = 128;
-const DYE_RES_DESKTOP = 512;
-const DYE_RES_MOBILE = 256;
-const DENSITY_DISSIPATION = 1.4;
-const VELOCITY_DISSIPATION = 0.4;
-const PRESSURE_DECAY = 0.8;
-const PRESSURE_ITERATIONS = 20;
-const CURL = 22;
-const SPLAT_RADIUS = 0.22 / 100;
-const SPLAT_FORCE = 5e3;
-const DYE_INTENSITY = 0.12;
-const MAX_DPR = 1.5;
-const PALETTE = [
-  [0, 0.78, 0.92],
-  [0.68, 0.32, 1],
-  [0.25, 0.55, 1]
-];
-const VERT = `#version 300 es
-precision highp float;
-in vec2 aPosition;
-out vec2 vUv, vL, vR, vT, vB;
-uniform vec2 texelSize;
-void main() {
-  vUv = aPosition * 0.5 + 0.5;
-  vL = vUv - vec2(texelSize.x, 0.0);
-  vR = vUv + vec2(texelSize.x, 0.0);
-  vT = vUv + vec2(0.0, texelSize.y);
-  vB = vUv - vec2(0.0, texelSize.y);
-  gl_Position = vec4(aPosition, 0.0, 1.0);
-}`;
-const HEAD = `#version 300 es
-precision highp float;
-precision highp sampler2D;
-in vec2 vUv, vL, vR, vT, vB;
-out vec4 o;
-`;
-const FRAG = {
-  clear: `${HEAD}
-uniform sampler2D uTexture; uniform float value;
-void main() { o = value * texture(uTexture, vUv); }`,
-  splat: `${HEAD}
-uniform sampler2D uTarget; uniform float aspectRatio; uniform vec3 color;
-uniform vec2 point; uniform float radius;
-void main() {
-  vec2 p = vUv - point; p.x *= aspectRatio;
-  vec3 s = exp(-dot(p, p) / radius) * color;
-  o = vec4(texture(uTarget, vUv).xyz + s, 1.0);
-}`,
-  advection: `${HEAD}
-uniform sampler2D uVelocity, uSource; uniform vec2 velTexel;
-uniform float dt, dissipation;
-void main() {
-  vec2 coord = vUv - dt * texture(uVelocity, vUv).xy * velTexel;
-  o = texture(uSource, coord) / (1.0 + dissipation * dt);
-  o.a = 1.0;
-}`,
-  divergence: `${HEAD}
-uniform sampler2D uVelocity;
-void main() {
-  float L = texture(uVelocity, vL).x, R = texture(uVelocity, vR).x;
-  float T = texture(uVelocity, vT).y, B = texture(uVelocity, vB).y;
-  vec2 C = texture(uVelocity, vUv).xy;
-  // Solid walls: reflect velocity at the edges.
-  if (vL.x < 0.0) L = -C.x; if (vR.x > 1.0) R = -C.x;
-  if (vT.y > 1.0) T = -C.y; if (vB.y < 0.0) B = -C.y;
-  o = vec4(0.5 * (R - L + T - B), 0.0, 0.0, 1.0);
-}`,
-  curl: `${HEAD}
-uniform sampler2D uVelocity;
-void main() {
-  float L = texture(uVelocity, vL).y, R = texture(uVelocity, vR).y;
-  float T = texture(uVelocity, vT).x, B = texture(uVelocity, vB).x;
-  o = vec4(0.5 * (R - L - T + B), 0.0, 0.0, 1.0);
-}`,
-  vorticity: `${HEAD}
-uniform sampler2D uVelocity, uCurl; uniform float curl, dt;
-void main() {
-  float L = texture(uCurl, vL).x, R = texture(uCurl, vR).x;
-  float T = texture(uCurl, vT).x, B = texture(uCurl, vB).x;
-  float C = texture(uCurl, vUv).x;
-  vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));
-  force /= length(force) + 0.0001;
-  force *= curl * C; force.y *= -1.0;
-  vec2 v = texture(uVelocity, vUv).xy + force * dt;
-  o = vec4(clamp(v, -1000.0, 1000.0), 0.0, 1.0);
-}`,
-  pressure: `${HEAD}
-uniform sampler2D uPressure, uDivergence;
-void main() {
-  float L = texture(uPressure, vL).x, R = texture(uPressure, vR).x;
-  float T = texture(uPressure, vT).x, B = texture(uPressure, vB).x;
-  float div = texture(uDivergence, vUv).x;
-  o = vec4((L + R + B + T - div) * 0.25, 0.0, 0.0, 1.0);
-}`,
-  gradientSubtract: `${HEAD}
-uniform sampler2D uPressure, uVelocity;
-void main() {
-  float L = texture(uPressure, vL).x, R = texture(uPressure, vR).x;
-  float T = texture(uPressure, vT).x, B = texture(uPressure, vB).x;
-  vec2 v = texture(uVelocity, vUv).xy - vec2(R - L, T - B);
-  o = vec4(v, 0.0, 1.0);
-}`,
-  // Transparent where there is no ink, so the page shows through.
-  display: `${HEAD}
-uniform sampler2D uTexture;
-void main() {
-  vec3 c = min(texture(uTexture, vUv).rgb, vec3(1.0));
-  float a = max(c.r, max(c.g, c.b));
-  o = vec4(c, a);
-}`
-};
-function compile(gl, type, src) {
-  const s = gl.createShader(type);
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) ?? "");
-  return s;
-}
-function link(gl, vs, fsSrc) {
-  const program = gl.createProgram();
-  gl.attachShader(program, vs);
-  gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, fsSrc));
-  gl.bindAttribLocation(program, 0, "aPosition");
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-    throw new Error(gl.getProgramInfoLog(program) ?? "");
-  const uniforms = {};
-  const count = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-  for (let i = 0; i < count; i++) {
-    const name = gl.getActiveUniform(program, i).name;
-    uniforms[name] = gl.getUniformLocation(program, name);
-  }
-  return { program, uniforms };
-}
-function createFbo(gl, w, h) {
-  const texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
-  const fbo = gl.createFramebuffer();
-  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-  if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE)
-    throw new Error("half-float framebuffer not renderable");
-  gl.viewport(0, 0, w, h);
-  gl.clearColor(0, 0, 0, 1);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  return { texture, fbo, w, h };
-}
-function createDouble(gl, w, h) {
-  const d = {
-    read: createFbo(gl, w, h),
-    write: createFbo(gl, w, h),
-    w,
-    h,
-    swap() {
-      [d.read, d.write] = [d.write, d.read];
-    }
-  };
-  return d;
-}
-function gridFor(res, w, h) {
-  const aspect = w > h ? w / h : h / w;
-  const min = Math.round(res);
-  const max = Math.round(res * aspect);
-  return w > h ? { w: max, h: min } : { w: min, h: max };
-}
-function FluidCanvas({ className }) {
-  const canvasRef = reactExports.useRef(null);
-  reactExports.useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const gl = canvas.getContext("webgl2", {
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: false,
-      depth: false,
-      stencil: false
-    });
-    if (!gl || !gl.getExtension("EXT_color_buffer_float")) return;
-    let programs;
-    try {
-      const vs = compile(gl, gl.VERTEX_SHADER, VERT);
-      programs = Object.fromEntries(
-        Object.keys(FRAG).map((k) => [k, link(gl, vs, FRAG[k])])
-      );
-    } catch {
-      return;
-    }
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(0);
-    const blit = (target) => {
-      if (target) {
-        gl.viewport(0, 0, target.w, target.h);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
-      } else {
-        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      }
-      gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-    };
-    let unit = 0;
-    const run = (name, values) => {
-      const p = programs[name];
-      gl.useProgram(p.program);
-      unit = 0;
-      for (const [key, v] of Object.entries(values)) {
-        const loc = p.uniforms[key];
-        if (loc === void 0) continue;
-        if (typeof v === "number") gl.uniform1f(loc, v);
-        else if (Array.isArray(v)) {
-          if (v.length === 2) gl.uniform2f(loc, v[0], v[1]);
-          else gl.uniform3f(loc, v[0], v[1], v[2]);
-        } else {
-          gl.activeTexture(gl.TEXTURE0 + unit);
-          gl.bindTexture(gl.TEXTURE_2D, v.texture);
-          gl.uniform1i(loc, unit++);
-        }
-      }
-    };
-    let velocity, dye, pressure, divergence, curl;
-    let ready = false;
-    const dyeRes = window.matchMedia("(pointer: coarse)").matches ? DYE_RES_MOBILE : DYE_RES_DESKTOP;
-    const resize = () => {
-      const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
-      const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
-      if (ready && canvas.width === w && canvas.height === h) return;
-      canvas.width = w;
-      canvas.height = h;
-      const sim = gridFor(SIM_RES, w, h);
-      const d = gridFor(dyeRes, w, h);
-      velocity = createDouble(gl, sim.w, sim.h);
-      pressure = createDouble(gl, sim.w, sim.h);
-      divergence = createFbo(gl, sim.w, sim.h);
-      curl = createFbo(gl, sim.w, sim.h);
-      dye = createDouble(gl, d.w, d.h);
-      ready = true;
-    };
-    try {
-      resize();
-    } catch {
-      return;
-    }
-    const splat = (x, y, dx, dy, color) => {
-      const aspect = canvas.width / canvas.height;
-      const radius = SPLAT_RADIUS * (aspect > 1 ? aspect : 1);
-      run("splat", {
-        uTarget: velocity.read,
-        aspectRatio: aspect,
-        point: [x, y],
-        color: [dx, dy, 0],
-        radius
-      });
-      blit(velocity.write);
-      velocity.swap();
-      run("splat", { uTarget: dye.read, aspectRatio: aspect, point: [x, y], color, radius });
-      blit(dye.write);
-      dye.swap();
-    };
-    let hue = 0;
-    const nextColor = () => {
-      hue = (hue + 1) % PALETTE.length;
-      return PALETTE[hue].map((c) => c * DYE_INTENSITY);
-    };
-    const ambientSplat = () => {
-      const x = 0.15 + Math.random() * 0.7;
-      const y = 0.2 + Math.random() * 0.6;
-      const angle = Math.random() * Math.PI * 2;
-      const force = 600 + Math.random() * 900;
-      splat(x, y, Math.cos(angle) * force, Math.sin(angle) * force, nextColor());
-    };
-    const step2 = (dt) => {
-      const simTexel = [1 / velocity.w, 1 / velocity.h];
-      gl.disable(gl.BLEND);
-      run("curl", { texelSize: simTexel, uVelocity: velocity.read });
-      blit(curl);
-      run("vorticity", {
-        texelSize: simTexel,
-        uVelocity: velocity.read,
-        uCurl: curl,
-        curl: CURL,
-        dt
-      });
-      blit(velocity.write);
-      velocity.swap();
-      run("divergence", { texelSize: simTexel, uVelocity: velocity.read });
-      blit(divergence);
-      run("clear", { texelSize: simTexel, uTexture: pressure.read, value: PRESSURE_DECAY });
-      blit(pressure.write);
-      pressure.swap();
-      for (let i = 0; i < PRESSURE_ITERATIONS; i++) {
-        run("pressure", {
-          texelSize: simTexel,
-          uPressure: pressure.read,
-          uDivergence: divergence
-        });
-        blit(pressure.write);
-        pressure.swap();
-      }
-      run("gradientSubtract", {
-        texelSize: simTexel,
-        uPressure: pressure.read,
-        uVelocity: velocity.read
-      });
-      blit(velocity.write);
-      velocity.swap();
-      run("advection", {
-        texelSize: simTexel,
-        velTexel: simTexel,
-        uVelocity: velocity.read,
-        uSource: velocity.read,
-        dt,
-        dissipation: VELOCITY_DISSIPATION
-      });
-      blit(velocity.write);
-      velocity.swap();
-      run("advection", {
-        texelSize: [1 / dye.w, 1 / dye.h],
-        velTexel: simTexel,
-        uVelocity: velocity.read,
-        uSource: dye.read,
-        dt,
-        dissipation: DENSITY_DISSIPATION
-      });
-      blit(dye.write);
-      dye.swap();
-    };
-    const render = () => {
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.clearColor(0, 0, 0, 0);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      run("display", { texelSize: [1 / canvas.width, 1 / canvas.height], uTexture: dye.read });
-      blit(null);
-    };
-    let last = null;
-    const stir = (clientX, clientY) => {
-      const r = canvas.getBoundingClientRect();
-      if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom) {
-        last = null;
-        return;
-      }
-      const x = (clientX - r.left) / r.width;
-      const y = 1 - (clientY - r.top) / r.height;
-      if (last) {
-        const aspect = r.width / r.height;
-        const dx = (x - last.x) * (aspect < 1 ? aspect : 1);
-        const dy = (y - last.y) / (aspect > 1 ? aspect : 1);
-        if (Math.abs(dx) + Math.abs(dy) > 5e-4)
-          splat(x, y, dx * SPLAT_FORCE, dy * SPLAT_FORCE, nextColor());
-      }
-      last = { x, y };
-    };
-    const onPointerMove = (e) => {
-      if (e.pointerType === "mouse" || e.pointerType === "pen") stir(e.clientX, e.clientY);
-    };
-    const onTouchMove = (e) => {
-      const t = e.touches[0];
-      if (t) stir(t.clientX, t.clientY);
-    };
-    const onTouchEnd = () => {
-      last = null;
-    };
-    let visible = true;
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-    });
-    io.observe(canvas);
-    let lost = false;
-    const onLost = (e) => {
-      e.preventDefault();
-      lost = true;
-    };
-    canvas.addEventListener("webglcontextlost", onLost);
-    let raf = 0;
-    let prev = performance.now();
-    let nextAmbient = prev + 400;
-    for (let i = 0; i < 4; i++) ambientSplat();
-    const frame = (now2) => {
-      raf = requestAnimationFrame(frame);
-      const dt = Math.min(1 / 60, (now2 - prev) / 1e3);
-      prev = now2;
-      if (lost || !visible || document.hidden) return;
-      try {
-        resize();
-      } catch {
-        lost = true;
-        return;
-      }
-      if (now2 > nextAmbient) {
-        ambientSplat();
-        nextAmbient = now2 + 1800 + Math.random() * 2200;
-      }
-      step2(dt);
-      render();
-    };
-    raf = requestAnimationFrame(frame);
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      canvas.removeEventListener("webglcontextlost", onLost);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
-    };
-  }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("canvas", { ref: canvasRef, "aria-hidden": true, className });
-}
 const INTERVAL_MS = 4500;
 const FADE_MS = 700;
 const IMAGE_CLASS = "absolute inset-0 h-full w-full rounded-full object-cover";
@@ -2490,7 +2067,6 @@ function useSinkOnScroll() {
       const t = Math.min(1, Math.max(0, window.scrollY / (el.offsetHeight || 1)));
       el.style.transform = t ? `translateY(${t * 80}px) scale(${1 - t * 0.08})` : "";
       el.style.opacity = String(1 - t * 0.7);
-      el.style.filter = t ? `blur(${t * 4}px)` : "";
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -2512,7 +2088,6 @@ function Hero() {
       ref,
       className: "py-20 sm:py-28 grid md:grid-cols-[1fr_320px] gap-12 items-center origin-top will-change-transform",
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(FluidCanvas, { className: "pointer-events-none absolute inset-y-0 left-1/2 -z-10 h-full w-screen -translate-x-1/2" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-6 text-xs font-mono text-muted-foreground", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" }),
@@ -2996,15 +2571,23 @@ function SiteFooter() {
 }
 const GRAVITY = 2e3;
 const SUBSTEPS = 4;
-const ITERATIONS = 6;
+const ITERATIONS = 8;
 const FRICTION = 0.45;
-const BETA = 0.25;
+const BETA = 0.12;
 const SLOP = 0.4;
 const MAX_BIAS = 700;
 const MAX_SPEED = 3200;
 const DENSITY = 1e-3;
 const GRAB_STIFFNESS = 700;
 const GRAB_DAMPING = 45;
+const POSITION_PASSES = 2;
+const POSITION_SHARE = 0.8;
+const REST_SPEED = 20;
+const REST_SPIN = 0.3;
+const REST_SECONDS = 0.7;
+const CREEP_SPEED = 30;
+const CREEP_SPIN = 0.6;
+const CREEP_BRAKE = 0.8;
 const GROUP_TONES = [
   "border-cyan-400/50 text-cyan-700 dark:text-cyan-200",
   "border-violet-400/50 text-violet-700 dark:text-violet-200",
@@ -3193,6 +2776,40 @@ function solveContact(bodies, c, dt) {
   applyImpulse(A, c.px, c.py, -djt * tx, -djt * ty);
   if (B) applyImpulse(B, c.px, c.py, djt * tx, djt * ty);
 }
+function detect(bodies, W, H) {
+  const contacts = [];
+  const order = bodies.map((_, i) => i);
+  const reach = bodies.map((b) => b.half + b.r);
+  order.sort((p, q) => bodies[p].x - reach[p] - (bodies[q].x - reach[q]));
+  for (let k = 0; k < order.length; k++) {
+    const i = order[k];
+    collideWalls(bodies, i, W, H, contacts);
+    const right = bodies[i].x + reach[i];
+    for (let m = k + 1; m < order.length; m++) {
+      const j = order[m];
+      if (bodies[j].x - reach[j] > right) break;
+      if (Math.abs(bodies[j].y - bodies[i].y) > reach[i] + reach[j]) continue;
+      collidePair(bodies, i, j, contacts);
+    }
+  }
+  return contacts;
+}
+function separate(bodies, W, H) {
+  for (let pass = 0; pass < POSITION_PASSES; pass++) {
+    for (const c of detect(bodies, W, H)) {
+      const A = bodies[c.a];
+      const B = c.b >= 0 ? bodies[c.b] : null;
+      const total = A.invM + (B ? B.invM : 0);
+      const push = Math.max(0, c.pen - SLOP) * POSITION_SHARE / total;
+      A.x -= c.nx * push * A.invM;
+      A.y -= c.ny * push * A.invM;
+      if (B) {
+        B.x += c.nx * push * B.invM;
+        B.y += c.ny * push * B.invM;
+      }
+    }
+  }
+}
 function step(bodies, W, H, dt, grab) {
   for (const b of bodies) b.vy += GRAVITY * dt;
   if (grab) {
@@ -3208,11 +2825,7 @@ function step(bodies, W, H, dt, grab) {
     applyImpulse(b, ax, ay, fx * dt, fy * dt);
     b.w *= 0.985;
   }
-  const contacts = [];
-  for (let i = 0; i < bodies.length; i++) {
-    collideWalls(bodies, i, W, H, contacts);
-    for (let j = i + 1; j < bodies.length; j++) collidePair(bodies, i, j, contacts);
-  }
+  const contacts = detect(bodies, W, H);
   for (const c of contacts) {
     const [rvx, rvy] = relVel(bodies, c);
     const vn = rvx * c.nx + rvy * c.ny;
@@ -3225,9 +2838,15 @@ function step(bodies, W, H, dt, grab) {
       b.vx *= MAX_SPEED / speed;
       b.vy *= MAX_SPEED / speed;
     }
-    b.vx *= 0.9995;
-    b.vy *= 0.9995;
-    b.w *= 0.998;
+    if (Math.hypot(b.vx, b.vy) < CREEP_SPEED && Math.abs(b.w) < CREEP_SPIN) {
+      b.vx *= CREEP_BRAKE;
+      b.vy *= CREEP_BRAKE;
+      b.w *= CREEP_BRAKE;
+    } else {
+      b.vx *= 0.9995;
+      b.vy *= 0.9995;
+      b.w *= 0.998;
+    }
     b.x += b.vx * dt;
     b.y += b.vy * dt;
     b.a += b.w * dt;
@@ -3241,14 +2860,25 @@ function SkillsPlayground({ groups }) {
   const chipRefs = reactExports.useRef([]);
   const bodies = reactExports.useRef([]);
   const grab = reactExports.useRef(null);
+  const rest = reactExports.useRef({ calm: 0, asleep: false });
   const [dragging, setDragging] = reactExports.useState(null);
+  const wake = () => {
+    rest.current = { calm: 0, asleep: false };
+  };
   reactExports.useEffect(() => {
     const pit = pitRef.current;
     if (!pit) return;
     let raf = 0;
     let started = false;
     let visible = false;
+    let fontsReady = false;
+    if (document.fonts)
+      void document.fonts.ready.then(() => {
+        fontsReady = true;
+      });
+    else fontsReady = true;
     let last = performance.now();
+    let size = { W: 0, H: 0 };
     const start = () => {
       started = true;
       const W = pit.clientWidth;
@@ -3285,13 +2915,24 @@ function SkillsPlayground({ groups }) {
       raf = requestAnimationFrame(frame);
       const elapsed = Math.min(1 / 30, (now2 - last) / 1e3);
       last = now2;
-      if (!visible || document.hidden) return;
+      if (!visible || document.hidden || !fontsReady) return;
       if (!started) start();
       const W = pit.clientWidth;
       const H = pit.clientHeight;
+      if (W !== size.W || H !== size.H) {
+        size = { W, H };
+        wake();
+      }
+      if (rest.current.asleep && !grab.current) return;
       const dt = elapsed / SUBSTEPS;
       for (let s = 0; s < SUBSTEPS; s++) step(bodies.current, W, H, dt, grab.current);
+      separate(bodies.current, W, H);
       paint();
+      const moving = bodies.current.some(
+        (b) => Math.hypot(b.vx, b.vy) > REST_SPEED || Math.abs(b.w) > REST_SPIN
+      );
+      rest.current.calm = moving || grab.current ? 0 : rest.current.calm + elapsed;
+      if (rest.current.calm > REST_SECONDS) rest.current.asleep = true;
     };
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -3323,6 +2964,7 @@ function SkillsPlayground({ groups }) {
     const dx = px - b.x;
     const dy = py - b.y;
     grab.current = { i, lx: dx * c - dy * s, ly: dx * s + dy * c, tx: px, ty: py };
+    wake();
     setDragging(i);
   };
   const onMove = (e) => {
@@ -3333,9 +2975,11 @@ function SkillsPlayground({ groups }) {
   };
   const onUp = () => {
     grab.current = null;
+    wake();
     setDragging(null);
   };
   const shake = () => {
+    wake();
     for (const b of bodies.current) {
       b.vy -= 700 + Math.random() * 700;
       b.vx += (Math.random() - 0.5) * 700;
@@ -3382,7 +3026,7 @@ function SkillsPlayground({ groups }) {
               onPointerMove: onMove,
               onPointerUp: onUp,
               onPointerCancel: onUp,
-              className: `absolute left-0 top-0 origin-center touch-none whitespace-nowrap rounded-full border bg-background/85 px-3 py-1 text-xs font-medium shadow-[0_4px_14px_-6px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:px-3.5 sm:py-1.5 sm:text-sm ${c.tone} ${dragging === i ? "cursor-grabbing ring-1 ring-primary" : "cursor-grab"}`,
+              className: `absolute left-0 top-0 origin-center touch-none whitespace-nowrap rounded-full border bg-background px-2.5 py-0.5 text-[11px] font-medium will-change-transform sm:px-3.5 sm:py-1.5 sm:text-sm ${c.tone} ${dragging === i ? "cursor-grabbing ring-1 ring-primary" : "cursor-grab"}`,
               style: { transform: "translate(-9999px, 0)" },
               children: c.label
             },
@@ -3849,7 +3493,7 @@ const commands = [
     run: ({ print }) => {
       printAligned(
         print,
-        links.map((link2) => ({ label: link2.label, value: link2.url }))
+        links.map((link) => ({ label: link.label, value: link.url }))
       );
     }
   },
