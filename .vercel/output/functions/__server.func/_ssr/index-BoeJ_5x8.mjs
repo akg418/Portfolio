@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-qKV3kGFD.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-C_pmePTj.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -1707,255 +1707,344 @@ function Achievements() {
     ] })
   ] }) });
 }
-const RAMP = " .,:;-=+*oxO#%@";
-const GLYPH_PX = 48;
-const CELL_CSS_PX = 7;
-const REVEAL_MS = 1600;
+const PACKED = "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IwSSADoEkgAm/KgAPfyoAFT8qABr/KgAgvyoAF//qAB2/6gAjf+oAKT/qAC7/6gA0v+oAOn/qAAAAKgAFwCoAC4AqABFAKgAXACoAHMAqACKAKgAoQCoALcAqADOAKgA5QCoAPwAqAATAagAKgGoAEEBqABYAagAbwGoAIYBqAC0AagAywGoAOIBqAD4AagADwKoAN4CqAD1AqgADAOoACMDqADDA6gA2gOoAPEDqAAIBKgAHwSoAL8EqAAC/L4AGfy+ADH8vgB2/L4Ajfy+ADD9vgBH/b4Adf++AIz/vgCj/74Auv++ANL/vgDp/74AAAC+ABcAvgAuAL4ARgC+AF0AvgB0AL4AiwC+AKMAvgC6AL4A0QC+AOgAvgD/AL4AFwG+AC4BvgBFAb4AXAG+AHQBvgCiAb4AuQG+ANEBvgDoAb4A/wG+ABYCvgAtAr4A5wK+AP4CvgAWA74ALQO+AEQDvgC4A74AzwO+AOcDvgD+A74AFQS+AEQEvgD1+9QADPzUACT81ACC/NQAmfzUAPj81ABb/9QAc//UAIr/1ACi/9QAuf/UANH/1ADo/9QAAADUABgA1AAvANQARwDUAF4A1AB2ANQAjQDUAKUA1AC8ANQA1ADUAOsA1AADAdQAGgHUADIB1ABJAdQAYQHUAJAB1ACoAdQAvwHUANcB1ADuAdQABgLUAB0C1AA1AtQATALUAMIC1ADZAtQA8QLUAAgD1AAgA9QAOAPUAE8D1ACtA9QAxQPUANwD1AD0A9QACwTUACME1ABSBNQA7PvqAAT86gAc/OoAZP/qAHz/6gCU/+oArP/qAMT/6gDc/+oA9P/qAAwA6gAkAOoAPADqAFQA6gBsAOoAhADqAJwA6gC0AOoAzADqAOQA6gD8AOoAFAHqACwB6gBEAeoAXAHqAIwB6gCkAeoAvAHqANQB6gDsAeoABALqABwC6gA0AuoATALqAMQC6gDcAuoA9ALqAAwD6gAkA+oAPAPqAFQD6gBsA+oAhAPqAJwD6gC0A+oAzAPqAOQD6gD8A+oAFATqACwE6gBEBOoAXATqAHQE6gCMBOoAvATqAMb7AAHe+wAB9vsAAQ/8AAEn/AABev8AAZP/AAGr/wABw/8AAdz/AAH0/wABDAAAASQAAAE9AAABVQAAAW0AAAGGAAABngAAAbYAAAHPAAAB5wAAAf8AAAEYAQAB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";
+function landDots() {
+  const bin = atob(PACKED);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const tenths = new Int16Array(bytes.buffer);
+  const out = new Float32Array(tenths.length);
+  for (let i = 0; i < tenths.length; i++) out[i] = tenths[i] / 10;
+  return out;
+}
+const DEG = Math.PI / 180;
+const CAIRO = { name: "Cairo", lat: 30.04, lon: 31.24 };
+const CITIES = [
+  { name: "London", lat: 51.5, lon: -0.13 },
+  { name: "Berlin", lat: 52.52, lon: 13.4 },
+  { name: "Dubai", lat: 25.2, lon: 55.27 },
+  { name: "Riyadh", lat: 24.71, lon: 46.68 },
+  { name: "New York", lat: 40.71, lon: -74 },
+  { name: "San Francisco", lat: 37.77, lon: -122.42 },
+  { name: "Toronto", lat: 43.65, lon: -79.38 },
+  { name: "Singapore", lat: 1.35, lon: 103.82 }
+];
+const IDLE_SPIN = 0.12;
+const DEFAULT_PITCH = 0.38;
+const ARC_MS = 2600;
+const ARC_GAP_MS = 700;
+const ARC_SEGMENTS = 64;
+const BUCKETS = 8;
 const MAX_DPR$1 = 2;
-const VERT = `
-attribute vec2 aPos;
-varying vec2 vUv;
-void main() {
-  vUv = aPos * 0.5 + 0.5;
-  gl_Position = vec4(aPos, 0.0, 1.0);
-}`;
-const FRAG = `
-precision highp float;
-varying vec2 vUv;
-uniform sampler2D uImage;
-uniform sampler2D uAtlas;
-uniform vec2 uCells;
-uniform vec2 uCover;   // scale of the photo inside the frame, for object-fit: cover
-uniform vec2 uMouse;   // 0-1, y up; far away when absent
-uniform float uAspect; // frame width / height
-uniform float uTime;
-uniform float uReveal; // 0 → 1 as it decodes in
-uniform float uGlitch; // 0 → 1 while a glitch band is active
-uniform float uGlitchY;
-uniform float uGlyphs;
-
-float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-
-vec2 cover(vec2 uv) { return (uv - 0.5) * uCover + 0.5; }
-
-void main() {
-  vec2 uv = vUv;
-
-  // A glitch shoves a band of rows sideways.
-  float band = step(abs(uv.y - uGlitchY), 0.035) * uGlitch;
-  uv.x += band * (hash(vec2(floor(uv.y * uCells.y), floor(uTime * 20.0))) - 0.5) * 0.12;
-
-  vec2 cell = floor(uv * uCells);
-  vec2 inCell = fract(uv * uCells);
-  vec2 centre = (cell + 0.5) / uCells;
-
-  vec2 photoUv = cover(vec2(centre.x, 1.0 - centre.y));
-  vec3 photo = texture2D(uImage, photoUv).rgb;
-  float lum = dot(photo, vec3(0.299, 0.587, 0.114));
-  // Lift the contrast, so the ramp is used end to end.
-  lum = clamp((lum - 0.08) * 1.35, 0.0, 1.0);
-
-  // Ripples spreading out from the pointer.
-  vec2 d = uv - uMouse;
-  d.x *= uAspect;
-  float dist = length(d);
-  lum += sin(dist * 55.0 - uTime * 7.0) * 0.22 * exp(-dist * 7.0);
-
-  // Decode in: rows below the sweep line are still random, flickering glyphs.
-  // The sweep runs past the bottom row, so every cell has settled by the end.
-  float settled = step(hash(cell) * 0.25, uReveal * 1.5 - (1.0 - centre.y) * 1.2);
-  float noise = hash(cell + floor(uTime * 18.0));
-  lum = mix(noise, lum, settled);
-
-  float index = floor(clamp(lum, 0.0, 0.999) * uGlyphs);
-  vec2 atlasUv = vec2((index + inCell.x) / uGlyphs, 1.0 - inCell.y);
-  float ink = texture2D(uAtlas, atlasUv).a;
-
-  // Glyphs take the photo's colour, brightened; unsettled ones glow cyan.
-  vec3 tint = mix(vec3(0.3, 0.9, 1.0), min(photo * 1.6 + 0.12, 1.0), settled);
-  vec3 ascii = tint * ink;
-  float alpha = ink * (0.35 + 0.65 * settled);
-
-  // The lens: inside it the real photo shows through.
-  float lens = (1.0 - smoothstep(0.1, 0.17, dist)) * uReveal;
-  vec3 real = texture2D(uImage, cover(vec2(uv.x, 1.0 - uv.y))).rgb;
-  vec3 color = mix(ascii, real, lens);
-  alpha = mix(alpha, 1.0, lens);
-
-  // A ring at the lens edge.
-  float ring = smoothstep(0.012, 0.0, abs(dist - 0.17)) * uReveal;
-  color += vec3(0.3, 0.9, 1.0) * ring * 0.8;
-  alpha = max(alpha, ring * 0.8);
-
-  gl_FragColor = vec4(color * alpha, alpha);
-}`;
-function makeAtlas() {
+function toVec(lat, lon) {
+  const la = lat * DEG;
+  const lo = lon * DEG;
+  return [Math.cos(la) * Math.sin(lo), Math.sin(la), Math.cos(la) * Math.cos(lo)];
+}
+function slerp(a, b, t) {
+  const dot = Math.min(1, Math.max(-1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
+  const omega = Math.acos(dot);
+  if (omega < 1e-5) return a;
+  const s = Math.sin(omega);
+  const wa = Math.sin((1 - t) * omega) / s;
+  const wb = Math.sin(t * omega) / s;
+  return [a[0] * wa + b[0] * wb, a[1] * wa + b[1] * wb, a[2] * wa + b[2] * wb];
+}
+function toRgb(color) {
   const c = document.createElement("canvas");
-  c.width = GLYPH_PX * RAMP.length;
-  c.height = GLYPH_PX;
+  c.width = c.height = 1;
   const g = c.getContext("2d");
-  g.fillStyle = "#fff";
-  g.textAlign = "center";
-  g.textBaseline = "middle";
-  g.font = `bold ${Math.round(GLYPH_PX * 0.92)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-  for (let i = 0; i < RAMP.length; i++) {
-    g.fillText(RAMP[i], i * GLYPH_PX + GLYPH_PX / 2, GLYPH_PX * 0.54);
-  }
-  return c;
+  g.fillStyle = "#888";
+  g.fillStyle = color;
+  g.fillRect(0, 0, 1, 1);
+  const [r, gr, b] = g.getImageData(0, 0, 1, 1).data;
+  return [r, gr, b];
 }
-function texture(gl, source) {
-  const t = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, t);
-  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  return t;
-}
-function AsciiPortrait({ src, className }) {
+const rgba = ([r, g, b], a) => `rgba(${r},${g},${b},${a})`;
+function DotGlobe({ className }) {
   const canvasRef = reactExports.useRef(null);
+  const [dragging, setDragging] = reactExports.useState(false);
+  const view = reactExports.useRef({
+    yaw: -31.24 * DEG + 0.35,
+    pitch: DEFAULT_PITCH,
+    vYaw: 0,
+    vPitch: 0,
+    drag: null
+  });
   reactExports.useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const gl = canvas.getContext("webgl", { premultipliedAlpha: true, antialias: false });
-    if (!gl) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const compile = (type, source) => {
-      const s = gl.createShader(type);
-      gl.shaderSource(s, source);
-      gl.compileShader(s);
-      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
-        throw new Error(gl.getShaderInfoLog(s) ?? "");
-      return s;
-    };
-    const program = gl.createProgram();
-    try {
-      gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
-      gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
-      gl.bindAttribLocation(program, 0, "aPos");
-      gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-    } catch {
-      return;
+    const raw = landDots();
+    const n = raw.length / 2;
+    const land = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      const [x, y, z] = toVec(raw[i * 2 + 1], raw[i * 2]);
+      land[i * 3] = x;
+      land[i * 3 + 1] = y;
+      land[i * 3 + 2] = z;
     }
-    gl.useProgram(program);
-    const u = (name) => gl.getUniformLocation(program, name);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(0);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    let imageAspect = 1;
-    let ready = false;
-    let cancelled = false;
+    const home = toVec(CAIRO.lat, CAIRO.lon);
+    const arcs = CITIES.map((c, i) => {
+      const to = toVec(c.lat, c.lon);
+      const angle = Math.acos(home[0] * to[0] + home[1] * to[1] + home[2] * to[2]);
+      const lift = 0.05 + angle * 0.1;
+      const pts = [];
+      for (let k = 0; k <= ARC_SEGMENTS; k++) {
+        const t = k / ARC_SEGMENTS;
+        const p = slerp(home, to, t);
+        const h = 1 + lift * Math.sin(Math.PI * t);
+        pts.push([p[0] * h, p[1] * h, p[2] * h]);
+      }
+      return { ...c, to, pts, offset: i * (ARC_MS + ARC_GAP_MS) * 0.45 };
+    });
+    const root = getComputedStyle(document.documentElement);
+    let P = [34, 211, 238];
+    let A = [168, 85, 247];
+    let primary = "";
+    let accent = "";
+    let ink = "";
+    const readColors = () => {
+      P = toRgb(root.getPropertyValue("--color-primary").trim() || "#22d3ee");
+      A = toRgb(root.getPropertyValue("--color-accent").trim() || "#a855f7");
+      primary = rgba(P, 1);
+      accent = rgba(A, 1);
+      ink = rgba(toRgb(getComputedStyle(canvas).color), 1);
+    };
+    readColors();
+    const mo = new MutationObserver(readColors);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
+    const resize = () => {
+      dpr = Math.min(MAX_DPR$1, window.devicePixelRatio || 1);
+      W = canvas.clientWidth;
+      H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    const buckets = Array.from({ length: BUCKETS }, () => []);
+    const draw = (now2) => {
+      const v = view.current;
+      const R = Math.min(W, H) * 0.37;
+      const cx = W / 2;
+      const cy = H / 2;
+      const cyaw = Math.cos(v.yaw);
+      const syaw = Math.sin(v.yaw);
+      const cp = Math.cos(v.pitch);
+      const sp = Math.sin(v.pitch);
+      const rot = (x, y, z) => {
+        const x1 = x * cyaw + z * syaw;
+        const z1 = -x * syaw + z * cyaw;
+        const y2 = y * cp - z1 * sp;
+        const z2 = y * sp + z1 * cp;
+        return [x1, y2, z2];
+      };
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const glow = ctx.createRadialGradient(cx, cy, R * 0.9, cx, cy, R * 1.25);
+      glow.addColorStop(0, rgba(P, 0));
+      glow.addColorStop(0.35, rgba(P, 0.22));
+      glow.addColorStop(1, rgba(P, 0));
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, W, H);
+      const body = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
+      body.addColorStop(0, rgba(P, 0.1));
+      body.addColorStop(1, rgba(A, 0.06));
+      ctx.fillStyle = body;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fill();
+      for (const b of buckets) b.length = 0;
+      for (let i = 0; i < n; i++) {
+        const [x, y, z] = rot(land[i * 3], land[i * 3 + 1], land[i * 3 + 2]);
+        const k = Math.min(BUCKETS - 1, Math.floor((z + 1) / 2 * BUCKETS));
+        buckets[k].push(cx + x * R, cy - y * R);
+      }
+      for (let k = 0; k < BUCKETS; k++) {
+        const depth = (k + 0.5) / BUCKETS;
+        const front = depth > 0.5;
+        ctx.globalAlpha = front ? 0.25 + (depth - 0.5) * 1.5 : 0.06 + depth * 0.1;
+        ctx.fillStyle = front ? ink : primary;
+        const size = front ? 1.1 + (depth - 0.5) * 2.4 : 0.9;
+        const list = buckets[k];
+        for (let i = 0; i < list.length; i += 2) {
+          ctx.fillRect(list[i] - size / 2, list[i + 1] - size / 2, size, size);
+        }
+      }
+      ctx.globalAlpha = 1;
+      const shown = (p) => p[2] > 0 || Math.hypot(p[0], p[1]) > 1;
+      const cycle = arcs.length * (ARC_MS + ARC_GAP_MS) * 0.45 + ARC_MS;
+      for (const a of arcs) {
+        const t = (now2 + cycle - a.offset) % cycle / ARC_MS;
+        if (t > 1.35) continue;
+        const head = Math.min(1, t);
+        const tail = Math.max(0, t - 0.55);
+        const from = Math.floor(tail * ARC_SEGMENTS);
+        const to = Math.floor(head * ARC_SEGMENTS);
+        const grad = ctx.createLinearGradient(0, 0, W, 0);
+        grad.addColorStop(0, primary);
+        grad.addColorStop(1, accent);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.4;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        let pen = false;
+        for (let k = from; k <= to; k++) {
+          const p = rot(...a.pts[k]);
+          if (!shown(p)) {
+            pen = false;
+            continue;
+          }
+          const x = cx + p[0] * R;
+          const y = cy - p[1] * R;
+          if (pen) ctx.lineTo(x, y);
+          else ctx.moveTo(x, y);
+          pen = true;
+        }
+        ctx.globalAlpha = t > 1 ? Math.max(0, 1 - (t - 1) / 0.35) : 0.9;
+        ctx.stroke();
+        if (t < 1) {
+          const p = rot(...a.pts[to]);
+          if (shown(p)) {
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "#fff";
+            ctx.shadowColor = primary;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(cx + p[0] * R, cy - p[1] * R, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+        if (t >= 1) {
+          const p = rot(...a.to);
+          if (p[2] > 0) {
+            const s = (t - 1) / 0.35;
+            const x = cx + p[0] * R;
+            const y = cy - p[1] * R;
+            ctx.globalAlpha = 1 - s;
+            ctx.strokeStyle = accent;
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(x, y, 3 + s * 12, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = ink;
+            ctx.font = "600 10px ui-monospace, SFMono-Regular, Menlo, monospace";
+            ctx.fillText(a.name, x + 7, y - 6);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+      const c = rot(...home);
+      if (c[2] > 0) {
+        const x = cx + c[0] * R;
+        const y = cy - c[1] * R;
+        const pulse = now2 / 1400 % 1;
+        ctx.strokeStyle = primary;
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 1 - pulse;
+        ctx.beginPath();
+        ctx.arc(x, y, 4 + pulse * 16, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = primary;
+        ctx.shadowColor = primary;
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(x, y, 3.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = ink;
+        ctx.font = "700 11px ui-monospace, SFMono-Regular, Menlo, monospace";
+        ctx.fillText(CAIRO.name, x + 8, y + 4);
+      }
+    };
     let raf = 0;
+    let last = performance.now();
     let visible = false;
-    let revealStart = -1;
-    let mouse = { x: -10, y: -10 };
-    let target = { x: -10, y: -10 };
-    let glitchUntil = 0;
-    let glitchY = 0.5;
-    let nextGlitch = performance.now() + 3e3;
-    gl.activeTexture(gl.TEXTURE1);
-    texture(gl, makeAtlas());
-    gl.uniform1i(u("uAtlas"), 1);
-    gl.uniform1f(u("uGlyphs"), RAMP.length);
-    const size = () => {
-      const dpr = Math.min(MAX_DPR$1, window.devicePixelRatio || 1);
-      const w = Math.max(1, Math.round(canvas.clientWidth * dpr));
-      const h = Math.max(1, Math.round(canvas.clientHeight * dpr));
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-      gl.viewport(0, 0, w, h);
-      const aspect = canvas.clientWidth / Math.max(1, canvas.clientHeight);
-      gl.uniform2f(
-        u("uCells"),
-        Math.round(canvas.clientWidth / CELL_CSS_PX),
-        Math.round(canvas.clientHeight / (CELL_CSS_PX * 1.25))
-      );
-      gl.uniform1f(u("uAspect"), aspect);
-      gl.uniform2f(
-        u("uCover"),
-        aspect > imageAspect ? 1 : aspect / imageAspect,
-        aspect > imageAspect ? imageAspect / aspect : 1
-      );
-    };
-    const render = (now2) => {
-      if (!ready) return;
-      size();
-      mouse.x += (target.x - mouse.x) * 0.18;
-      mouse.y += (target.y - mouse.y) * 0.18;
-      const reveal = reduce ? 1 : revealStart < 0 ? 0 : Math.min(1, (now2 - revealStart) / REVEAL_MS);
-      if (!reduce && now2 > nextGlitch) {
-        glitchUntil = now2 + 180;
-        glitchY = 0.1 + Math.random() * 0.8;
-        nextGlitch = now2 + 3500 + Math.random() * 5e3;
-      }
-      gl.uniform2f(u("uMouse"), mouse.x, mouse.y);
-      gl.uniform1f(u("uTime"), reduce ? 0 : now2 / 1e3);
-      gl.uniform1f(u("uReveal"), reveal);
-      gl.uniform1f(u("uGlitch"), now2 < glitchUntil ? 1 : 0);
-      gl.uniform1f(u("uGlitchY"), glitchY);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    };
-    const frame = (now2) => {
-      raf = requestAnimationFrame(frame);
-      if (!visible || document.hidden) return;
-      render(now2);
-    };
-    const img = new Image();
-    img.decoding = "async";
-    img.onload = () => {
-      if (cancelled) return;
-      imageAspect = img.naturalWidth / img.naturalHeight;
-      gl.activeTexture(gl.TEXTURE0);
-      texture(gl, img);
-      gl.uniform1i(u("uImage"), 0);
-      ready = true;
-      if (reduce) render(performance.now());
-      else raf = requestAnimationFrame(frame);
-    };
-    img.src = src;
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible && revealStart < 0) revealStart = performance.now();
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
     });
     io.observe(canvas);
-    const aim = (clientX, clientY) => {
-      const r = canvas.getBoundingClientRect();
-      const inside = clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom;
-      target = inside ? { x: (clientX - r.left) / r.width, y: 1 - (clientY - r.top) / r.height } : { x: -10, y: -10 };
-      if (inside && mouse.x < -1) mouse = { ...target };
+    const frame = (now2) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min(0.05, (now2 - last) / 1e3);
+      last = now2;
+      if (!visible || document.hidden) return;
+      const v = view.current;
+      if (!v.drag) {
+        v.yaw += (v.vYaw + (reduce ? 0 : IDLE_SPIN)) * dt;
+        v.pitch += v.vPitch * dt;
+        const decay = Math.exp(-2.2 * dt);
+        v.vYaw *= decay;
+        v.vPitch *= decay;
+        v.pitch += (DEFAULT_PITCH - v.pitch) * (1 - Math.exp(-1.5 * dt));
+      }
+      draw(reduce ? 0 : now2);
     };
-    const onPointerMove = (e) => aim(e.clientX, e.clientY);
-    const onTouchMove = (e) => {
-      const t = e.touches[0];
-      if (t) aim(t.clientX, t.clientY);
-    };
-    const onTouchEnd = () => {
-      target = { x: -10, y: -10 };
-    };
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    raf = requestAnimationFrame(frame);
     return () => {
-      cancelled = true;
       cancelAnimationFrame(raf);
       io.disconnect();
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      ro.disconnect();
+      mo.disconnect();
     };
-  }, [src]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("canvas", { ref: canvasRef, "aria-hidden": true, className });
+  }, []);
+  const perPx = () => 1 / ((canvasRef.current?.clientWidth ?? 300) * 0.37);
+  const onDown = (e) => {
+    if (e.button !== 0) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const v = view.current;
+    v.drag = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId };
+    v.vYaw = v.vPitch = 0;
+    setDragging(true);
+  };
+  const onMove = (e) => {
+    const v = view.current;
+    const d = v.drag;
+    if (!d || d.id !== e.pointerId) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
+    const now2 = performance.now();
+    const dt = Math.max(1, now2 - d.t) / 1e3;
+    const dyaw = (e.clientX - d.x) * perPx();
+    const dpitch = (e.clientY - d.y) * perPx();
+    v.yaw += dyaw;
+    v.pitch = Math.max(-1.1, Math.min(1.1, v.pitch + dpitch));
+    v.vYaw = v.vYaw * 0.5 + dyaw / dt * 0.5;
+    v.vPitch = v.vPitch * 0.5 + dpitch / dt * 0.5;
+    d.x = e.clientX;
+    d.y = e.clientY;
+    d.t = now2;
+  };
+  const onUp = () => {
+    const v = view.current;
+    if (!v.drag) return;
+    if (performance.now() - v.drag.t > 80) v.vYaw = v.vPitch = 0;
+    v.vYaw = Math.max(-8, Math.min(8, v.vYaw));
+    v.vPitch = Math.max(-4, Math.min(4, v.vPitch));
+    v.drag = null;
+    setDragging(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "canvas",
+    {
+      ref: canvasRef,
+      "aria-hidden": true,
+      "data-cursor": dragging ? "Spin" : "Drag",
+      onPointerDown: onDown,
+      onPointerMove: onMove,
+      onPointerUp: onUp,
+      onPointerCancel: onUp,
+      onLostPointerCapture: onUp,
+      className: `touch-pan-y text-foreground ${dragging ? "cursor-grabbing" : "cursor-grab"} ${className ?? ""}`
+    }
+  );
 }
 const ZONE = "Africa/Cairo";
 function now() {
@@ -2344,17 +2433,13 @@ function ScrollLit({ text, className }) {
     i < words.length - 1 ? " " : ""
   ] }, i)) });
 }
-const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
-const photos = [
-  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" }
-];
 const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 function Contact() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "section",
     {
       id: "contact",
-      className: "py-24 border-t border-border grid gap-12 lg:grid-cols-[1fr_300px] lg:items-center",
+      className: "py-24 border-t border-border grid gap-10 lg:grid-cols-[1fr_340px] lg:items-center",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -2409,15 +2494,9 @@ function Contact() {
             ] }) }) })
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("figure", { className: "relative mx-auto w-full max-w-[300px]", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            AsciiPortrait,
-            {
-              src: photos[0].src,
-              className: "block h-[380px] w-full rounded-xl border border-border bg-background/40"
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("figcaption", { className: "mt-2 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "./me --ascii · hover to look closer" })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("figure", { className: "mx-auto w-full max-w-[340px] select-none", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(DotGlobe, { className: "block aspect-square w-full" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("figcaption", { className: "mt-1 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Cairo → anywhere · drag to spin" })
         ] })
       ]
     }
@@ -2934,6 +3013,10 @@ function LanyardBadge({ photo, photoAlt }) {
     }
   );
 }
+const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
+const photos = [
+  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" }
+];
 function useSinkOnScroll() {
   const ref = reactExports.useRef(null);
   reactExports.useEffect(() => {
