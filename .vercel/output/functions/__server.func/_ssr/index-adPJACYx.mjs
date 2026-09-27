@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DbAeMdSB.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-C_KLriFw.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, R as RotateCw, d as GraduationCap, e as MapPin, f as Globe, P as Phone, S as SquareTerminal, g as Sun, h as Moon, i as Pause, j as Play, D as Download, X } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, R as RotateCw, d as GraduationCap, e as MapPin, f as Globe, P as Phone, S as SquareTerminal, g as Sun, h as Moon, i as Play, j as Pause, k as Activity, Z as Zap, l as Radar, m as Skull, D as Download, X } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -931,7 +931,7 @@ const BURST = 7;
 const SHOT_GAP_MS = 95;
 const ROUND_MS = 110;
 const MUZZLE_Y = 17;
-const rand = (min, max) => min + Math.random() * (max - min);
+const rand$1 = (min, max) => min + Math.random() * (max - min);
 const other = (name) => name === "alice" ? "bob" : "alice";
 const mover = (x) => ({
   x,
@@ -1032,7 +1032,7 @@ function RobotWorld({ walkway }) {
       const { min, max } = span();
       const from = world.current.ball.x;
       const mid = (min + max) / 2;
-      const target = name === "alice" ? rand(mid, max - BALL_PX) : rand(min, mid);
+      const target = name === "alice" ? rand$1(mid, max - BALL_PX) : rand$1(min, mid);
       const distance = Math.abs(target - from);
       const ms = distance / SPEED.ball * 1e3;
       set((w) => {
@@ -1052,8 +1052,8 @@ function RobotWorld({ walkway }) {
     const wander = async (name) => {
       while (!cancelled) {
         const { min, max } = span();
-        await walk(name, rand(min, max), SPEED.wander);
-        await sleep(rand(...PAUSE_MS));
+        await walk(name, rand$1(min, max), SPEED.wander);
+        await sleep(rand$1(...PAUSE_MS));
       }
     };
     const fallOver = async () => {
@@ -1076,7 +1076,7 @@ function RobotWorld({ walkway }) {
         for (const n of ROBOT_NAMES) {
           w[n] = {
             ...w[n],
-            x: rand(min, max),
+            x: rand$1(min, max),
             ms: 0,
             fallen: false,
             hidden: false,
@@ -1142,7 +1142,7 @@ function RobotWorld({ walkway }) {
         const shot = {
           id,
           x: s.x + (s.facing === 1 ? ROBOT_W + 22 : -22),
-          to: v.x + ROBOT_W / 2 + rand(-4, 4),
+          to: v.x + ROBOT_W / 2 + rand$1(-4, 4),
           bottom: (s.grounded ? FLOOR_PX : LINE_PX) + MUZZLE_Y,
           ms: 0
         };
@@ -1597,7 +1597,7 @@ function Scramble({ text }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { ref, "aria-label": text, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-hidden": true, children: shown }) });
 }
 const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
-const COLORS = [
+const COLORS$1 = [
   "#ef4444",
   "#f59e0b",
   "#22c55e",
@@ -1665,7 +1665,7 @@ function ContestBalloons({
       const g = document.createElementNS(NS, "g");
       g.setAttribute("data-balloon", String(i));
       g.style.cursor = "grab";
-      const c = COLORS[i % COLORS.length];
+      const c = COLORS$1[i % COLORS$1.length];
       g.innerHTML = `
         <path d="M0,-1 l-3.5,6 h7 z" fill="${c}"/>
         <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${c}"/>
@@ -1876,7 +1876,7 @@ function ContestBalloons({
         a: Math.random() * 360,
         va: (Math.random() - 0.5) * 900,
         life: 0.9 + Math.random() * 0.5,
-        c: COLORS[i % COLORS.length]
+        c: COLORS$1[i % COLORS$1.length]
       });
     }
     s.booms.push({ x: k.x, y: cy - RADIUS, t: performance.now() });
@@ -4009,6 +4009,1340 @@ function ProjectsFan({ onSelect }) {
     }
   );
 }
+const NODES = [
+  {
+    id: "app",
+    label: "Flutter app",
+    sub: "iOS · Android",
+    x: 90,
+    y: 150,
+    kind: "client",
+    info: "Learners ask questions by typing, speaking or taking a photo, and open lessons."
+  },
+  {
+    id: "admin",
+    label: "Admin dashboard",
+    sub: "Next.js",
+    x: 90,
+    y: 300,
+    kind: "client",
+    info: "Internal dashboard reading the same API."
+  },
+  {
+    id: "stripe",
+    label: "Billing webhooks",
+    sub: "Stripe · RevenueCat",
+    x: 90,
+    y: 470,
+    kind: "external",
+    info: "Subscription events. Entitlement is derived from live subscription state, which is what closed the Premium-downgrade revenue leak."
+  },
+  {
+    id: "ingress",
+    label: "Ingress",
+    sub: "Kubernetes · TLS",
+    x: 255,
+    y: 300,
+    kind: "edge",
+    replicas: 2,
+    perPod: 64,
+    info: "Terminates TLS and routes only to pods that are Ready."
+  },
+  {
+    id: "hub",
+    label: "API hub",
+    sub: "FastAPI · WorkOS + JWT",
+    x: 430,
+    y: 300,
+    kind: "service",
+    replicas: 3,
+    perPod: 12,
+    info: "Owns everything user-facing: auth, learners, lessons, XP, 1v1 challenges, search, webhooks. It coordinates the pipeline by enqueueing jobs rather than doing inference itself."
+  },
+  {
+    id: "postgres",
+    label: "PostgreSQL",
+    sub: "pgvector",
+    x: 430,
+    y: 525,
+    kind: "store",
+    info: "Relational data plus pgvector embeddings for the similarity search."
+  },
+  {
+    id: "redis",
+    label: "Redis",
+    sub: "ARQ job queues",
+    x: 610,
+    y: 300,
+    kind: "store",
+    info: "Queues between pipeline stages. A stage picks a job up when one of its pods has a free slot."
+  },
+  {
+    id: "similarity",
+    label: "similarity-checker",
+    sub: "embed → pgvector",
+    x: 800,
+    y: 80,
+    kind: "worker",
+    replicas: 2,
+    min: 1,
+    max: 5,
+    perPod: 4,
+    info: "Embeds each incoming question and searches pgvector, so a lesson that already exists is reused instead of rebuilt."
+  },
+  {
+    id: "enricher",
+    label: "question-enricher",
+    sub: "ARQ worker",
+    x: 800,
+    y: 195,
+    kind: "worker",
+    replicas: 2,
+    min: 1,
+    max: 5,
+    perPod: 4,
+    info: "Enriches the raw question before the lesson is built."
+  },
+  {
+    id: "builder",
+    label: "lesson-builder",
+    sub: "13-step Gemini pipeline",
+    x: 800,
+    y: 310,
+    kind: "worker",
+    replicas: 3,
+    min: 1,
+    max: 8,
+    perPod: 2,
+    info: "Builds the bilingual EN/AR lesson in 13 Gemini steps, then writes it to S3."
+  },
+  {
+    id: "images",
+    label: "images-manager",
+    sub: "Gemini image · Pillow",
+    x: 800,
+    y: 425,
+    kind: "worker",
+    replicas: 2,
+    min: 1,
+    max: 5,
+    perPod: 3,
+    info: "Generates the lesson's illustrations, post-processes them and stores them in S3."
+  },
+  {
+    id: "audio",
+    label: "audio-manager",
+    sub: "Gemini TTS",
+    x: 800,
+    y: 540,
+    kind: "worker",
+    replicas: 2,
+    min: 1,
+    max: 5,
+    perPod: 3,
+    info: "Narrates the lesson with Gemini TTS and stores the audio in S3."
+  },
+  {
+    id: "gemini",
+    label: "Gemini",
+    sub: "text · image · TTS",
+    x: 1005,
+    y: 250,
+    kind: "external",
+    info: "External model API. Everything in the pipeline depends on it, so its failures are the ones worth rehearsing."
+  },
+  {
+    id: "s3",
+    label: "S3",
+    sub: "lessons · media",
+    x: 1005,
+    y: 480,
+    kind: "store",
+    info: "Lesson JSON, illustrations and narration."
+  }
+];
+const EDGES = [
+  { a: "app", b: "ingress" },
+  { a: "admin", b: "ingress" },
+  { a: "stripe", b: "ingress" },
+  { a: "ingress", b: "hub" },
+  { a: "hub", b: "redis" },
+  { a: "hub", b: "postgres" },
+  { a: "redis", b: "similarity" },
+  { a: "redis", b: "enricher" },
+  { a: "redis", b: "builder" },
+  { a: "redis", b: "images" },
+  { a: "redis", b: "audio" },
+  { a: "similarity", b: "gemini" },
+  { a: "enricher", b: "gemini" },
+  { a: "builder", b: "gemini" },
+  { a: "images", b: "gemini" },
+  { a: "audio", b: "gemini" },
+  { a: "similarity", b: "postgres", arc: 0 },
+  { a: "builder", b: "s3" },
+  { a: "images", b: "s3" },
+  { a: "audio", b: "s3" },
+  // Workers patch status back to the hub over HTTP.
+  { a: "similarity", b: "hub", callback: true, arc: -70 },
+  { a: "images", b: "hub", callback: true, arc: 60 },
+  { a: "audio", b: "hub", callback: true, arc: 90 }
+];
+const NODE_W = 150;
+const NODE_H = 54;
+const nodeById = Object.fromEntries(NODES.map((n) => [n.id, n]));
+function curve(e) {
+  const A = nodeById[e.a];
+  const B = nodeById[e.b];
+  const dx = B.x - A.x;
+  const dy = B.y - A.y;
+  const bend = e.arc ?? 0;
+  if (Math.abs(dx) < 40) {
+    return [A, { x: A.x + 40, y: A.y + dy / 3 }, { x: B.x + 40, y: B.y - dy / 3 }, B];
+  }
+  return [A, { x: A.x + dx * 0.5, y: A.y + bend }, { x: B.x - dx * 0.5, y: B.y + bend }, B];
+}
+function bezier([p0, p1, p2, p3], t) {
+  const u = 1 - t;
+  const a = u * u * u;
+  const b = 3 * u * u * t;
+  const c = 3 * u * t * t;
+  const d = t * t * t;
+  return {
+    x: a * p0.x + b * p1.x + c * p2.x + d * p3.x,
+    y: a * p0.y + b * p1.y + c * p2.y + d * p3.y
+  };
+}
+function curveLength(c) {
+  let len = 0;
+  let prev = c[0];
+  for (let i = 1; i <= 24; i++) {
+    const p = bezier(c, i / 24);
+    len += Math.hypot(p.x - prev.x, p.y - prev.y);
+    prev = p;
+  }
+  return len;
+}
+function edgeKey(a, b) {
+  return a < b ? `${a}|${b}` : `${b}|${a}`;
+}
+const edgeByKey = Object.fromEntries(EDGES.map((e) => [edgeKey(e.a, e.b), e]));
+class Aborted extends Error {
+}
+class Timeout extends Error {
+}
+class ModelError extends Error {
+}
+const TRAVEL_PX_PER_MS = 0.9;
+const RESTART_BACKOFF_MS = 1400;
+const READINESS_MS = 1900;
+const HTTP_TIMEOUT_MS = 3500;
+const MAX_ATTEMPTS = 4;
+const RETRY_BASE_MS = 500;
+const BUILD_STEPS = 13;
+const REUSE_RATE = 0.3;
+const WINDOW_MS = 2e4;
+const rand = (a, b) => a + Math.random() * (b - a);
+const RATES = { read: 5, question: 0.9, webhook: 0.25 };
+class Simulation {
+  now = 0;
+  speed = 1;
+  paused = false;
+  traffic = 1;
+  autoscale = true;
+  geminiDown = false;
+  spikeUntil = -1;
+  packets = [];
+  services = {};
+  trace = null;
+  built = 0;
+  reused = 0;
+  retries = 0;
+  deadLettered = 0;
+  failed = 0;
+  done = [];
+  geminiCalls = [];
+  heap = [];
+  seq = 0;
+  ids = 0;
+  nextArrival = { read: 0, question: 0, webhook: 0 };
+  lengths = {};
+  nextScale = 0;
+  constructor() {
+    for (const def of NODES) {
+      if (!def.replicas) continue;
+      this.services[def.id] = {
+        def,
+        pods: Array.from({ length: def.replicas }, () => this.pod("ready")),
+        waiters: [],
+        idleFor: 0,
+        lastError: -1e9,
+        step: 0
+      };
+    }
+    for (const [k, e] of Object.entries(edgeByKey)) this.lengths[k] = curveLength(curve(e));
+  }
+  // ---- clock -------------------------------------------------------------
+  at(t, fn) {
+    const h = this.heap;
+    h.push({ t, seq: this.seq++, fn });
+    let i = h.length - 1;
+    while (i > 0) {
+      const p = i - 1 >> 1;
+      if (h[p].t < h[i].t || h[p].t === h[i].t && h[p].seq < h[i].seq) break;
+      [h[p], h[i]] = [h[i], h[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const h = this.heap;
+    const top = h[0];
+    const last = h.pop();
+    if (h.length) {
+      h[0] = last;
+      let i = 0;
+      for (; ; ) {
+        const l = i * 2 + 1;
+        const r = l + 1;
+        let m = i;
+        const less = (a, b) => h[a].t < h[b].t || h[a].t === h[b].t && h[a].seq < h[b].seq;
+        if (l < h.length && less(l, m)) m = l;
+        if (r < h.length && less(r, m)) m = r;
+        if (m === i) break;
+        [h[m], h[i]] = [h[i], h[m]];
+        i = m;
+      }
+    }
+    return top;
+  }
+  sleep(ms) {
+    return new Promise((resolve) => this.at(this.now + Math.max(0, ms), resolve));
+  }
+  /** Advances simulated time by a frame's worth of real time. */
+  step(realMs) {
+    if (this.paused) return;
+    const dt = Math.min(100, realMs) * this.speed;
+    const end = this.now + dt;
+    this.arrivals(end);
+    while (this.heap.length && this.heap[0].t <= end) {
+      const e = this.pop();
+      this.now = e.t;
+      e.fn();
+    }
+    this.now = end;
+    if (this.now >= this.nextScale) {
+      this.nextScale = this.now + 1e3;
+      this.scale(1e3);
+    }
+    this.packets = this.packets.filter((p) => p.t0 + p.dur > this.now);
+    const cutoff = this.now - WINDOW_MS;
+    if (this.done.length && this.done[0].t < cutoff)
+      this.done = this.done.filter((d) => d.t >= cutoff);
+    if (this.geminiCalls.length && this.geminiCalls[0] < this.now - 5e3)
+      this.geminiCalls = this.geminiCalls.filter((t) => t >= this.now - 5e3);
+  }
+  // ---- traffic -------------------------------------------------------------
+  arrivals(until) {
+    const boost = this.now < this.spikeUntil ? 5 : 1;
+    for (const flow of ["read", "question", "webhook"]) {
+      const rate = RATES[flow] * this.traffic * boost / 1e3;
+      if (rate <= 0) continue;
+      if (this.nextArrival[flow] < this.now) this.nextArrival[flow] = this.now;
+      while (this.nextArrival[flow] <= until) {
+        const t = this.nextArrival[flow];
+        this.at(t, () => this.start(flow, false));
+        this.nextArrival[flow] += -Math.log(1 - Math.random()) / rate;
+      }
+    }
+  }
+  start(flow, traced) {
+    const run = flow === "read" ? this.read : flow === "question" ? this.question : this.webhook;
+    const t0 = this.now;
+    const net = { visual: 0, modelled: 0 };
+    const ms = () => flow === "question" ? this.now - t0 : this.now - t0 - net.visual + net.modelled;
+    if (traced) this.trace = { id: ++this.ids, spans: [], start: t0 };
+    run.call(this, traced, net).then(
+      (outcome) => {
+        this.done.push({
+          flow,
+          t: this.now,
+          ms: ms(),
+          ok: true,
+          built: outcome === "lesson built"
+        });
+        if (traced && this.trace) {
+          this.trace.end = this.now;
+          this.trace.outcome = outcome;
+        }
+      },
+      (e) => {
+        this.done.push({ flow, t: this.now, ms: ms(), ok: false });
+        this.failed++;
+        if (traced && this.trace) {
+          this.trace.end = this.now;
+          this.trace.outcome = e.message || "failed";
+        }
+      }
+    );
+  }
+  // ---- primitives ------------------------------------------------------------
+  span(traced, name, node) {
+    if (!traced || !this.trace) return null;
+    const s = { name, node, start: this.now, status: "ok" };
+    this.trace.spans.push(s);
+    return s;
+  }
+  close(s, status = "ok") {
+    if (!s) return;
+    s.end = this.now;
+    s.status = status;
+  }
+  /** A hop along the map, as a packet; resolves on arrival. */
+  async travel(from, to, flow, traced, failed = false, net) {
+    const len = this.lengths[edgeKey(from, to)] ?? 200;
+    const dur = len / TRAVEL_PX_PER_MS;
+    if (net) {
+      net.visual += dur;
+      net.modelled += rand(0.3, 1.2);
+    }
+    this.packets.push({ id: ++this.ids, from, to, t0: this.now, dur, flow, traced, failed });
+    await this.sleep(dur);
+  }
+  pod(state) {
+    return { id: ++this.ids, state, busy: 0, tokens: /* @__PURE__ */ new Set() };
+  }
+  freePod(svc) {
+    let best = null;
+    for (const p of svc.pods) {
+      if (p.state !== "ready" || p.busy >= (svc.def.perPod ?? 1)) continue;
+      if (!best || p.busy < best.busy) best = p;
+    }
+    return best;
+  }
+  take(svc, pod) {
+    const t = { pod, aborted: false, svc };
+    pod.busy++;
+    pod.tokens.add(t);
+    return t;
+  }
+  /** A slot on one of the service's Ready pods, queueing if there is none. */
+  acquire(id, timeoutMs) {
+    const svc = this.services[id];
+    const pod = this.freePod(svc);
+    if (pod && !svc.waiters.length) return Promise.resolve(this.take(svc, pod));
+    return new Promise((resolve, reject) => {
+      const w = { resolve, reject };
+      svc.waiters.push(w);
+      if (timeoutMs) {
+        this.seq;
+        this.at(this.now + timeoutMs, () => {
+          const i = svc.waiters.indexOf(w);
+          if (i < 0) return;
+          svc.waiters.splice(i, 1);
+          svc.lastError = this.now;
+          reject(new Timeout("504 · no ready pod"));
+        });
+      }
+    });
+  }
+  release(t) {
+    t.pod.busy--;
+    t.pod.tokens.delete(t);
+    if (t.pod.state === "terminating" && t.pod.busy === 0) {
+      t.svc.pods = t.svc.pods.filter((p) => p !== t.pod);
+    }
+    this.pump(t.svc);
+  }
+  pump(svc) {
+    while (svc.waiters.length) {
+      const pod = this.freePod(svc);
+      if (!pod) return;
+      const w = svc.waiters.shift();
+      w.resolve(this.take(svc, pod));
+    }
+  }
+  /** Time spent on a slot that has already been acquired; throws if its pod died. */
+  async busy(t, ms) {
+    await this.sleep(ms);
+    if (t.aborted) throw new Aborted("pod killed");
+  }
+  async gemini(from, flow, traced, what, ms) {
+    const s = this.span(traced, what, "gemini");
+    await this.travel(from, "gemini", flow, traced);
+    this.geminiCalls.push(this.now);
+    if (this.geminiDown && Math.random() < 0.85) {
+      await this.sleep(rand(150, 300));
+      this.services[from].lastError = this.now;
+      await this.travel("gemini", from, flow, traced, true);
+      this.close(s, "error");
+      throw new ModelError("Gemini 503");
+    }
+    await this.sleep(ms);
+    await this.travel("gemini", from, flow, traced);
+    this.close(s);
+  }
+  /**
+   * One pipeline stage as an ARQ job: wait for a slot, run, and on failure
+   * give the slot back and come back later with exponential backoff.
+   */
+  async job(stage, traced, run) {
+    for (let attempt = 1; ; attempt++) {
+      const q = this.span(traced, `queued · ${stage}`, "redis");
+      const token = await this.acquire(stage);
+      this.close(q);
+      const s = this.span(traced, attempt > 1 ? `${stage} (attempt ${attempt})` : stage, stage);
+      try {
+        await run(token);
+        this.release(token);
+        this.close(s);
+        return;
+      } catch (e) {
+        this.release(token);
+        this.services[stage].lastError = this.now;
+        if (attempt >= MAX_ATTEMPTS) {
+          this.close(s, "error");
+          this.deadLettered++;
+          throw new Error(`dead-lettered at ${stage}`);
+        }
+        this.close(s, "retry");
+        this.retries++;
+        if (e instanceof Aborted) continue;
+        const backoff = RETRY_BASE_MS * 2 ** (attempt - 1) * rand(0.8, 1.2);
+        const d = this.span(traced, `backoff ${Math.round(backoff)}ms`, "redis");
+        await this.sleep(backoff);
+        this.close(d, "retry");
+      }
+    }
+  }
+  // ---- flows ---------------------------------------------------------------
+  /** GET /lessons/{id}: through Ingress to the hub, a Postgres read, and back. */
+  async read(traced, net) {
+    const client = Math.random() < 0.8 ? "app" : "admin";
+    await this.travel(client, "ingress", "read", traced, false, net);
+    await this.http(client, "read", traced, "GET /lessons/{id}", net, async (t) => {
+      await this.busy(t, rand(4, 12));
+      const s = this.span(traced, "SELECT lesson", "postgres");
+      await this.travel("hub", "postgres", "read", traced, false, net);
+      await this.sleep(rand(4, 18));
+      await this.travel("postgres", "hub", "read", traced, false, net);
+      this.close(s);
+      if (t.aborted) throw new Aborted("pod killed");
+    });
+    await this.travel("ingress", client, "read", traced, false, net);
+    return "200 OK";
+  }
+  /** A billing webhook updating entitlement from live subscription state. */
+  async webhook(traced, net) {
+    await this.travel("stripe", "ingress", "webhook", traced, false, net);
+    await this.http("stripe", "webhook", traced, "POST /webhooks/billing", net, async (t) => {
+      await this.busy(t, rand(3, 8));
+      const s = this.span(traced, "UPDATE entitlement", "postgres");
+      await this.travel("hub", "postgres", "webhook", traced, false, net);
+      await this.sleep(rand(6, 20));
+      await this.travel("postgres", "hub", "webhook", traced, false, net);
+      this.close(s);
+    });
+    await this.travel("ingress", "stripe", "webhook", traced, false, net);
+    return "200 OK";
+  }
+  /**
+   * The hub leg of an HTTP request: Ingress waits for a Ready hub pod (504
+   * after a while), and a pod dying mid-request turns into a 502.
+   */
+  async http(client, flow, traced, name, net, handler) {
+    const s = this.span(traced, name, "hub");
+    let token;
+    try {
+      token = await this.acquire("hub", HTTP_TIMEOUT_MS);
+    } catch (e) {
+      this.close(s, "error");
+      await this.travel("ingress", client, flow, traced, true, net);
+      throw e;
+    }
+    await this.travel("ingress", "hub", flow, traced, false, net);
+    try {
+      await handler(token);
+    } catch (e) {
+      this.release(token);
+      this.close(s, "error");
+      this.services.hub.lastError = this.now;
+      await this.travel("hub", "ingress", flow, traced, true, net);
+      await this.travel("ingress", client, flow, traced, true, net);
+      throw e instanceof Aborted ? new Error("502 · pod killed mid-request") : e;
+    }
+    this.release(token);
+    await this.travel("hub", "ingress", flow, traced, false, net);
+    this.close(s);
+  }
+  /**
+   * A learner asks a question. The hub answers 202 at once and enqueues the
+   * job; the pipeline then checks for an existing lesson, enriches, builds in
+   * 13 Gemini steps, and fans out to images and audio in parallel.
+   */
+  async question(traced, _net) {
+    await this.travel("app", "ingress", "question", traced);
+    await this.http("app", "question", traced, "POST /questions → 202", void 0, async (t) => {
+      await this.busy(t, rand(6, 14));
+      await this.travel("hub", "redis", "question", traced);
+      await this.travel("redis", "hub", "question", traced);
+    });
+    void this.travel("ingress", "app", "question", traced);
+    await this.travel("redis", "similarity", "question", traced);
+    let duplicate = false;
+    await this.job("similarity", traced, async (t) => {
+      await this.gemini("similarity", "question", traced, "embed question", rand(200, 380));
+      const s2 = this.span(traced, "pgvector search", "postgres");
+      await this.travel("similarity", "postgres", "question", traced);
+      await this.sleep(rand(15, 45));
+      await this.travel("postgres", "similarity", "question", traced);
+      this.close(s2);
+      if (t.aborted) throw new Aborted("pod killed");
+      duplicate = !traced && Math.random() < REUSE_RATE;
+    });
+    if (duplicate) {
+      await this.travel("similarity", "hub", "question", traced);
+      this.reused++;
+      return "reused an existing lesson";
+    }
+    await this.travel("similarity", "redis", "question", traced);
+    await this.travel("redis", "enricher", "question", traced);
+    await this.job("enricher", traced, async (t) => {
+      await this.gemini("enricher", "question", traced, "enrich question", rand(350, 650));
+      if (t.aborted) throw new Aborted("pod killed");
+    });
+    await this.travel("enricher", "redis", "question", traced);
+    await this.travel("redis", "builder", "question", traced);
+    await this.job("builder", traced, async (t) => {
+      const svc = this.services.builder;
+      for (let i = 1; i <= BUILD_STEPS; i++) {
+        svc.step = i;
+        await this.gemini("builder", "question", traced, `build step ${i}/13`, rand(160, 380));
+        if (t.aborted) throw new Aborted("pod killed");
+      }
+      const s2 = this.span(traced, "PUT lesson.json", "s3");
+      await this.travel("builder", "s3", "question", traced);
+      await this.travel("s3", "builder", "question", traced);
+      this.close(s2);
+    });
+    await this.travel("builder", "redis", "question", traced);
+    const media = (stage, model, ms) => (async () => {
+      await this.travel("redis", stage, "question", traced);
+      await this.job(stage, traced, async (t) => {
+        await this.gemini(stage, "question", traced, model, rand(...ms));
+        const s2 = this.span(traced, `PUT ${stage}`, "s3");
+        await this.travel(stage, "s3", "question", traced);
+        await this.travel("s3", stage, "question", traced);
+        this.close(s2);
+        if (t.aborted) throw new Aborted("pod killed");
+      });
+      const p = this.span(traced, `PATCH status (${stage})`, "hub");
+      await this.travel(stage, "hub", "question", traced);
+      this.close(p);
+    })();
+    await Promise.all([
+      media("images", "generate illustrations", [1100, 1900]),
+      media("audio", "TTS narration", [800, 1500])
+    ]);
+    const s = this.span(traced, "UPDATE lesson ready", "postgres");
+    await this.travel("hub", "postgres", "question", traced);
+    await this.travel("postgres", "hub", "question", traced);
+    this.close(s);
+    this.built++;
+    return "lesson built";
+  }
+  // ---- chaos and scaling -------------------------------------------------
+  /** Kills one running pod; Kubernetes restarts it after a back-off. */
+  killPod(id) {
+    const svc = this.services[id];
+    const victims = svc?.pods.filter((p) => p.state === "ready");
+    if (!victims?.length) return false;
+    const pod = victims[Math.floor(Math.random() * victims.length)];
+    pod.state = "down";
+    svc.lastError = this.now;
+    for (const t of pod.tokens) t.aborted = true;
+    this.at(this.now + RESTART_BACKOFF_MS, () => {
+      if (pod.state !== "down") return;
+      pod.state = "starting";
+      this.at(this.now + READINESS_MS, () => {
+        if (pod.state !== "starting") return;
+        pod.state = "ready";
+        this.pump(svc);
+      });
+    });
+    return true;
+  }
+  scale(everyMs) {
+    if (!this.autoscale) return;
+    for (const svc of Object.values(this.services)) {
+      const def = svc.def;
+      if (def.kind !== "worker" || !def.max) continue;
+      const live = svc.pods.filter((p) => p.state !== "terminating");
+      const ready = live.filter((p) => p.state === "ready");
+      const cap = ready.length * (def.perPod ?? 1);
+      const busy = ready.reduce((n, p) => n + p.busy, 0);
+      if (svc.waiters.length > cap * 0.5 && live.length < def.max) {
+        const pod = this.pod("starting");
+        svc.pods.push(pod);
+        this.at(this.now + READINESS_MS, () => {
+          if (pod.state !== "starting") return;
+          pod.state = "ready";
+          this.pump(svc);
+        });
+        svc.idleFor = 0;
+      } else if (!svc.waiters.length && busy < cap * 0.3) {
+        svc.idleFor += everyMs;
+        if (svc.idleFor >= 6e3 && live.length > (def.min ?? 1)) {
+          const idle = ready.find((p) => p.busy === 0);
+          if (idle) {
+            idle.state = "terminating";
+            svc.pods = svc.pods.filter((p) => p !== idle);
+          }
+          svc.idleFor = 0;
+        }
+      } else {
+        svc.idleFor = 0;
+      }
+    }
+  }
+  // ---- read-outs -------------------------------------------------------------
+  stats() {
+    const window2 = this.done;
+    const pct = (flow, p, builtOnly = false) => {
+      const ms = window2.filter((d) => d.flow === flow && d.ok && (!builtOnly || d.built)).map((d) => d.ms);
+      if (!ms.length) return 0;
+      ms.sort((a, b) => a - b);
+      return ms[Math.min(ms.length - 1, Math.floor(ms.length * p))];
+    };
+    const last5 = window2.filter((d) => d.t >= this.now - 5e3);
+    const errors = last5.filter((d) => !d.ok).length;
+    return {
+      rps: last5.length / 5,
+      errorRate: last5.length ? errors / last5.length : 0,
+      readP50: pct("read", 0.5),
+      readP95: pct("read", 0.95),
+      lessonP50: pct("question", 0.5, true),
+      geminiPerSec: this.geminiCalls.length / 5,
+      built: this.built,
+      reused: this.reused,
+      retries: this.retries,
+      deadLettered: this.deadLettered,
+      failed: this.failed,
+      inFlight: this.packets.length
+    };
+  }
+  nodeState(id) {
+    const svc = this.services[id];
+    if (!svc) return null;
+    const per = svc.def.perPod ?? 1;
+    const ready = svc.pods.filter((p) => p.state === "ready");
+    const cap = ready.length * per;
+    const busy = ready.reduce((n, p) => n + p.busy, 0);
+    return {
+      pods: svc.pods.map((p) => p.state),
+      util: cap ? busy / cap : svc.waiters.length ? 1 : 0,
+      queued: svc.waiters.length,
+      erroredRecently: this.now - svc.lastError < 900,
+      step: id === "builder" && busy > 0 ? svc.step : 0
+    };
+  }
+}
+const COLORS = {
+  read: "#22d3ee",
+  question: "#a78bfa",
+  webhook: "#fbbf24",
+  failed: "#f43f5e",
+  traced: "#ffffff"
+};
+const POD_COLORS = {
+  ready: "#34d399",
+  starting: "#fbbf24",
+  down: "#f43f5e",
+  terminating: "#64748b"
+};
+const SPEEDS = [0.5, 1, 2, 4];
+const SNAPSHOT_MS = 120;
+const POOL = 420;
+const curves = Object.fromEntries(EDGES.map((e) => [edgeKey(e.a, e.b), curve(e)]));
+function pathD(e) {
+  const [p0, p1, p2, p3] = curve(e);
+  return `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`;
+}
+function fmtMs(ms) {
+  if (!ms) return "—";
+  return ms >= 1e3 ? `${(ms / 1e3).toFixed(1)}s` : `${Math.round(ms)}ms`;
+}
+function SystemMap() {
+  const simRef = reactExports.useRef(null);
+  const packetLayer = reactExports.useRef(null);
+  const edgeRefs = reactExports.useRef({});
+  const boxRef = reactExports.useRef(null);
+  const [snap, setSnap] = reactExports.useState(null);
+  const [selected, setSelected] = reactExports.useState("hub");
+  const [ui, setUi] = reactExports.useState({
+    paused: false,
+    speed: 1,
+    traffic: 1,
+    autoscale: true,
+    geminiDown: false
+  });
+  reactExports.useEffect(() => {
+    const sim2 = new Simulation();
+    simRef.current = sim2;
+    const layer = packetLayer.current;
+    const NS = "http://www.w3.org/2000/svg";
+    const pool = [];
+    for (let i = 0; i < POOL; i++) {
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("r", "3");
+      c.style.display = "none";
+      layer.appendChild(c);
+      pool.push(c);
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) sim2.speed = 0.5;
+    let raf = 0;
+    let last = performance.now();
+    let lastSnap = 0;
+    let visible = false;
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    if (boxRef.current) io.observe(boxRef.current);
+    const frame = (t) => {
+      raf = requestAnimationFrame(frame);
+      const dt = t - last;
+      last = t;
+      if (!visible || document.hidden) return;
+      sim2.step(dt);
+      const load = {};
+      for (const p of sim2.packets) {
+        const k = edgeKey(p.from, p.to);
+        load[k] = (load[k] ?? 0) + (p.failed ? 3 : 1);
+      }
+      for (const [k, el] of Object.entries(edgeRefs.current)) {
+        if (!el) continue;
+        const n = load[k] ?? 0;
+        el.style.strokeOpacity = String(n ? Math.min(0.75, 0.28 + n * 0.07) : 0.16);
+        el.style.stroke = n ? "var(--color-primary)" : "currentColor";
+      }
+      let i = 0;
+      for (const p of sim2.packets) {
+        if (i >= POOL) break;
+        const e = edgeByKey[edgeKey(p.from, p.to)];
+        const c = curves[edgeKey(p.from, p.to)];
+        if (!e || !c) continue;
+        let k = Math.min(1, Math.max(0, (sim2.now - p.t0) / p.dur));
+        if (p.from !== e.a) k = 1 - k;
+        const pt = bezier(c, k);
+        const el = pool[i++];
+        el.style.display = "";
+        el.setAttribute("cx", pt.x.toFixed(1));
+        el.setAttribute("cy", pt.y.toFixed(1));
+        el.setAttribute("r", p.traced ? "5.5" : "3");
+        el.setAttribute(
+          "fill",
+          p.failed ? COLORS.failed : p.traced ? COLORS.traced : COLORS[p.flow]
+        );
+        el.setAttribute("filter", p.traced ? "url(#sysmap-glow-strong)" : "url(#sysmap-glow)");
+      }
+      for (; i < POOL; i++) {
+        if (pool[i].style.display === "none") break;
+        pool[i].style.display = "none";
+      }
+      if (t - lastSnap > SNAPSHOT_MS) {
+        lastSnap = t;
+        const nodes = {};
+        for (const n of NODES) nodes[n.id] = sim2.nodeState(n.id);
+        setSnap({
+          nodes,
+          stats: sim2.stats(),
+          trace: sim2.trace ? { ...sim2.trace, spans: [...sim2.trace.spans] } : null,
+          now: sim2.now
+        });
+      }
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      layer.replaceChildren();
+    };
+  }, []);
+  const set = (key, value) => {
+    const sim2 = simRef.current;
+    if (sim2) sim2[key] = value;
+    setUi((u) => ({ ...u, [key]: value }));
+  };
+  const sim = simRef.current;
+  const sel = nodeById[selected];
+  const selState = snap?.nodes[selected];
+  const s = snap?.stats;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: boxRef, className: "rounded-2xl border border-border bg-card/40 p-3 sm:p-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-end justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300", children: "Live · getXplain.ai under the hood" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-1 text-xl font-bold tracking-tight sm:text-2xl", children: "Break production. It's a simulation." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 max-w-xl text-xs text-muted-foreground", children: "The real architecture, running as a discrete-event simulation in your browser. Click any node to inspect it, kill its pods, or take Gemini down, and watch retries, restarts and autoscaling handle it." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2 font-mono text-[11px]", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => set("paused", !ui.paused),
+            className: "inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 hover:border-primary/60",
+            children: [
+              ui.paused ? /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { className: "h-3.5 w-3.5" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Pause, { className: "h-3.5 w-3.5" }),
+              ui.paused ? "Play" : "Pause"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex overflow-hidden rounded-md border border-border", children: SPEEDS.map((v) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => set("speed", v),
+            className: `px-2 py-1.5 ${ui.speed === v ? "bg-primary text-primary-foreground" : "bg-background hover:text-primary"}`,
+            children: [
+              v,
+              "×"
+            ]
+          },
+          v
+        )) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-center gap-2 rounded-md border border-border bg-background px-2.5 py-1.5", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "h-3.5 w-3.5 text-primary" }),
+          "traffic",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "input",
+            {
+              type: "range",
+              min: 0,
+              max: 4,
+              step: 0.25,
+              value: ui.traffic,
+              onChange: (e) => set("traffic", Number(e.target.value)),
+              className: "w-20 accent-[var(--color-primary)]",
+              "aria-label": "Traffic"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "w-8 tabular-nums", children: [
+            ui.traffic,
+            "×"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => sim && (sim.spikeUntil = sim.now + 6e3),
+            className: "inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 hover:border-amber-400/60 hover:text-amber-300",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-3.5 w-3.5" }),
+              " Spike 5×"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => set("autoscale", !ui.autoscale),
+            "aria-pressed": ui.autoscale,
+            className: `rounded-md border px-2.5 py-1.5 ${ui.autoscale ? "border-emerald-400/50 text-emerald-300" : "border-border bg-background text-muted-foreground"}`,
+            children: [
+              "autoscale ",
+              ui.autoscale ? "on" : "off"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => sim?.start("question", true),
+            className: "inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1.5 font-semibold text-primary-foreground hover:opacity-90",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Radar, { className: "h-3.5 w-3.5" }),
+              " Trace a question"
+            ]
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-1 font-mono text-[10px] text-muted-foreground sm:hidden", children: "← swipe the map · tap a node →" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "svg",
+      {
+        viewBox: "0 0 1100 620",
+        className: "min-w-[760px] w-full select-none",
+        role: "img",
+        "aria-label": "Architecture map of getXplain.ai with live simulated traffic",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2", result: "b" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow-strong", x: "-300%", y: "-300%", width: "700%", height: "700%", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "4", result: "b" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "platform", dashed: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "arq pipeline", dashed: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
+          EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "path",
+            {
+              ref: (el) => {
+                edgeRefs.current[edgeKey(e.a, e.b)] = el;
+              },
+              d: pathD(e),
+              fill: "none",
+              stroke: "currentColor",
+              strokeWidth: e.callback ? 1 : 1.4,
+              strokeDasharray: e.callback ? "4 5" : void 0,
+              className: "text-foreground transition-[stroke-opacity] duration-300"
+            },
+            edgeKey(e.a, e.b)
+          )),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("g", { ref: packetLayer }),
+          NODES.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            NodeBox,
+            {
+              def: n,
+              state: snap?.nodes[n.id] ?? null,
+              selected: selected === n.id,
+              geminiDown: n.id === "gemini" && ui.geminiDown,
+              onSelect: () => setSelected(n.id)
+            },
+            n.id
+          ))
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "GET lesson" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.question, label: "question → lesson pipeline" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.webhook, label: "billing webhook" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.failed, label: "failure" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.traced, label: "traced request" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto", children: "pods:" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: POD_COLORS.ready, label: "ready" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: POD_COLORS.starting, label: "starting" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: POD_COLORS.down, label: "crashed" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4 lg:grid-cols-7", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "throughput", value: s ? `${s.rps.toFixed(1)}/s` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Metric,
+        {
+          label: "GET p50 / p95",
+          value: s ? `${fmtMs(s.readP50)} / ${fmtMs(s.readP95)}` : "—"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lesson build p50", value: s ? fmtMs(s.lessonP50) : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Metric,
+        {
+          label: "error rate (5s)",
+          value: s ? `${(s.errorRate * 100).toFixed(1)}%` : "—",
+          warn: !!s && s.errorRate > 0.02
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "gemini calls", value: s ? `${s.geminiPerSec.toFixed(1)}/s` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lessons built · reused", value: s ? `${s.built} · ${s.reused}` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Metric,
+        {
+          label: "retries · dead-lettered",
+          value: s ? `${s.retries} · ${s.deadLettered}` : "—",
+          warn: !!s && s.deadLettered > 0
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-background/50 p-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Inspector" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1 text-lg font-bold", children: sel.label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[11px] text-primary", children: sel.sub }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs leading-relaxed text-muted-foreground", children: sel.info }),
+        selState && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-2 font-mono text-[11px]", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5", children: [
+            "pods",
+            selState.pods.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                title: p,
+                className: "inline-block h-2.5 w-2.5 rounded-full",
+                style: { background: POD_COLORS[p] }
+              },
+              i
+            )),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-muted-foreground", children: [
+              selState.pods.filter((p) => p === "ready").length,
+              "/",
+              selState.pods.length,
+              " ready"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "load ",
+            Math.round(selState.util * 100),
+            "% · queued ",
+            selState.queued,
+            sel.max ? ` · autoscale ${sel.min}–${sel.max}` : ""
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              type: "button",
+              onClick: () => sim?.killPod(selected),
+              className: "mt-1 inline-flex items-center gap-1.5 rounded-md border border-rose-500/50 px-2.5 py-1.5 text-rose-300 hover:bg-rose-500/10",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Skull, { className: "h-3.5 w-3.5" }),
+                " Kill a pod"
+              ]
+            }
+          )
+        ] }),
+        selected === "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => set("geminiDown", !ui.geminiDown),
+            className: `mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.geminiDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`,
+            children: ui.geminiDown ? "Restore Gemini" : "Simulate a Gemini outage"
+          }
+        ),
+        !selState && selected !== "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] text-muted-foreground", children: "Managed or external: not something you can kill from here. Try the API hub or a worker." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TracePanel, { trace: snap?.trace ?? null, now: snap?.now ?? 0 })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground", children: "Services and flows follow the production system; traffic, timings (compressed), replica counts and failures are simulated." })
+  ] });
+}
+function Zone({
+  x,
+  y,
+  w,
+  h,
+  label,
+  dashed
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { className: "text-foreground", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "rect",
+      {
+        x,
+        y,
+        width: w,
+        height: h,
+        rx: 16,
+        fill: "currentColor",
+        fillOpacity: 0.02,
+        stroke: "currentColor",
+        strokeOpacity: 0.1,
+        strokeDasharray: dashed ? "6 6" : void 0
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "text",
+      {
+        x: x + 12,
+        y: y + h - 10,
+        fontSize: "9",
+        fontFamily: "ui-monospace, monospace",
+        fill: "currentColor",
+        opacity: 0.35,
+        letterSpacing: "1.5",
+        children: label.toUpperCase()
+      }
+    )
+  ] });
+}
+function NodeBox({
+  def,
+  state,
+  selected,
+  geminiDown,
+  onSelect
+}) {
+  const x = def.x - NODE_W / 2;
+  const y = def.y - NODE_H / 2;
+  const hot = !!state?.erroredRecently || geminiDown;
+  const accent = def.kind === "worker" ? "#a78bfa" : def.kind === "service" || def.kind === "edge" ? "#22d3ee" : def.kind === "external" ? "#fbbf24" : "#94a3b8";
+  const util = state?.util ?? 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "g",
+    {
+      onClick: onSelect,
+      "data-cursor": "Inspect",
+      className: "cursor-pointer text-foreground",
+      role: "button",
+      "aria-label": `Inspect ${def.label}`,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x,
+            y,
+            width: NODE_W,
+            height: NODE_H,
+            rx: 12,
+            fill: "var(--color-background)",
+            stroke: hot ? "#f43f5e" : selected ? accent : "currentColor",
+            strokeOpacity: hot || selected ? 1 : 0.18,
+            strokeWidth: selected ? 1.8 : 1.2,
+            style: {
+              filter: hot ? "drop-shadow(0 0 8px rgba(244,63,94,.55))" : selected ? `drop-shadow(0 0 10px ${accent}66)` : void 0,
+              transition: "stroke .2s"
+            }
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y: y + 10, width: 3, height: NODE_H - 20, rx: 1.5, fill: accent }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("text", { x: x + 12, y: y + 21, fontSize: "12.5", fontWeight: "700", fill: "currentColor", children: def.label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "text",
+          {
+            x: x + 12,
+            y: y + 36,
+            fontSize: "9.5",
+            fontFamily: "ui-monospace, monospace",
+            fill: "currentColor",
+            opacity: 0.55,
+            children: state?.step ? `step ${state.step}/13 · ${def.sub.split(" ")[0]}` : def.sub
+          }
+        ),
+        state?.pods.slice(0, 9).map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: x + 14 + i * 9, cy: y + 46, r: 3, fill: POD_COLORS[p], children: p === "starting" && /* @__PURE__ */ jsxRuntimeExports.jsx("animate", { attributeName: "opacity", values: "1;.3;1", dur: "0.8s", repeatCount: "indefinite" }) }, i)),
+        state && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: x + NODE_W - 58,
+            y: y + 43,
+            width: 46 * Math.min(1, util),
+            height: 5,
+            rx: 2.5,
+            fill: util > 0.85 ? "#f43f5e" : util > 0.6 ? "#fbbf24" : "#34d399"
+          }
+        ),
+        state && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "rect",
+          {
+            x: x + NODE_W - 58,
+            y: y + 43,
+            width: 46,
+            height: 5,
+            rx: 2.5,
+            fill: "currentColor",
+            opacity: 0.1
+          }
+        ),
+        !!state?.queued && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + NODE_W - 30, y: y - 9, width: 38, height: 18, rx: 9, fill: "#f59e0b" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "text",
+            {
+              x: x + NODE_W - 11,
+              y: y + 4,
+              fontSize: "10",
+              fontWeight: "700",
+              textAnchor: "middle",
+              fill: "#111827",
+              children: state.queued > 99 ? "99+" : state.queued
+            }
+          )
+        ] }),
+        geminiDown && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + NODE_W - 36, y: y - 9, width: 44, height: 18, rx: 9, fill: "#f43f5e" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "text",
+            {
+              x: x + NODE_W - 14,
+              y: y + 4,
+              fontSize: "10",
+              fontWeight: "700",
+              textAnchor: "middle",
+              fill: "#fff",
+              children: "503"
+            }
+          )
+        ] })
+      ]
+    }
+  );
+}
+function Metric({ label, value, warn }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-background/80 px-3 py-2.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `font-mono text-sm font-bold tabular-nums ${warn ? "text-rose-400" : ""}`, children: value }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground", children: label })
+  ] });
+}
+function Dot({ c, label }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-2 w-2 rounded-full", style: { background: c, boxShadow: `0 0 6px ${c}` } }),
+    label
+  ] });
+}
+const SPAN_COLORS = { ok: "#22d3ee", error: "#f43f5e", retry: "#f59e0b" };
+function TracePanel({ trace, now: now2 }) {
+  if (!trace) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground", children: "Press “Trace a question” to follow one request through every service, as a distributed trace." });
+  }
+  const end = trace.end ?? now2;
+  const total = Math.max(1, end - trace.start);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-background/50 p-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-baseline justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+        "Trace #",
+        trace.id
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "span",
+        {
+          className: trace.end ? trace.outcome?.includes("dead") || trace.outcome?.includes("50") ? "text-rose-400" : "text-emerald-400" : "text-amber-300",
+          children: trace.end ? `${trace.outcome} · ${fmtMs(total)}` : `running · ${fmtMs(total)}`
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 max-h-64 space-y-[3px] overflow-y-auto pr-1", children: trace.spans.map((sp, i) => {
+      const left = (sp.start - trace.start) / total * 100;
+      const width = Math.max(0.6, ((sp.end ?? now2) - sp.start) / total * 100);
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "grid grid-cols-[minmax(0,44%)_1fr] items-center gap-2 font-mono text-[10px]",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate text-muted-foreground", title: `${sp.name} · ${sp.node}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground/80", children: sp.name }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative h-2.5 rounded-sm bg-foreground/5", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "absolute inset-y-0 rounded-sm",
+                style: {
+                  left: `${left}%`,
+                  width: `${Math.min(width, 100 - left)}%`,
+                  background: SPAN_COLORS[sp.status],
+                  opacity: sp.end ? 0.9 : 0.5
+                }
+              }
+            ) })
+          ]
+        },
+        i
+      );
+    }) })
+  ] });
+}
 function Projects() {
   const [selected, setSelected] = reactExports.useState(null);
   const close = reactExports.useCallback(() => setSelected(null), []);
@@ -4017,6 +5351,7 @@ function Projects() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(CodeXml, { className: "w-5 h-5 text-muted-foreground" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scramble, { text: "Selected projects" }) })
     ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SystemMap, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-10 text-sm text-muted-foreground", children: "Pick a card for the full story. Drag or swipe to spin the deck — give it a flick." }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectsFan, { onSelect: setSelected }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ProjectDialog, { project: selected, onClose: close })
