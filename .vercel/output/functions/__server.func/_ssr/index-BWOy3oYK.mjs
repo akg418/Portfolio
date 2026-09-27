@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DZ2ef1R9.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-BsWxqPHE.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -1676,7 +1676,6 @@ const INFLATE_MS = 650;
 const HEIGHT = 280;
 function ContestBalloons({
   backdrop,
-  quiet = false,
   controls
 }) {
   const boxRef = reactExports.useRef(null);
@@ -1942,7 +1941,6 @@ function ContestBalloons({
     setPops((n) => n + 1);
   };
   const onDown = (e) => {
-    if (quiet) return;
     const target = e.target.closest("[data-balloon]");
     if (!target || e.button !== 0) return;
     const i = Number(target.getAttribute("data-balloon"));
@@ -1982,25 +1980,12 @@ function ContestBalloons({
         onPointerLeave: () => {
           state.current.pointer = null;
         },
-        "data-cursor": quiet ? void 0 : "Pop",
+        "data-cursor": "Pop",
         className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
         style: { height: HEIGHT },
         children: [
           backdrop,
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "svg",
-            {
-              ref: svgRef,
-              "aria-hidden": true,
-              className: "absolute inset-0 h-full w-full overflow-visible transition-[opacity,filter,transform] duration-700 ease-out",
-              style: quiet ? {
-                opacity: 0.14,
-                filter: "blur(3px)",
-                transform: "scale(0.96)",
-                pointerEvents: "none"
-              } : void 0
-            }
-          )
+          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" })
         ]
       }
     ),
@@ -2131,17 +2116,18 @@ function AcpcMoments() {
     const r = e.currentTarget.getBoundingClientRect();
     audio.currentTime = (e.clientX - r.left) / r.width * duration;
   };
-  const backdrop = /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      ref: photosRef,
-      "aria-hidden": !playing,
-      className: "absolute inset-0 transition-[filter] duration-1000",
-      style: {
-        filter: playing ? "none" : "blur(7px) brightness(0.42) saturate(1.15)"
-      },
-      children: [
-        MOMENTS.map((m, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+  const backdrop = /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: photosRef,
+        "aria-hidden": !playing,
+        className: "absolute inset-0 transition-[filter] duration-1000",
+        style: {
+          // Always behind the balloons; the music only clears the blur a little.
+          filter: playing ? "blur(2.5px) brightness(0.68) saturate(1.2)" : "blur(7px) brightness(0.42) saturate(1.15)"
+        },
+        children: MOMENTS.map((m, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
           "img",
           {
             src: m.src,
@@ -2157,25 +2143,25 @@ function AcpcMoments() {
             }
           },
           m.src
-        )),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "div",
-          {
-            className: "absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-3 font-mono text-[11px] text-white transition-opacity duration-700",
-            style: { opacity: playing ? 1 : 0 },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: MOMENTS[slide].alt }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "opacity-70", children: [
-                slide + 1,
-                "/",
-                MOMENTS.length
-              ] })
-            ]
-          }
-        )
-      ]
-    }
-  );
+        ))
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-3 font-mono text-[11px] text-white transition-opacity duration-700",
+        style: { opacity: playing ? 1 : 0 },
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: MOMENTS[slide].alt }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "opacity-70", children: [
+            slide + 1,
+            "/",
+            MOMENTS.length
+          ] })
+        ]
+      }
+    )
+  ] });
   const controls = /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-xl border border-border bg-card/60 p-2 backdrop-blur-sm", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "button",
@@ -2251,7 +2237,7 @@ function AcpcMoments() {
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, quiet: playing, controls });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls });
 }
 function Achievements() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-24 border-t border-border", children: [
