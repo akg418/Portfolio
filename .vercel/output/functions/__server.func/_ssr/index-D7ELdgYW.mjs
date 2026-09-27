@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-CCbJCxCg.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DZ2ef1R9.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, R as RotateCw, d as GraduationCap, e as MapPin, f as Globe, P as Phone, S as SquareTerminal, g as Sun, h as Moon, X } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, R as RotateCw, d as GraduationCap, e as MapPin, f as Globe, P as Phone, S as SquareTerminal, g as Sun, h as Moon, i as Pause, j as Play, D as Download, X } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -1674,7 +1674,11 @@ const DRAG_PX$2 = 5;
 const REINFLATE_MS = 3500;
 const INFLATE_MS = 650;
 const HEIGHT = 280;
-function ContestBalloons() {
+function ContestBalloons({
+  backdrop,
+  quiet = false,
+  controls
+}) {
   const boxRef = reactExports.useRef(null);
   const svgRef = reactExports.useRef(null);
   const [pops, setPops] = reactExports.useState(0);
@@ -1938,6 +1942,7 @@ function ContestBalloons() {
     setPops((n) => n + 1);
   };
   const onDown = (e) => {
+    if (quiet) return;
     const target = e.target.closest("[data-balloon]");
     if (!target || e.button !== 0) return;
     const i = Number(target.getAttribute("data-balloon"));
@@ -1965,7 +1970,7 @@ function ContestBalloons() {
     if (!g.moved) pop(g.i);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         ref: boxRef,
@@ -1977,17 +1982,276 @@ function ContestBalloons() {
         onPointerLeave: () => {
           state.current.pointer = null;
         },
-        "data-cursor": "Pop",
+        "data-cursor": quiet ? void 0 : "Pop",
         className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
         style: { height: HEIGHT },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, className: "absolute inset-0 h-full w-full overflow-visible", "aria-hidden": true })
+        children: [
+          backdrop,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "svg",
+            {
+              ref: svgRef,
+              "aria-hidden": true,
+              className: "absolute inset-0 h-full w-full overflow-visible transition-[opacity,filter,transform] duration-700 ease-out",
+              style: quiet ? {
+                opacity: 0.14,
+                filter: "blur(3px)",
+                transform: "scale(0.96)",
+                pointerEvents: "none"
+              } : void 0
+            }
+          )
+        ]
       }
     ),
+    controls,
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, or click to pop" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
     ] })
   ] });
+}
+const music = "/assets/acpc-music-Sbaw3JnV.mp3";
+const group = "/assets/group-DVKU7Npx.jpg";
+const firstToSolve = "/assets/ecpc-first-to-solve-BR9AQIT0.jpg";
+const atDesk = "/assets/team-at-desk-CDpQf1R3.jpg";
+const withCoach = "/assets/team-with-coach-mb8minXj.jpg";
+const hearts = "/assets/team-hearts-DqBWM-34.jpg";
+const thumbsUp = "/assets/thumbs-up-dNmpP-K9.jpg";
+const selfieDay = "/assets/selfie-day-Z6xIplMz.jpg";
+const selfieNight = "/assets/selfie-night-C5dw_zPW.jpg";
+const MOMENTS = [
+  { src: group, alt: "The team at the ACPC Africa & Arab Championship" },
+  { src: firstToSolve, alt: "First to solve at ECPC" },
+  { src: withCoach, alt: "At our desk at the ACPC finals, with our coach" },
+  { src: atDesk, alt: "The team at our ECPC desk" },
+  { src: hearts, alt: "Between problems at the finals" },
+  { src: thumbsUp, alt: "Thumbs up at ACPC" },
+  { src: selfieDay, alt: "ACPC, before the contest" },
+  { src: selfieNight, alt: "The night after, with the whole crew" }
+];
+const IDLE_SLIDE_MS = 6e3;
+const PLAY_SLIDE_MS = 5e3;
+const BARS = 14;
+function time(s) {
+  if (!Number.isFinite(s)) return "0:00";
+  const m = Math.floor(s / 60);
+  return `${m}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+}
+function AcpcMoments() {
+  const audioRef = reactExports.useRef(null);
+  const barsRef = reactExports.useRef(null);
+  const photosRef = reactExports.useRef(null);
+  const analyser = reactExports.useRef(null);
+  const [playing, setPlaying] = reactExports.useState(false);
+  const [slide, setSlide] = reactExports.useState(0);
+  const [now2, setNow] = reactExports.useState(0);
+  const [duration, setDuration] = reactExports.useState(0);
+  reactExports.useEffect(() => {
+    const a = audioRef.current;
+    if (a && a.readyState >= 1) setDuration(a.duration);
+  }, []);
+  reactExports.useEffect(() => {
+    const id = window.setInterval(
+      () => setSlide((i) => (i + 1) % MOMENTS.length),
+      playing ? PLAY_SLIDE_MS : IDLE_SLIDE_MS
+    );
+    return () => window.clearInterval(id);
+  }, [playing]);
+  reactExports.useEffect(() => {
+    if (!playing) {
+      photosRef.current?.style.setProperty("--beat", "0");
+      return;
+    }
+    const canvas = barsRef.current;
+    const ctx = canvas?.getContext("2d");
+    const data = new Uint8Array(analyser.current?.frequencyBinCount ?? 32);
+    let raf = 0;
+    const draw = () => {
+      raf = requestAnimationFrame(draw);
+      const a = analyser.current;
+      if (!a || !canvas || !ctx) return;
+      a.getByteFrequencyData(data);
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (canvas.width !== Math.round(w * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      const bw = w / BARS;
+      const grad = ctx.createLinearGradient(0, h, 0, 0);
+      grad.addColorStop(0, "#22d3ee");
+      grad.addColorStop(1, "#a855f7");
+      ctx.fillStyle = grad;
+      for (let i = 0; i < BARS; i++) {
+        const v = data[Math.floor(i / BARS * data.length * 0.7)] / 255;
+        const bh = Math.max(2, v * h);
+        ctx.fillRect(i * bw + 1.5, h - bh, bw - 3, bh);
+      }
+      const bass = (data[0] + data[1] + data[2]) / (3 * 255);
+      photosRef.current?.style.setProperty("--beat", bass.toFixed(3));
+    };
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, [playing]);
+  const toggle = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (!audio.paused) {
+      audio.pause();
+      return;
+    }
+    if (!analyser.current) {
+      try {
+        const Ctx = window.AudioContext ?? window.webkitAudioContext;
+        const ac = new Ctx();
+        const source = ac.createMediaElementSource(audio);
+        const an = ac.createAnalyser();
+        an.fftSize = 64;
+        an.smoothingTimeConstant = 0.8;
+        source.connect(an);
+        an.connect(ac.destination);
+        analyser.current = an;
+        await ac.resume();
+      } catch {
+      }
+    }
+    try {
+      await audio.play();
+    } catch {
+      setPlaying(false);
+    }
+  };
+  const seek = (e) => {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    audio.currentTime = (e.clientX - r.left) / r.width * duration;
+  };
+  const backdrop = /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      ref: photosRef,
+      "aria-hidden": !playing,
+      className: "absolute inset-0 transition-[filter] duration-1000",
+      style: {
+        filter: playing ? "none" : "blur(7px) brightness(0.42) saturate(1.15)"
+      },
+      children: [
+        MOMENTS.map((m, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "img",
+          {
+            src: m.src,
+            alt: playing && i === slide ? m.alt : "",
+            draggable: false,
+            loading: "lazy",
+            className: "absolute inset-0 h-full w-full object-cover transition-[opacity,transform] ease-out",
+            style: {
+              opacity: i === slide ? 1 : 0,
+              // A slow zoom while it is on, swelling with the bass.
+              transform: `scale(calc(${i === slide ? 1.12 : 1.04} + var(--beat, 0) * 0.04))`,
+              transitionDuration: `1200ms, ${playing ? PLAY_SLIDE_MS : IDLE_SLIDE_MS}ms`
+            }
+          },
+          m.src
+        )),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-3 font-mono text-[11px] text-white transition-opacity duration-700",
+            style: { opacity: playing ? 1 : 0 },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: MOMENTS[slide].alt }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "opacity-70", children: [
+                slide + 1,
+                "/",
+                MOMENTS.length
+              ] })
+            ]
+          }
+        )
+      ]
+    }
+  );
+  const controls = /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-xl border border-border bg-card/60 p-2 backdrop-blur-sm", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        type: "button",
+        onClick: toggle,
+        "aria-label": playing ? "Pause the ACPC track" : "Play the ACPC track",
+        className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105 active:scale-95",
+        children: playing ? /* @__PURE__ */ jsxRuntimeExports.jsx(Pause, { className: "h-4 w-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { className: "h-4 w-4 translate-x-[1px]" })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-1 flex justify-between font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: playing ? "Now playing · ACPC" : "Play the ACPC track" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "tabular-nums", children: [
+          time(now2),
+          " / ",
+          time(duration)
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          onClick: seek,
+          role: "presentation",
+          className: "group relative h-1.5 cursor-pointer overflow-hidden rounded-full bg-border",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "div",
+            {
+              className: "absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-accent",
+              style: { width: duration ? `${now2 / duration * 100}%` : "0%" }
+            }
+          )
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "canvas",
+      {
+        ref: barsRef,
+        "aria-hidden": true,
+        className: "hidden h-8 w-24 shrink-0 transition-opacity duration-500 sm:block",
+        style: { opacity: playing ? 1 : 0.15 }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "a",
+      {
+        href: music,
+        download: "acpc-music.mp3",
+        "aria-label": "Download the ACPC track",
+        title: "Download the track",
+        className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "h-4 w-4" })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "audio",
+      {
+        ref: audioRef,
+        src: music,
+        preload: "metadata",
+        onPlay: () => setPlaying(true),
+        onPause: () => setPlaying(false),
+        onEnded: (e) => {
+          e.currentTarget.currentTime = 0;
+          setPlaying(false);
+          setNow(0);
+        },
+        onTimeUpdate: (e) => setNow(e.currentTarget.currentTime),
+        onLoadedMetadata: (e) => setDuration(e.currentTarget.duration),
+        onDurationChange: (e) => setDuration(e.currentTarget.duration)
+      }
+    )
+  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, quiet: playing, controls });
 }
 function Achievements() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-24 border-t border-border", children: [
@@ -1995,7 +2259,7 @@ function Achievements() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-5 h-5 text-muted-foreground" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scramble, { text: "Competitions & community" }) })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AcpcMoments, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-8 text-sm", children: [
       competitions.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-semibold mb-2", children: c.title }),
@@ -2395,19 +2659,19 @@ function now() {
   }).format(/* @__PURE__ */ new Date());
 }
 function LocalTime() {
-  const [time, setTime] = reactExports.useState(null);
+  const [time2, setTime] = reactExports.useState(null);
   reactExports.useEffect(() => {
     setTime(now());
     const id = window.setInterval(() => setTime(now()), 1e3);
     return () => window.clearInterval(id);
   }, []);
-  if (!time) return null;
-  const hour = Number(time.slice(0, 2));
+  if (!time2) return null;
+  const hour = Number(time2.slice(0, 2));
   const awake = hour >= 9 && hour < 24;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2 font-mono text-xs text-muted-foreground", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `h-1.5 w-1.5 rounded-full ${awake ? "bg-emerald-400" : "bg-amber-400"}` }),
     "Cairo · ",
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tabular-nums text-foreground", children: time }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tabular-nums text-foreground", children: time2 }),
     " ·",
     " ",
     awake ? "probably awake" : "probably asleep"
@@ -4145,7 +4409,7 @@ function step(bodies, W, H, dt, grab) {
 }
 function SkillsPlayground({ groups }) {
   const chips = Object.entries(groups).flatMap(
-    ([group, items], g) => items.map((label) => ({ label, group, tone: GROUP_TONES[g % GROUP_TONES.length] }))
+    ([group2, items], g) => items.map((label) => ({ label, group: group2, tone: GROUP_TONES[g % GROUP_TONES.length] }))
   );
   const pitRef = reactExports.useRef(null);
   const chipRefs = reactExports.useRef([]);
@@ -4373,8 +4637,8 @@ function Skills() {
         tab("list", "List")
       ] })
     ] }),
-    view === "play" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SkillsPlayground, { groups: skills }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid sm:grid-cols-2 gap-4", children: Object.entries(skills).map(([group, items]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "spotlight rounded-xl border border-border bg-card/40 p-5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3", children: group }),
+    view === "play" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SkillsPlayground, { groups: skills }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid sm:grid-cols-2 gap-4", children: Object.entries(skills).map(([group2, items]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "spotlight rounded-xl border border-border bg-card/40 p-5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3", children: group2 }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: items.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "span",
         {
@@ -4383,7 +4647,7 @@ function Skills() {
         },
         s
       )) })
-    ] }, group)) })
+    ] }, group2)) })
   ] }) });
 }
 const DURATION_MS = 1600;
@@ -4778,8 +5042,8 @@ const commands = [
     run: ({ print }) => {
       printAligned(
         print,
-        Object.entries(skills).map(([group, items]) => ({
-          label: group,
+        Object.entries(skills).map(([group2, items]) => ({
+          label: group2,
           value: items.join(", ")
         }))
       );
