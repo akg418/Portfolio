@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-BsWxqPHE.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DbAeMdSB.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -521,61 +521,6 @@ function Preloader() {
       }
     )
   ] });
-}
-const WORDS = Object.values(skills).flat();
-const BASE_SPEED = 40;
-const MAX_SKEW = 12;
-function ScrollMarquee() {
-  const trackRef = reactExports.useRef(null);
-  reactExports.useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let x = 0;
-    let boost = 0;
-    let direction = 1;
-    let lastY = window.scrollY;
-    let last = performance.now();
-    let raf = 0;
-    const frame = (now2) => {
-      const dt = Math.min(0.05, (now2 - last) / 1e3);
-      last = now2;
-      const dy = window.scrollY - lastY;
-      lastY = window.scrollY;
-      if (dy !== 0) direction = dy > 0 ? 1 : -1;
-      boost += (Math.abs(dy) * 6 - boost) * 0.12;
-      x -= direction * (BASE_SPEED + boost * 8) * dt;
-      const half = track.scrollWidth / 2;
-      if (half > 0) x = (x % half - half) % half;
-      const skew = Math.max(-MAX_SKEW, Math.min(MAX_SKEW, direction * boost * 0.15));
-      track.style.transform = `translate3d(${x}px,0,0) skewX(${-skew}deg)`;
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-  const row = (key) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex shrink-0 items-center", children: WORDS.map((w, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: i % 3 === 1 ? "marquee-fill" : "marquee-outline", children: w }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mx-6 text-primary/60 sm:mx-10", children: "✦" })
-  ] }, w + i)) }, key);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      "aria-hidden": true,
-      className: "relative left-1/2 w-screen -translate-x-1/2 overflow-hidden border-y border-border py-6 select-none",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "div",
-        {
-          ref: trackRef,
-          className: "flex w-max whitespace-nowrap text-5xl font-black uppercase tracking-tight will-change-transform sm:text-7xl",
-          children: [
-            row("a"),
-            row("b")
-          ]
-        }
-      )
-    }
-  );
 }
 function MouseGlow() {
   const ref = reactExports.useRef(null);
@@ -5615,7 +5560,6 @@ function Index() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(Experience, {}),
       gamingMode && /* @__PURE__ */ jsxRuntimeExports.jsx(CupGame, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Projects, {}),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ScrollMarquee, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Skills, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Achievements, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Contact, {}),
