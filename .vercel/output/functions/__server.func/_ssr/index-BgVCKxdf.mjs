@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, j as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, m as links, b as readJson, c as writeJson, k as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DH3AEg3y.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DDD8aaWX.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -1979,76 +1979,381 @@ function Typewriter({
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" })
   ] });
 }
-const INTERVAL_MS = 4500;
-const FADE_MS = 700;
-const IMAGE_CLASS = "absolute inset-0 h-full w-full rounded-full object-cover";
-function Slide({ slide, active }) {
-  if (slide.art) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 overflow-hidden rounded-full", "aria-hidden": !active, children: slide.art });
-  }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "img",
-    {
-      src: slide.src,
-      alt: active ? slide.alt : "",
-      "aria-hidden": !active,
-      width: 320,
-      height: 320,
-      className: IMAGE_CLASS
-    }
-  );
+const STRAP_POINTS = 14;
+const GRAVITY$1 = 1700;
+const DAMPING = 0.994;
+const ITERATIONS$1 = 14;
+const SUBSTEPS$1 = 3;
+const MAX_STRETCH = 1.7;
+const STRAP_MASS = 1;
+const HOLE_MASS = 4;
+const CARD_MASS = 7;
+const HOLE_PX = 16;
+const MAX_TILT = 38;
+const DRAG_PX$1 = 5;
+const REST_SPEED$1 = 4;
+const DESKTOP = { cardW: 210, cardH: 300, strap: 270, anchorY: -130, height: 520 };
+const MOBILE = { cardW: 176, cardH: 252, strap: 170, anchorY: -16, height: 440 };
+function constrain(a, b, len) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const d = Math.hypot(dx, dy) || 1e-6;
+  const w = a.invM + b.invM;
+  if (!w) return;
+  const k = (d - len) / d / w;
+  a.x += dx * k * a.invM;
+  a.y += dy * k * a.invM;
+  b.x -= dx * k * b.invM;
+  b.y -= dy * k * b.invM;
 }
-function AvatarCarousel({
-  photos: photos2,
-  className
-}) {
-  const [index, setIndex] = reactExports.useState(0);
-  const [paused, setPaused] = reactExports.useState(false);
-  const [reduceMotion, setReduceMotion] = reactExports.useState(false);
+function LanyardBadge({ photo, photoAlt }) {
+  const boxRef = reactExports.useRef(null);
+  const cardRef = reactExports.useRef(null);
+  const tiltRef = reactExports.useRef(null);
+  const strapRef = reactExports.useRef(null);
+  const [size, setSize] = reactExports.useState(DESKTOP);
+  const [flipped, setFlipped] = reactExports.useState(false);
+  const [held, setHeld] = reactExports.useState(false);
+  const strapId = reactExports.useId();
+  const sim = reactExports.useRef(null);
   reactExports.useEffect(() => {
-    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const mq = window.matchMedia("(max-width: 767px)");
+    const pick = () => setSize(mq.matches ? MOBILE : DESKTOP);
+    pick();
+    mq.addEventListener("change", pick);
+    return () => mq.removeEventListener("change", pick);
   }, []);
-  const cycles = photos2.length > 1 && !reduceMotion;
   reactExports.useEffect(() => {
-    if (!cycles || paused) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % photos2.length), INTERVAL_MS);
-    return () => clearInterval(id);
-  }, [cycles, paused, photos2.length]);
-  if (!cycles) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { slide: photos2[0], active: true }) });
-  }
-  const next = () => setIndex((i) => (i + 1) % photos2.length);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    const box = boxRef.current;
+    if (!box) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ax = () => box.clientWidth / 2;
+    const seg = size.strap / (STRAP_POINTS - 1);
+    const rod = size.cardH - HOLE_PX;
+    const pts = [];
+    for (let i = 0; i < STRAP_POINTS; i++) {
+      const t = i / (STRAP_POINTS - 1);
+      const x = ax() + (reduce ? 0 : t * t * size.strap * 0.8);
+      const y = size.anchorY + (reduce ? t * size.strap : t * size.strap * 0.55);
+      const invM = i === 0 ? 0 : i === STRAP_POINTS - 1 ? 1 / HOLE_MASS : 1 / STRAP_MASS;
+      pts.push({ x, y, px: x, py: y, invM });
+    }
+    const hole = pts[STRAP_POINTS - 1];
+    const bx = hole.x + (reduce ? 0 : rod * 0.5);
+    const by = hole.y + (reduce ? rod : rod * 0.85);
+    pts.push({ x: bx, y: by, px: bx, py: by, invM: 1 / CARD_MASS });
+    sim.current = { pts, seg, grab: null, asleep: false, tilt: 0 };
+    const paint = () => {
+      const s = sim.current;
+      const h = s.pts[STRAP_POINTS - 1];
+      const b = s.pts[STRAP_POINTS];
+      const angle = Math.atan2(-(b.x - h.x), b.y - h.y);
+      const card = cardRef.current;
+      if (card) {
+        card.style.transform = `translate(${h.x - size.cardW / 2}px, ${h.y - HOLE_PX}px) rotate(${angle}rad)`;
+      }
+      if (tiltRef.current) tiltRef.current.style.setProperty("--tilt", `${s.tilt}deg`);
+      let d = `M${s.pts[0].x},${s.pts[0].y}`;
+      for (let i = 1; i < STRAP_POINTS - 1; i++) {
+        const p = s.pts[i];
+        const n = s.pts[i + 1];
+        d += ` Q${p.x},${p.y} ${(p.x + n.x) / 2},${(p.y + n.y) / 2}`;
+      }
+      d += ` L${h.x},${h.y}`;
+      strapRef.current?.setAttribute("d", d);
+    };
+    if (reduce) {
+      paint();
+      return;
+    }
+    let raf = 0;
+    let last = performance.now();
+    let nextBreeze = last + 5e3;
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    io.observe(box);
+    const frame = (now2) => {
+      raf = requestAnimationFrame(frame);
+      const s = sim.current;
+      const elapsed = Math.min(1 / 30, (now2 - last) / 1e3);
+      last = now2;
+      if (!visible || document.hidden) return;
+      if (now2 > nextBreeze && !s.grab) {
+        const b2 = s.pts[STRAP_POINTS];
+        b2.px -= (Math.random() - 0.5) * 3;
+        s.asleep = false;
+        nextBreeze = now2 + 5e3 + Math.random() * 5e3;
+      }
+      if (s.asleep && !s.grab) return;
+      const dt = elapsed / SUBSTEPS$1;
+      const anchorX = ax();
+      for (let step2 = 0; step2 < SUBSTEPS$1; step2++) {
+        for (const p of s.pts) {
+          if (!p.invM) continue;
+          const vx2 = (p.x - p.px) * DAMPING;
+          const vy2 = (p.y - p.py) * DAMPING;
+          p.px = p.x;
+          p.py = p.y;
+          p.x += vx2;
+          p.y += vy2 + GRAVITY$1 * dt * dt;
+        }
+        const top = s.pts[0];
+        top.x = top.px = anchorX;
+        top.y = top.py = size.anchorY;
+        for (let k = 0; k < ITERATIONS$1; k++) {
+          for (let i = 0; i < STRAP_POINTS - 1; i++) constrain(s.pts[i], s.pts[i + 1], s.seg);
+          constrain(s.pts[STRAP_POINTS - 1], s.pts[STRAP_POINTS], rod);
+          if (s.grab) {
+            const h2 = s.pts[STRAP_POINTS - 1];
+            const b2 = s.pts[STRAP_POINTS];
+            const w0 = 1 - s.grab.s;
+            const w1 = s.grab.s;
+            const gx = h2.x + (b2.x - h2.x) * w1;
+            const gy = h2.y + (b2.y - h2.y) * w1;
+            const norm = w0 * w0 + w1 * w1;
+            const ex = s.grab.tx - gx;
+            const ey = s.grab.ty - gy;
+            h2.x += ex * w0 / norm;
+            h2.y += ey * w0 / norm;
+            b2.x += ex * w1 / norm;
+            b2.y += ey * w1 / norm;
+          }
+        }
+        const h = s.pts[STRAP_POINTS - 1];
+        const dx = h.x - anchorX;
+        const dy = h.y - size.anchorY;
+        const d = Math.hypot(dx, dy);
+        const max = size.strap * MAX_STRETCH;
+        if (d > max) {
+          h.x = anchorX + dx / d * max;
+          h.y = size.anchorY + dy / d * max;
+        }
+      }
+      const b = s.pts[STRAP_POINTS];
+      const vx = (b.x - b.px) / dt;
+      const vy = (b.y - b.py) / dt;
+      const target = Math.max(-MAX_TILT, Math.min(MAX_TILT, vx * 0.035));
+      s.tilt += (target - s.tilt) * 0.12;
+      paint();
+      const still = s.pts.every((p) => Math.hypot(p.x - p.px, p.y - p.py) / dt < REST_SPEED$1);
+      if (still && !s.grab && Math.abs(s.tilt) < 0.2 && Math.hypot(vx, vy) < REST_SPEED$1) {
+        s.asleep = true;
+      }
+    };
+    paint();
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, [size]);
+  const local = (e) => {
+    const r = boxRef.current.getBoundingClientRect();
+    return [e.clientX - r.left, e.clientY - r.top];
+  };
+  const release = () => {
+    const s = sim.current;
+    if (!s?.grab) return;
+    const clicked = !s.grab.moved;
+    s.grab = null;
+    s.asleep = false;
+    setHeld(false);
+    if (clicked) setFlipped((f) => !f);
+  };
+  const onDown = (e) => {
+    const s = sim.current;
+    if (!s || e.button !== 0) return;
+    if (e.target.closest("a")) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const [x, y] = local(e);
+    const h = s.pts[STRAP_POINTS - 1];
+    const b = s.pts[STRAP_POINTS];
+    const ax = b.x - h.x;
+    const ay = b.y - h.y;
+    const len2 = ax * ax + ay * ay || 1;
+    const along = ((x - h.x) * ax + (y - h.y) * ay) / len2;
+    s.grab = {
+      s: Math.max(0.05, Math.min(1, along)),
+      tx: x,
+      ty: y,
+      startX: x,
+      startY: y,
+      moved: false
+    };
+    s.asleep = false;
+    setHeld(true);
+  };
+  const onMove = (e) => {
+    const g = sim.current?.grab;
+    if (!g) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) return release();
+    const [x, y] = local(e);
+    g.tx = x;
+    g.ty = y;
+    if (Math.hypot(x - g.startX, y - g.startY) > DRAG_PX$1) g.moved = true;
+  };
+  reactExports.useEffect(() => {
+    const drop = () => {
+      const s = sim.current;
+      if (s?.grab) s.grab.moved = true;
+      release();
+    };
+    window.addEventListener("blur", drop);
+    return () => window.removeEventListener("blur", drop);
+  }, []);
+  const [first, , second] = profile.name.toUpperCase().split(/( )/);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
-      className: `${className} cursor-pointer`,
-      onMouseEnter: () => setPaused(true),
-      onMouseLeave: () => setPaused(false),
-      onClick: next,
-      role: "button",
-      tabIndex: 0,
-      onKeyDown: (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          next();
-        }
-      },
-      "aria-label": "Show the next photo",
-      title: "Click for the next photo",
-      children: photos2.map((slide, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-        "div",
-        {
-          className: "absolute inset-0",
-          style: {
-            opacity: i === index ? 1 : 0,
-            transform: i === index ? "scale(1)" : "scale(1.06)",
-            transition: `opacity ${FADE_MS}ms ease, transform ${FADE_MS}ms ease`,
-            willChange: "opacity, transform"
-          },
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { slide, active: i === index })
-        },
-        slide.src ?? slide.alt
-      ))
+      ref: boxRef,
+      className: "relative z-20 w-full select-none md:w-[320px]",
+      style: { height: size.height },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "svg",
+          {
+            className: "pointer-events-none absolute inset-0 h-full w-full overflow-visible",
+            "aria-hidden": true,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "path",
+                {
+                  ref: strapRef,
+                  fill: "none",
+                  stroke: "var(--color-primary)",
+                  strokeWidth: "11",
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  opacity: "0.9",
+                  id: strapId
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "text",
+                {
+                  fontSize: "6.5",
+                  fontWeight: "700",
+                  letterSpacing: "1.6",
+                  fill: "var(--color-background)",
+                  dominantBaseline: "middle",
+                  className: "font-mono",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx("textPath", { href: `#${strapId}`, startOffset: "6", children: `${profile.domain.toUpperCase()} • `.repeat(8) })
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            ref: cardRef,
+            onPointerDown: onDown,
+            onPointerMove: onMove,
+            onPointerUp: release,
+            onPointerCancel: release,
+            onLostPointerCapture: release,
+            "data-cursor": held ? "Throw" : "Grab",
+            className: `absolute left-0 top-0 touch-none ${held ? "cursor-grabbing" : "cursor-grab"}`,
+            style: {
+              width: size.cardW,
+              height: size.cardH,
+              transformOrigin: `50% ${HOLE_PX}px`,
+              perspective: 900
+            },
+            role: "button",
+            tabIndex: 0,
+            "aria-label": `${profile.name}'s badge. Press to flip it over.`,
+            onKeyDown: (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setFlipped((f) => !f);
+              }
+            },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                ref: tiltRef,
+                className: "relative h-full w-full [transform-style:preserve-3d]",
+                style: { transform: "rotateY(var(--tilt, 0deg))" },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "div",
+                  {
+                    className: "relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d]",
+                    style: { transform: `rotateY(${flipped ? 180 : 0}deg)` },
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "badge-face absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1224] text-white shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative h-[46%] overflow-hidden", children: [
+                          photo && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "img",
+                            {
+                              src: photo,
+                              alt: photoAlt,
+                              draggable: false,
+                              className: "h-full w-full object-cover object-[50%_30%]"
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-[#0d1224] via-transparent to-transparent" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" })
+                        ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-1 flex-col px-4 pb-3 pt-1", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300", children: profile.domain }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1 text-xl font-black leading-[0.95] tracking-tight", children: [
+                            first,
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-gradient-to-r from-cyan-300 to-violet-400 bg-clip-text text-transparent", children: second })
+                          ] }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1.5 text-[11px] text-white/60", children: profile.role }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-auto flex items-end justify-between", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[8px] uppercase tracking-widest text-white/40", children: "Access" }),
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-300", children: "All areas" })
+                            ] }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex h-7 items-end gap-[1.5px]", "aria-hidden": true, children: "3121413211231412".split("").map((w, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-full bg-white/70", style: { width: Number(w) } }, i)) })
+                          ] })
+                        ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-1.5 bg-gradient-to-r from-cyan-400 to-violet-500" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "badge-face badge-back absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1224] p-4 text-white shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto mt-0.5 h-2 w-9 rounded-full bg-black/60 ring-1 ring-white/20" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-4 font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300", children: "If found, hire" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1 text-sm font-bold", children: profile.name }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-0.5 text-[11px] text-white/60", children: profile.location }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 space-y-1.5 font-mono text-[10px]", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "a",
+                            {
+                              href: `mailto:${profile.email}`,
+                              className: "block truncate text-white/80 underline-offset-2 hover:text-cyan-300 hover:underline",
+                              children: profile.email
+                            }
+                          ),
+                          links.map((l) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "a",
+                            {
+                              href: l.url,
+                              target: "_blank",
+                              rel: "noreferrer",
+                              className: "block text-white/80 underline-offset-2 hover:text-cyan-300 hover:underline",
+                              children: [
+                                l.label,
+                                " ↗"
+                              ]
+                            },
+                            l.label
+                          ))
+                        ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-auto font-mono text-[8px] uppercase tracking-widest text-white/35", children: "Click to flip back" })
+                      ] })
+                    ]
+                  }
+                )
+              }
+            )
+          }
+        )
+      ]
     }
   );
 }
@@ -2143,16 +2448,7 @@ function Hero() {
             ] }) })
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative justify-self-center md:justify-self-end", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-accent/30 blur-2xl" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative rounded-full p-[3px] avatar-ring", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            AvatarCarousel,
-            {
-              photos,
-              className: "relative z-10 w-56 h-56 sm:w-72 sm:h-72 rounded-full overflow-hidden bg-card"
-            }
-          ) })
-        ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative w-full justify-self-center md:w-auto md:justify-self-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LanyardBadge, { photo: photos[0]?.src, photoAlt: photos[0]?.alt }) })
       ]
     }
   ) });
