@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { Code2 } from "lucide-react";
 import { ProjectDialog } from "@/components/sections/projects/ProjectDialog";
 import { ProjectsFan } from "@/components/sections/projects/ProjectsFan";
+import { SystemMap } from "@/components/sections/projects/SystemMap";
 import type { Project } from "@/data/profile";
 
 /**
@@ -20,6 +21,9 @@ export function Projects() {
         <h2 className="text-3xl font-bold tracking-tight">
           <Scramble text="Selected projects" />
         </h2>
+      </div>
+      <div className="mb-12">
+        <SystemMap />
       </div>
       <p className="mb-10 text-sm text-muted-foreground">
         Pick a card for the full story. Drag or swipe to spin the deck — give it a flick.
