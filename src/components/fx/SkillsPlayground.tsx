@@ -550,15 +550,40 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
   };
   const onMove = (e: React.PointerEvent) => {
     if (!grab.current) return;
+    // The button came up somewhere we never heard about: let go.
+    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
     const [px, py] = pitPoint(e);
     grab.current.tx = px;
     grab.current.ty = py;
   };
   const onUp = () => {
+    if (!grab.current) return;
     grab.current = null;
     wake();
     setDragging(null);
   };
+
+  // Backstops for a release the chip itself misses: the button let go outside
+  // the window, capture lost, or the tab losing focus mid-drag.
+  useEffect(() => {
+    const release = () => {
+      if (!grab.current) return;
+      grab.current = null;
+      rest.current = { calm: 0, asleep: false };
+      setDragging(null);
+    };
+    const onVisibility = () => document.hidden && release();
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+    window.addEventListener("blur", release);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
+      window.removeEventListener("blur", release);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   const shake = () => {
     wake();
@@ -610,6 +635,7 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
             onPointerMove={onMove}
             onPointerUp={onUp}
             onPointerCancel={onUp}
+            onLostPointerCapture={onUp}
             className={`absolute left-0 top-0 origin-center touch-none whitespace-nowrap rounded-full border bg-background px-2.5 py-0.5 text-[11px] font-medium will-change-transform sm:px-3.5 sm:py-1.5 sm:text-sm ${c.tone} ${
               dragging === i ? "cursor-grabbing ring-1 ring-primary" : "cursor-grab"
             }`}
