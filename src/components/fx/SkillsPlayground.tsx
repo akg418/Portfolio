@@ -15,6 +15,11 @@ import { useEffect, useRef, useState } from "react";
  * - The solver is sequential impulses with accumulated, clamped normal and
  *   friction impulses and a Baumgarte bias to push overlaps apart, sub-stepped
  *   for stability. Bodies rotate, so a chip landing on a corner tips over.
+ * - A position pass after each frame pushes any overlap that is left straight
+ *   apart, so a heavy pile never sinks chips into each other; pairs come from
+ *   a sweep along x, not an all-pairs check.
+ * - Once everything has come to rest the whole thing sleeps, costing nothing,
+ *   until a chip is grabbed or the box is shaken.
  * - A grabbed chip hangs from the pointer on a damped spring attached where it
  *   was picked up, so it swings, and letting go throws it with the spring's
  *   velocity.
@@ -55,16 +60,30 @@ type Contact = {
 
 const GRAVITY = 2000;
 const SUBSTEPS = 4;
-const ITERATIONS = 6;
+const ITERATIONS = 8;
 const RESTITUTION = 0.18;
 const FRICTION = 0.45;
-const BETA = 0.25;
+const BETA = 0.12;
 const SLOP = 0.4;
 const MAX_BIAS = 700;
 const MAX_SPEED = 3200;
 const DENSITY = 0.001;
 const GRAB_STIFFNESS = 700;
 const GRAB_DAMPING = 45;
+/** Position-correction passes per frame, and how much overlap each removes. */
+const POSITION_PASSES = 2;
+const POSITION_SHARE = 0.8;
+/** Below these speeds for this long, the pile sleeps. */
+const REST_SPEED = 20;
+const REST_SPIN = 0.3;
+const REST_SECONDS = 0.7;
+/**
+ * A chip creeping slower than this is braked hard. A deep pile never quite
+ * converges on its own; it would jitter forever and never sleep.
+ */
+const CREEP_SPEED = 30;
+const CREEP_SPIN = 0.6;
+const CREEP_BRAKE = 0.8;
 
 /** One colour per skill group, so the pile still reads as categories. */
 const GROUP_TONES = [
@@ -309,6 +328,48 @@ function solveContact(bodies: Body[], c: Contact, dt: number) {
 
 type Grab = { i: number; lx: number; ly: number; tx: number; ty: number };
 
+/**
+ * Every contact in the box. Pairs come from sweep and prune: bodies sorted by
+ * the left edge of their bounds, each checked only against those that start
+ * before it ends.
+ */
+function detect(bodies: Body[], W: number, H: number) {
+  const contacts: Contact[] = [];
+  const order = bodies.map((_, i) => i);
+  const reach = bodies.map((b) => b.half + b.r);
+  order.sort((p, q) => bodies[p].x - reach[p] - (bodies[q].x - reach[q]));
+  for (let k = 0; k < order.length; k++) {
+    const i = order[k];
+    collideWalls(bodies, i, W, H, contacts);
+    const right = bodies[i].x + reach[i];
+    for (let m = k + 1; m < order.length; m++) {
+      const j = order[m];
+      if (bodies[j].x - reach[j] > right) break;
+      if (Math.abs(bodies[j].y - bodies[i].y) > reach[i] + reach[j]) continue;
+      collidePair(bodies, i, j, contacts);
+    }
+  }
+  return contacts;
+}
+
+/** Moves bodies straight out of whatever overlap the velocity solve left. */
+function separate(bodies: Body[], W: number, H: number) {
+  for (let pass = 0; pass < POSITION_PASSES; pass++) {
+    for (const c of detect(bodies, W, H)) {
+      const A = bodies[c.a];
+      const B = c.b >= 0 ? bodies[c.b] : null;
+      const total = A.invM + (B ? B.invM : 0);
+      const push = (Math.max(0, c.pen - SLOP) * POSITION_SHARE) / total;
+      A.x -= c.nx * push * A.invM;
+      A.y -= c.ny * push * A.invM;
+      if (B) {
+        B.x += c.nx * push * B.invM;
+        B.y += c.ny * push * B.invM;
+      }
+    }
+  }
+}
+
 function step(bodies: Body[], W: number, H: number, dt: number, grab: Grab | null) {
   for (const b of bodies) b.vy += GRAVITY * dt;
 
@@ -327,11 +388,7 @@ function step(bodies: Body[], W: number, H: number, dt: number, grab: Grab | nul
     b.w *= 0.985;
   }
 
-  const contacts: Contact[] = [];
-  for (let i = 0; i < bodies.length; i++) {
-    collideWalls(bodies, i, W, H, contacts);
-    for (let j = i + 1; j < bodies.length; j++) collidePair(bodies, i, j, contacts);
-  }
+  const contacts = detect(bodies, W, H);
   for (const c of contacts) {
     const [rvx, rvy] = relVel(bodies, c);
     const vn = rvx * c.nx + rvy * c.ny;
@@ -345,9 +402,15 @@ function step(bodies: Body[], W: number, H: number, dt: number, grab: Grab | nul
       b.vx *= MAX_SPEED / speed;
       b.vy *= MAX_SPEED / speed;
     }
-    b.vx *= 0.9995;
-    b.vy *= 0.9995;
-    b.w *= 0.998;
+    if (Math.hypot(b.vx, b.vy) < CREEP_SPEED && Math.abs(b.w) < CREEP_SPIN) {
+      b.vx *= CREEP_BRAKE;
+      b.vy *= CREEP_BRAKE;
+      b.w *= CREEP_BRAKE;
+    } else {
+      b.vx *= 0.9995;
+      b.vy *= 0.9995;
+      b.w *= 0.998;
+    }
     b.x += b.vx * dt;
     b.y += b.vy * dt;
     b.a += b.w * dt;
@@ -362,7 +425,13 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
   const chipRefs = useRef<(HTMLDivElement | null)[]>([]);
   const bodies = useRef<Body[]>([]);
   const grab = useRef<Grab | null>(null);
+  /** Seconds the pile has been at rest, and whether it has gone to sleep. */
+  const rest = useRef({ calm: 0, asleep: false });
   const [dragging, setDragging] = useState<number | null>(null);
+
+  const wake = () => {
+    rest.current = { calm: 0, asleep: false };
+  };
 
   useEffect(() => {
     const pit = pitRef.current;
@@ -371,7 +440,16 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
     let raf = 0;
     let started = false;
     let visible = false;
+    // Chips are measured for their bodies, so wait for the web font: measuring
+    // the fallback font makes bodies narrower than the chips drawn on them.
+    let fontsReady = false;
+    if (document.fonts)
+      void document.fonts.ready.then(() => {
+        fontsReady = true;
+      });
+    else fontsReady = true;
     let last = performance.now();
+    let size = { W: 0, H: 0 };
 
     const start = () => {
       started = true;
@@ -411,13 +489,26 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
       raf = requestAnimationFrame(frame);
       const elapsed = Math.min(1 / 30, (now - last) / 1000);
       last = now;
-      if (!visible || document.hidden) return;
+      if (!visible || document.hidden || !fontsReady) return;
       if (!started) start();
       const W = pit.clientWidth;
       const H = pit.clientHeight;
+      if (W !== size.W || H !== size.H) {
+        size = { W, H };
+        wake();
+      }
+      if (rest.current.asleep && !grab.current) return;
+
       const dt = elapsed / SUBSTEPS;
       for (let s = 0; s < SUBSTEPS; s++) step(bodies.current, W, H, dt, grab.current);
+      separate(bodies.current, W, H);
       paint();
+
+      const moving = bodies.current.some(
+        (b) => Math.hypot(b.vx, b.vy) > REST_SPEED || Math.abs(b.w) > REST_SPIN,
+      );
+      rest.current.calm = moving || grab.current ? 0 : rest.current.calm + elapsed;
+      if (rest.current.calm > REST_SECONDS) rest.current.asleep = true;
     };
 
     const io = new IntersectionObserver(
@@ -454,6 +545,7 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
     const dx = px - b.x;
     const dy = py - b.y;
     grab.current = { i, lx: dx * c - dy * s, ly: dx * s + dy * c, tx: px, ty: py };
+    wake();
     setDragging(i);
   };
   const onMove = (e: React.PointerEvent) => {
@@ -464,10 +556,12 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
   };
   const onUp = () => {
     grab.current = null;
+    wake();
     setDragging(null);
   };
 
   const shake = () => {
+    wake();
     for (const b of bodies.current) {
       b.vy -= 700 + Math.random() * 700;
       b.vx += (Math.random() - 0.5) * 700;
@@ -516,7 +610,7 @@ export function SkillsPlayground({ groups }: { groups: Record<string, string[]> 
             onPointerMove={onMove}
             onPointerUp={onUp}
             onPointerCancel={onUp}
-            className={`absolute left-0 top-0 origin-center touch-none whitespace-nowrap rounded-full border bg-background/85 px-3 py-1 text-xs font-medium shadow-[0_4px_14px_-6px_rgba(0,0,0,0.6)] backdrop-blur-sm sm:px-3.5 sm:py-1.5 sm:text-sm ${c.tone} ${
+            className={`absolute left-0 top-0 origin-center touch-none whitespace-nowrap rounded-full border bg-background px-2.5 py-0.5 text-[11px] font-medium will-change-transform sm:px-3.5 sm:py-1.5 sm:text-sm ${c.tone} ${
               dragging === i ? "cursor-grabbing ring-1 ring-primary" : "cursor-grab"
             }`}
             style={{ transform: "translate(-9999px, 0)" }}
