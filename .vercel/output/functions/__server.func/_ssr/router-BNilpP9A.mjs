@@ -479,7 +479,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-BgVCKxdf.mjs");
+const $$splitComponentImporter = () => import("./index-COWkCFvd.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });

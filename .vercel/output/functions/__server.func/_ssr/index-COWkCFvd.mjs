@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DDD8aaWX.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-BNilpP9A.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -1757,6 +1757,307 @@ function Magnetic({
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { ref, className: "inline-block", onPointerMove: move, onPointerLeave: leave, children });
 }
+const STEP_DESKTOP = 3;
+const STEP_MOBILE = 2.5;
+const BLEED = 60;
+const SPRING = 0.055;
+const DAMPING$1 = 0.84;
+const PUSH_RADIUS = 70;
+const PUSH_FORCE = 5.5;
+const SHOCK_RADIUS = 260;
+const SHOCK_FORCE = 38;
+const MAX_DPR = 2;
+function ParticleHeading({ lines, className }) {
+  const headingRef = reactExports.useRef(null);
+  const canvasRef = reactExports.useRef(null);
+  const lineRefs = reactExports.useRef([]);
+  const [live, setLive] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    const heading = headingRef.current;
+    const canvas = canvasRef.current;
+    if (!heading || !canvas) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const ctx = canvas.getContext("2d", { willReadFrequently: false });
+    if (!ctx) return;
+    let n = 0;
+    let x = new Float32Array(0);
+    let y = x;
+    let vx = x;
+    let vy = x;
+    let hx = x;
+    let hy = x;
+    let color = new Uint32Array(0);
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
+    let dot = 2;
+    let image = null;
+    let pixels = new Uint32Array(0);
+    let pointer = null;
+    let awake = true;
+    let assembled = false;
+    let visible = false;
+    let cancelled = false;
+    const sample = () => {
+      const box = heading.getBoundingClientRect();
+      dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
+      W = Math.ceil((box.width + BLEED * 2) * dpr);
+      H = Math.ceil((box.height + BLEED * 2) * dpr);
+      canvas.width = W;
+      canvas.height = H;
+      canvas.style.width = `${W / dpr}px`;
+      canvas.style.height = `${H / dpr}px`;
+      const off = document.createElement("canvas");
+      off.width = W;
+      off.height = H;
+      const o = off.getContext("2d");
+      if (!o) return;
+      const cs = getComputedStyle(heading);
+      o.scale(dpr, dpr);
+      o.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      o.letterSpacing = cs.letterSpacing === "normal" ? "0px" : cs.letterSpacing;
+      o.textBaseline = "alphabetic";
+      const root = getComputedStyle(document.documentElement);
+      const primary = root.getPropertyValue("--color-primary").trim() || "#22d3ee";
+      const accent = root.getPropertyValue("--color-accent").trim() || "#a855f7";
+      const ink = getComputedStyle(document.body).color;
+      lines.forEach((line, i) => {
+        const el = lineRefs.current[i];
+        if (!el) return;
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const r = range.getBoundingClientRect();
+        const m = o.measureText(line.text);
+        const left = r.left - box.left + BLEED;
+        const top = r.top - box.top + BLEED;
+        const baseline = top + (r.height + m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2;
+        if (line.gradient) {
+          const g = o.createLinearGradient(left, 0, left + r.width, 0);
+          g.addColorStop(0, primary);
+          g.addColorStop(1, accent);
+          o.fillStyle = g;
+        } else {
+          o.fillStyle = ink;
+        }
+        o.fillText(line.text, left, baseline);
+      });
+      const data = o.getImageData(0, 0, W, H).data;
+      const step22 = Math.round(
+        (window.matchMedia("(pointer: coarse)").matches ? STEP_MOBILE : STEP_DESKTOP) * dpr
+      );
+      dot = Math.max(1, Math.round(step22 * 0.62));
+      const homes = [];
+      const colors = [];
+      for (let py = 0; py < H; py += step22) {
+        for (let px = 0; px < W; px += step22) {
+          const k = (py * W + px) * 4;
+          const a = data[k + 3];
+          if (a < 128) continue;
+          homes.push(px, py);
+          colors.push(255 << 24 | data[k + 2] << 16 | data[k + 1] << 8 | data[k]);
+        }
+      }
+      const prevN = n;
+      n = homes.length / 2;
+      const nx = new Float32Array(n);
+      const ny = new Float32Array(n);
+      const nvx = new Float32Array(n);
+      const nvy = new Float32Array(n);
+      hx = new Float32Array(n);
+      hy = new Float32Array(n);
+      color = Uint32Array.from(colors);
+      for (let i = 0; i < n; i++) {
+        hx[i] = homes[i * 2];
+        hy[i] = homes[i * 2 + 1];
+        if (assembled && i < prevN) {
+          nx[i] = x[i];
+          ny[i] = y[i];
+        } else if (assembled) {
+          nx[i] = hx[i];
+          ny[i] = hy[i];
+        } else {
+          nx[i] = Math.random() * W;
+          ny[i] = Math.random() * H;
+          nvx[i] = (Math.random() - 0.5) * 30 * dpr;
+          nvy[i] = (Math.random() - 0.5) * 30 * dpr;
+        }
+      }
+      x = nx;
+      y = ny;
+      vx = nvx;
+      vy = nvy;
+      image = ctx.createImageData(W, H);
+      pixels = new Uint32Array(image.data.buffer);
+      awake = true;
+    };
+    const draw = () => {
+      if (!image) return;
+      pixels.fill(0);
+      for (let i = 0; i < n; i++) {
+        const px = x[i] | 0;
+        const py = y[i] | 0;
+        if (px < 0 || py < 0 || px + dot > W || py + dot > H) continue;
+        const c = color[i];
+        for (let dy = 0; dy < dot; dy++) {
+          const row = (py + dy) * W + px;
+          for (let dx = 0; dx < dot; dx++) pixels[row + dx] = c;
+        }
+      }
+      ctx.putImageData(image, 0, 0);
+    };
+    const step2 = () => {
+      const r = PUSH_RADIUS * dpr;
+      const r2 = r * r;
+      let moving = false;
+      for (let i = 0; i < n; i++) {
+        if (pointer) {
+          const dx = x[i] - pointer.x;
+          const dy = y[i] - pointer.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < r2 && d2 > 0.01) {
+            const d = Math.sqrt(d2);
+            const f = (1 - d / r) * PUSH_FORCE * dpr;
+            vx[i] += dx / d * f;
+            vy[i] += dy / d * f;
+          }
+        }
+        vx[i] = (vx[i] + (hx[i] - x[i]) * SPRING) * DAMPING$1;
+        vy[i] = (vy[i] + (hy[i] - y[i]) * SPRING) * DAMPING$1;
+        x[i] += vx[i];
+        y[i] += vy[i];
+        if (!moving && (Math.abs(vx[i]) > 0.02 || Math.abs(vy[i]) > 0.02)) moving = true;
+      }
+      return moving;
+    };
+    let raf = 0;
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      if (!visible || document.hidden || !assembled || !awake) return;
+      const moving = step2();
+      draw();
+      if (!moving && !pointer) {
+        x.set(hx);
+        y.set(hy);
+        draw();
+        awake = false;
+      }
+    };
+    const toCanvas = (clientX, clientY) => {
+      const r = canvas.getBoundingClientRect();
+      if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom)
+        return null;
+      return { x: (clientX - r.left) * dpr, y: (clientY - r.top) * dpr };
+    };
+    const onPointerMove = (e) => {
+      if (e.pointerType !== "mouse" && e.pointerType !== "pen") return;
+      pointer = toCanvas(e.clientX, e.clientY);
+      if (pointer) awake = true;
+    };
+    const onTouchMove = (e) => {
+      const t = e.touches[0];
+      pointer = t ? toCanvas(t.clientX, t.clientY) : null;
+      if (pointer) awake = true;
+    };
+    const onTouchEnd = () => {
+      pointer = null;
+    };
+    const onPointerDown = (e) => {
+      const p = toCanvas(e.clientX, e.clientY);
+      if (!p) return;
+      const rr = SHOCK_RADIUS * dpr;
+      for (let i = 0; i < n; i++) {
+        const dx = x[i] - p.x;
+        const dy = y[i] - p.y;
+        const d = Math.hypot(dx, dy);
+        if (d > rr || d < 0.01) continue;
+        const f = (1 - d / rr) * SHOCK_FORCE * dpr;
+        vx[i] += dx / d * f + (Math.random() - 0.5) * 4;
+        vy[i] += dy / d * f + (Math.random() - 0.5) * 4;
+      }
+      awake = true;
+    };
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !assembled && n) {
+        assembled = true;
+        awake = true;
+      }
+    });
+    let resizeTimer = 0;
+    const resample = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (cancelled) return;
+        sample();
+        if (!assembled) return;
+        draw();
+      }, 120);
+    };
+    const ro = new ResizeObserver(resample);
+    const mo = new MutationObserver(resample);
+    const start = () => {
+      if (cancelled) return;
+      sample();
+      if (!n) return;
+      setLive(true);
+      io.observe(canvas);
+      ro.observe(heading);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerdown", onPointerDown, { passive: true });
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      raf = requestAnimationFrame(frame);
+    };
+    if (document.fonts) void document.fonts.ready.then(start);
+    else start();
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      window.clearTimeout(resizeTimer);
+      io.disconnect();
+      ro.disconnect();
+      mo.disconnect();
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [lines]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "h2",
+      {
+        ref: headingRef,
+        className,
+        style: live ? { color: "transparent", WebkitTextFillColor: "transparent" } : void 0,
+        children: lines.map((line, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "span",
+            {
+              ref: (el) => {
+                lineRefs.current[i] = el;
+              },
+              className: line.gradient ? "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : void 0,
+              style: live && line.gradient ? { backgroundImage: "none" } : void 0,
+              children: line.text
+            }
+          )
+        ] }, i))
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "canvas",
+      {
+        ref: canvasRef,
+        "aria-hidden": true,
+        className: "pointer-events-none absolute",
+        style: { left: -BLEED, top: -BLEED }
+      }
+    )
+  ] });
+}
 function ScrollLit({ text, className }) {
   const ref = reactExports.useRef(null);
   const words = text.split(" ");
@@ -1793,13 +2094,16 @@ function ScrollLit({ text, className }) {
     i < words.length - 1 ? " " : ""
   ] }, i)) });
 }
+const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 function Contact() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "contact", className: "py-24 border-t border-border", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-5xl sm:text-7xl font-black tracking-tighter leading-[0.95]", children: [
-      "Let's build",
-      /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: "something." })
-    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ParticleHeading,
+      {
+        lines: HEADING,
+        className: "text-5xl sm:text-7xl font-black tracking-tighter leading-[0.95]"
+      }
+    ),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LocalTime, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       ScrollLit,
