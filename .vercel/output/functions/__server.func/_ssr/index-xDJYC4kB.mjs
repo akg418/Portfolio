@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DPMhfLp1.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-CG3lgIGk.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -4427,76 +4427,80 @@ function ProjectIndex({
 }
 const NODES = [
   {
-    id: "app",
-    label: "Flutter app",
-    sub: "iOS · Android",
+    id: "mobile",
+    label: "Mobile app",
+    sub: "client",
     x: 90,
     y: 150,
     kind: "client",
-    info: "Learners ask questions by typing, speaking or taking a photo, and open lessons."
+    info: "Where users start requests and async jobs."
   },
   {
-    id: "admin",
-    label: "Admin dashboard",
-    sub: "Next.js",
+    id: "web",
+    label: "Web dashboard",
+    sub: "client",
     x: 90,
     y: 300,
     kind: "client",
-    info: "Internal dashboard reading the same API."
+    info: "A second client of the same API."
   },
   {
-    id: "stripe",
-    label: "Billing webhooks",
-    sub: "Stripe · RevenueCat",
+    id: "payments",
+    label: "Payments",
+    sub: "webhooks",
     x: 90,
     y: 470,
     kind: "external",
-    info: "Subscription events. Entitlement is derived from live subscription state, which is what closed the Premium-downgrade revenue leak."
+    info: "Third-party events arriving as webhooks."
   },
   {
-    id: "ingress",
-    label: "Ingress",
-    sub: "Kubernetes · TLS",
+    id: "edge",
+    label: "Edge",
+    sub: "TLS · routing",
     x: 255,
     y: 300,
     kind: "edge",
     replicas: 2,
     perPod: 64,
-    info: "Terminates TLS and routes only to pods that are Ready."
+    info: "Terminates TLS and routes only to instances that are ready."
   },
   {
-    id: "hub",
-    label: "API hub",
-    sub: "FastAPI · WorkOS + JWT",
+    id: "api",
+    label: "Core API",
+    redacted: true,
+    sub: "",
     x: 430,
     y: 300,
     kind: "service",
     replicas: 3,
     perPod: 12,
-    info: "Owns everything user-facing: auth, learners, lessons, XP, 1v1 challenges, search, webhooks. It coordinates the pipeline by enqueueing jobs rather than doing inference itself."
+    info: "Serves the user-facing API and hands heavy work to the pipeline as queued jobs instead of doing it inline."
   },
   {
-    id: "postgres",
-    label: "PostgreSQL",
-    sub: "pgvector",
+    id: "db",
+    label: "Database",
+    redacted: true,
+    sub: "",
     x: 430,
     y: 525,
     kind: "store",
-    info: "Relational data plus pgvector embeddings for the similarity search."
+    info: "The system of record."
   },
   {
-    id: "redis",
-    label: "Redis",
-    sub: "ARQ job queues",
+    id: "queue",
+    label: "Job queue",
+    redacted: true,
+    sub: "",
     x: 610,
     y: 300,
     kind: "store",
-    info: "Queues between pipeline stages. A stage picks a job up when one of its pods has a free slot."
+    info: "Buffers work between pipeline stages, so each stage takes a job when it has a free slot."
   },
   {
-    id: "similarity",
-    label: "similarity-checker",
-    sub: "embed → pgvector",
+    id: "stage1",
+    label: "Stage 1",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 80,
     kind: "worker",
@@ -4504,12 +4508,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 4,
-    info: "Embeds each incoming question and searches pgvector, so a lesson that already exists is reused instead of rebuilt."
+    info: "First stage. It can finish a job early when the result already exists."
   },
   {
-    id: "enricher",
-    label: "question-enricher",
-    sub: "ARQ worker",
+    id: "stage2",
+    label: "Stage 2",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 195,
     kind: "worker",
@@ -4517,12 +4522,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 4,
-    info: "Enriches the raw question before the lesson is built."
+    info: "Prepares the job for the expensive stage."
   },
   {
-    id: "builder",
-    label: "lesson-builder",
-    sub: "13-step Gemini pipeline",
+    id: "stage3",
+    label: "Stage 3",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 310,
     kind: "worker",
@@ -4530,12 +4536,13 @@ const NODES = [
     min: 1,
     max: 8,
     perPod: 2,
-    info: "Builds the bilingual EN/AR lesson in 13 Gemini steps, then writes it to S3."
+    info: "The long one: a chain of model calls, then the result goes to storage."
   },
   {
-    id: "images",
-    label: "images-manager",
-    sub: "Gemini image · Pillow",
+    id: "stage4",
+    label: "Stage 4",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 425,
     kind: "worker",
@@ -4543,12 +4550,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 3,
-    info: "Generates the lesson's illustrations, post-processes them and stores them in S3."
+    info: "Runs in parallel with stage 5 once stage 3 is done."
   },
   {
-    id: "audio",
-    label: "audio-manager",
-    sub: "Gemini TTS",
+    id: "stage5",
+    label: "Stage 5",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 540,
     kind: "worker",
@@ -4556,52 +4564,54 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 3,
-    info: "Narrates the lesson with Gemini TTS and stores the audio in S3."
+    info: "Runs in parallel with stage 4 once stage 3 is done."
   },
   {
-    id: "gemini",
-    label: "Gemini",
-    sub: "text · image · TTS",
+    id: "ai",
+    label: "AI provider",
+    redacted: true,
+    sub: "",
     x: 1005,
     y: 250,
     kind: "external",
-    info: "External model API. Everything in the pipeline depends on it, so its failures are the ones worth rehearsing."
+    info: "An external model API that the pipeline depends on, which makes its outages the ones worth rehearsing."
   },
   {
-    id: "s3",
-    label: "S3",
-    sub: "lessons · media",
+    id: "store",
+    label: "Object storage",
+    redacted: true,
+    sub: "",
     x: 1005,
     y: 480,
     kind: "store",
-    info: "Lesson JSON, illustrations and narration."
+    info: "Where the pipeline's outputs land."
   }
 ];
 const EDGES = [
-  { a: "app", b: "ingress" },
-  { a: "admin", b: "ingress" },
-  { a: "stripe", b: "ingress" },
-  { a: "ingress", b: "hub" },
-  { a: "hub", b: "redis" },
-  { a: "hub", b: "postgres" },
-  { a: "redis", b: "similarity" },
-  { a: "redis", b: "enricher" },
-  { a: "redis", b: "builder" },
-  { a: "redis", b: "images" },
-  { a: "redis", b: "audio" },
-  { a: "similarity", b: "gemini" },
-  { a: "enricher", b: "gemini" },
-  { a: "builder", b: "gemini" },
-  { a: "images", b: "gemini" },
-  { a: "audio", b: "gemini" },
-  { a: "similarity", b: "postgres", arc: 0 },
-  { a: "builder", b: "s3" },
-  { a: "images", b: "s3" },
-  { a: "audio", b: "s3" },
-  // Workers patch status back to the hub over HTTP.
-  { a: "similarity", b: "hub", callback: true, arc: -70 },
-  { a: "images", b: "hub", callback: true, arc: 60 },
-  { a: "audio", b: "hub", callback: true, arc: 90 }
+  { a: "mobile", b: "edge" },
+  { a: "web", b: "edge" },
+  { a: "payments", b: "edge" },
+  { a: "edge", b: "api" },
+  { a: "api", b: "queue" },
+  { a: "api", b: "db" },
+  { a: "queue", b: "stage1" },
+  { a: "queue", b: "stage2" },
+  { a: "queue", b: "stage3" },
+  { a: "queue", b: "stage4" },
+  { a: "queue", b: "stage5" },
+  { a: "stage1", b: "ai" },
+  { a: "stage2", b: "ai" },
+  { a: "stage3", b: "ai" },
+  { a: "stage4", b: "ai" },
+  { a: "stage5", b: "ai" },
+  { a: "stage1", b: "db", arc: 0 },
+  { a: "stage3", b: "store" },
+  { a: "stage4", b: "store" },
+  { a: "stage5", b: "store" },
+  // Stages report status back to the API.
+  { a: "stage1", b: "api", callback: true, arc: -70 },
+  { a: "stage4", b: "api", callback: true, arc: 60 },
+  { a: "stage5", b: "api", callback: true, arc: 90 }
 ];
 const NODE_W = 150;
 const NODE_H = 54;
@@ -4654,18 +4664,18 @@ const READINESS_MS = 1900;
 const HTTP_TIMEOUT_MS = 3500;
 const MAX_ATTEMPTS = 4;
 const RETRY_BASE_MS = 500;
-const BUILD_STEPS = 13;
+const STEPS = [6, 12];
 const REUSE_RATE = 0.3;
 const WINDOW_MS = 2e4;
 const rand = (a, b) => a + Math.random() * (b - a);
-const RATES = { read: 5, question: 0.9, webhook: 0.25 };
+const RATES = { read: 5, job: 0.9, webhook: 0.25 };
 class Simulation {
   now = 0;
   speed = 1;
   paused = false;
   traffic = 1;
   autoscale = true;
-  geminiDown = false;
+  modelDown = false;
   spikeUntil = -1;
   packets = [];
   services = {};
@@ -4676,11 +4686,11 @@ class Simulation {
   deadLettered = 0;
   failed = 0;
   done = [];
-  geminiCalls = [];
+  modelCalls = [];
   heap = [];
   seq = 0;
   ids = 0;
-  nextArrival = { read: 0, question: 0, webhook: 0 };
+  nextArrival = { read: 0, job: 0, webhook: 0 };
   lengths = {};
   nextScale = 0;
   constructor() {
@@ -4753,13 +4763,13 @@ class Simulation {
     const cutoff = this.now - WINDOW_MS;
     if (this.done.length && this.done[0].t < cutoff)
       this.done = this.done.filter((d) => d.t >= cutoff);
-    if (this.geminiCalls.length && this.geminiCalls[0] < this.now - 5e3)
-      this.geminiCalls = this.geminiCalls.filter((t) => t >= this.now - 5e3);
+    if (this.modelCalls.length && this.modelCalls[0] < this.now - 5e3)
+      this.modelCalls = this.modelCalls.filter((t) => t >= this.now - 5e3);
   }
   // ---- traffic -------------------------------------------------------------
   arrivals(until) {
     const boost = this.now < this.spikeUntil ? 5 : 1;
-    for (const flow of ["read", "question", "webhook"]) {
+    for (const flow of ["read", "job", "webhook"]) {
       const rate = RATES[flow] * this.traffic * boost / 1e3;
       if (rate <= 0) continue;
       if (this.nextArrival[flow] < this.now) this.nextArrival[flow] = this.now;
@@ -4771,10 +4781,10 @@ class Simulation {
     }
   }
   start(flow, traced) {
-    const run = flow === "read" ? this.read : flow === "question" ? this.question : this.webhook;
+    const run = flow === "read" ? this.read : flow === "job" ? this.pipelineJob : this.webhook;
     const t0 = this.now;
     const net = { visual: 0, modelled: 0 };
-    const ms = () => flow === "question" ? this.now - t0 : this.now - t0 - net.visual + net.modelled;
+    const ms = () => flow === "job" ? this.now - t0 : this.now - t0 - net.visual + net.modelled;
     if (traced) this.trace = { id: ++this.ids, spans: [], start: t0 };
     run.call(this, traced, net).then(
       (outcome) => {
@@ -4783,7 +4793,7 @@ class Simulation {
           t: this.now,
           ms: ms(),
           ok: true,
-          built: outcome === "lesson built"
+          built: outcome === "job done"
         });
         if (traced && this.trace) {
           this.trace.end = this.now;
@@ -4881,28 +4891,28 @@ class Simulation {
     await this.sleep(ms);
     if (t.aborted) throw new Aborted("pod killed");
   }
-  async gemini(from, flow, traced, what, ms) {
-    const s = this.span(traced, what, "gemini");
-    await this.travel(from, "gemini", flow, traced);
-    this.geminiCalls.push(this.now);
-    if (this.geminiDown && Math.random() < 0.85) {
+  async model(from, flow, traced, what, ms) {
+    const s = this.span(traced, what, "ai");
+    await this.travel(from, "ai", flow, traced);
+    this.modelCalls.push(this.now);
+    if (this.modelDown && Math.random() < 0.85) {
       await this.sleep(rand(150, 300));
       this.services[from].lastError = this.now;
-      await this.travel("gemini", from, flow, traced, true);
+      await this.travel("ai", from, flow, traced, true);
       this.close(s, "error");
-      throw new ModelError("Gemini 503");
+      throw new ModelError("AI provider 503");
     }
     await this.sleep(ms);
-    await this.travel("gemini", from, flow, traced);
+    await this.travel("ai", from, flow, traced);
     this.close(s);
   }
   /**
-   * One pipeline stage as an ARQ job: wait for a slot, run, and on failure
+   * One pipeline stage of a job: wait for a slot, run, and on failure
    * give the slot back and come back later with exponential backoff.
    */
   async job(stage, traced, run) {
     for (let attempt = 1; ; attempt++) {
-      const q = this.span(traced, `queued · ${stage}`, "redis");
+      const q = this.span(traced, `queued · ${stage}`, "queue");
       const token = await this.acquire(stage);
       this.close(q);
       const s = this.span(traced, attempt > 1 ? `${stage} (attempt ${attempt})` : stage, stage);
@@ -4923,150 +4933,151 @@ class Simulation {
         this.retries++;
         if (e instanceof Aborted) continue;
         const backoff = RETRY_BASE_MS * 2 ** (attempt - 1) * rand(0.8, 1.2);
-        const d = this.span(traced, `backoff ${Math.round(backoff)}ms`, "redis");
+        const d = this.span(traced, `backoff ${Math.round(backoff)}ms`, "queue");
         await this.sleep(backoff);
         this.close(d, "retry");
       }
     }
   }
   // ---- flows ---------------------------------------------------------------
-  /** GET /lessons/{id}: through Ingress to the hub, a Postgres read, and back. */
+  /** A read: through the edge to the API, a database read, and back. */
   async read(traced, net) {
-    const client = Math.random() < 0.8 ? "app" : "admin";
-    await this.travel(client, "ingress", "read", traced, false, net);
-    await this.http(client, "read", traced, "GET /lessons/{id}", net, async (t) => {
+    const client = Math.random() < 0.8 ? "mobile" : "web";
+    await this.travel(client, "edge", "read", traced, false, net);
+    await this.http(client, "read", traced, "GET request", net, async (t) => {
       await this.busy(t, rand(4, 12));
-      const s = this.span(traced, "SELECT lesson", "postgres");
-      await this.travel("hub", "postgres", "read", traced, false, net);
+      const s = this.span(traced, "DB read", "db");
+      await this.travel("api", "db", "read", traced, false, net);
       await this.sleep(rand(4, 18));
-      await this.travel("postgres", "hub", "read", traced, false, net);
+      await this.travel("db", "api", "read", traced, false, net);
       this.close(s);
       if (t.aborted) throw new Aborted("pod killed");
     });
-    await this.travel("ingress", client, "read", traced, false, net);
+    await this.travel("edge", client, "read", traced, false, net);
     return "200 OK";
   }
-  /** A billing webhook updating entitlement from live subscription state. */
+  /** A third-party webhook updating a record. */
   async webhook(traced, net) {
-    await this.travel("stripe", "ingress", "webhook", traced, false, net);
-    await this.http("stripe", "webhook", traced, "POST /webhooks/billing", net, async (t) => {
+    await this.travel("payments", "edge", "webhook", traced, false, net);
+    await this.http("payments", "webhook", traced, "POST webhook", net, async (t) => {
       await this.busy(t, rand(3, 8));
-      const s = this.span(traced, "UPDATE entitlement", "postgres");
-      await this.travel("hub", "postgres", "webhook", traced, false, net);
+      const s = this.span(traced, "DB write", "db");
+      await this.travel("api", "db", "webhook", traced, false, net);
       await this.sleep(rand(6, 20));
-      await this.travel("postgres", "hub", "webhook", traced, false, net);
+      await this.travel("db", "api", "webhook", traced, false, net);
       this.close(s);
     });
-    await this.travel("ingress", "stripe", "webhook", traced, false, net);
+    await this.travel("edge", "payments", "webhook", traced, false, net);
     return "200 OK";
   }
   /**
-   * The hub leg of an HTTP request: Ingress waits for a Ready hub pod (504
+   * The API leg of an HTTP request: the edge waits for a ready instance (504
    * after a while), and a pod dying mid-request turns into a 502.
    */
   async http(client, flow, traced, name, net, handler) {
-    const s = this.span(traced, name, "hub");
+    const s = this.span(traced, name, "api");
     let token;
     try {
-      token = await this.acquire("hub", HTTP_TIMEOUT_MS);
+      token = await this.acquire("api", HTTP_TIMEOUT_MS);
     } catch (e) {
       this.close(s, "error");
-      await this.travel("ingress", client, flow, traced, true, net);
+      await this.travel("edge", client, flow, traced, true, net);
       throw e;
     }
-    await this.travel("ingress", "hub", flow, traced, false, net);
+    await this.travel("edge", "api", flow, traced, false, net);
     try {
       await handler(token);
     } catch (e) {
       this.release(token);
       this.close(s, "error");
-      this.services.hub.lastError = this.now;
-      await this.travel("hub", "ingress", flow, traced, true, net);
-      await this.travel("ingress", client, flow, traced, true, net);
+      this.services.api.lastError = this.now;
+      await this.travel("api", "edge", flow, traced, true, net);
+      await this.travel("edge", client, flow, traced, true, net);
       throw e instanceof Aborted ? new Error("502 · pod killed mid-request") : e;
     }
     this.release(token);
-    await this.travel("hub", "ingress", flow, traced, false, net);
+    await this.travel("api", "edge", flow, traced, false, net);
     this.close(s);
   }
   /**
-   * A learner asks a question. The hub answers 202 at once and enqueues the
-   * job; the pipeline then checks for an existing lesson, enriches, builds in
-   * 13 Gemini steps, and fans out to images and audio in parallel.
+   * An async job. The API answers 202 at once and enqueues it; stage 1 may
+   * finish it early, otherwise it runs through stages 2 and 3 and fans out to
+   * stages 4 and 5 in parallel.
    */
-  async question(traced, _net) {
-    await this.travel("app", "ingress", "question", traced);
-    await this.http("app", "question", traced, "POST /questions → 202", void 0, async (t) => {
+  async pipelineJob(traced, _net) {
+    await this.travel("mobile", "edge", "job", traced);
+    await this.http("mobile", "job", traced, "POST request → 202", void 0, async (t) => {
       await this.busy(t, rand(6, 14));
-      await this.travel("hub", "redis", "question", traced);
-      await this.travel("redis", "hub", "question", traced);
+      await this.travel("api", "queue", "job", traced);
+      await this.travel("queue", "api", "job", traced);
     });
-    void this.travel("ingress", "app", "question", traced);
-    await this.travel("redis", "similarity", "question", traced);
+    void this.travel("edge", "mobile", "job", traced);
+    await this.travel("queue", "stage1", "job", traced);
     let duplicate = false;
-    await this.job("similarity", traced, async (t) => {
-      await this.gemini("similarity", "question", traced, "embed question", rand(200, 380));
-      const s2 = this.span(traced, "pgvector search", "postgres");
-      await this.travel("similarity", "postgres", "question", traced);
+    await this.job("stage1", traced, async (t) => {
+      await this.model("stage1", "job", traced, "model call", rand(200, 380));
+      const s2 = this.span(traced, "DB lookup", "db");
+      await this.travel("stage1", "db", "job", traced);
       await this.sleep(rand(15, 45));
-      await this.travel("postgres", "similarity", "question", traced);
+      await this.travel("db", "stage1", "job", traced);
       this.close(s2);
       if (t.aborted) throw new Aborted("pod killed");
       duplicate = !traced && Math.random() < REUSE_RATE;
     });
     if (duplicate) {
-      await this.travel("similarity", "hub", "question", traced);
+      await this.travel("stage1", "api", "job", traced);
       this.reused++;
-      return "reused an existing lesson";
+      return "finished early (result existed)";
     }
-    await this.travel("similarity", "redis", "question", traced);
-    await this.travel("redis", "enricher", "question", traced);
-    await this.job("enricher", traced, async (t) => {
-      await this.gemini("enricher", "question", traced, "enrich question", rand(350, 650));
+    await this.travel("stage1", "queue", "job", traced);
+    await this.travel("queue", "stage2", "job", traced);
+    await this.job("stage2", traced, async (t) => {
+      await this.model("stage2", "job", traced, "model call", rand(350, 650));
       if (t.aborted) throw new Aborted("pod killed");
     });
-    await this.travel("enricher", "redis", "question", traced);
-    await this.travel("redis", "builder", "question", traced);
-    await this.job("builder", traced, async (t) => {
-      const svc = this.services.builder;
-      for (let i = 1; i <= BUILD_STEPS; i++) {
+    await this.travel("stage2", "queue", "job", traced);
+    await this.travel("queue", "stage3", "job", traced);
+    await this.job("stage3", traced, async (t) => {
+      const svc = this.services.stage3;
+      const steps = Math.round(rand(...STEPS));
+      for (let i = 1; i <= steps; i++) {
         svc.step = i;
-        await this.gemini("builder", "question", traced, `build step ${i}/13`, rand(160, 380));
+        await this.model("stage3", "job", traced, `model call ${i}`, rand(160, 380));
         if (t.aborted) throw new Aborted("pod killed");
       }
-      const s2 = this.span(traced, "PUT lesson.json", "s3");
-      await this.travel("builder", "s3", "question", traced);
-      await this.travel("s3", "builder", "question", traced);
+      const s2 = this.span(traced, "write object", "store");
+      await this.travel("stage3", "store", "job", traced);
+      await this.travel("store", "stage3", "job", traced);
       this.close(s2);
     });
-    await this.travel("builder", "redis", "question", traced);
-    const media = (stage, model, ms) => (async () => {
-      await this.travel("redis", stage, "question", traced);
+    await this.travel("stage3", "queue", "job", traced);
+    const media = (stage, what, ms) => (async () => {
+      await this.travel("queue", stage, "job", traced);
       await this.job(stage, traced, async (t) => {
-        await this.gemini(stage, "question", traced, model, rand(...ms));
-        const s2 = this.span(traced, `PUT ${stage}`, "s3");
-        await this.travel(stage, "s3", "question", traced);
-        await this.travel("s3", stage, "question", traced);
+        await this.model(stage, "job", traced, what, rand(...ms));
+        const s2 = this.span(traced, `PUT ${stage}`, "store");
+        await this.travel(stage, "store", "job", traced);
+        await this.travel("store", stage, "job", traced);
         this.close(s2);
         if (t.aborted) throw new Aborted("pod killed");
       });
-      const p = this.span(traced, `PATCH status (${stage})`, "hub");
-      await this.travel(stage, "hub", "question", traced);
+      const p = this.span(traced, `PATCH status (${stage})`, "api");
+      await this.travel(stage, "api", "job", traced);
       this.close(p);
     })();
     await Promise.all([
-      media("images", "generate illustrations", [1100, 1900]),
-      media("audio", "TTS narration", [800, 1500])
+      media("stage4", "model call", [1100, 1900]),
+      media("stage5", "model call", [800, 1500])
     ]);
-    const s = this.span(traced, "UPDATE lesson ready", "postgres");
-    await this.travel("hub", "postgres", "question", traced);
-    await this.travel("postgres", "hub", "question", traced);
+    const s = this.span(traced, "DB write", "db");
+    await this.travel("api", "db", "job", traced);
+    await this.travel("db", "api", "job", traced);
     this.close(s);
     this.built++;
-    return "lesson built";
+    return "job done";
   }
   // ---- chaos and scaling -------------------------------------------------
-  /** Kills one running pod; Kubernetes restarts it after a back-off. */
+  /** Kills one running instance; it is restarted after a back-off. */
   killPod(id) {
     const svc = this.services[id];
     const victims = svc?.pods.filter((p) => p.state === "ready");
@@ -5135,8 +5146,8 @@ class Simulation {
       errorRate: last5.length ? errors / last5.length : 0,
       readP50: pct("read", 0.5),
       readP95: pct("read", 0.95),
-      lessonP50: pct("question", 0.5, true),
-      geminiPerSec: this.geminiCalls.length / 5,
+      jobP50: pct("job", 0.5, true),
+      modelPerSec: this.modelCalls.length / 5,
       built: this.built,
       reused: this.reused,
       retries: this.retries,
@@ -5157,13 +5168,13 @@ class Simulation {
       util: cap ? busy / cap : svc.waiters.length ? 1 : 0,
       queued: svc.waiters.length,
       erroredRecently: this.now - svc.lastError < 900,
-      step: id === "builder" && busy > 0 ? svc.step : 0
+      step: id === "stage3" && busy > 0 ? svc.step : 0
     };
   }
 }
 const COLORS = {
   read: "#22d3ee",
-  question: "#a78bfa",
+  job: "#a78bfa",
   webhook: "#fbbf24",
   failed: "#f43f5e",
   traced: "#ffffff"
@@ -5182,6 +5193,16 @@ function pathD(e) {
   const [p0, p1, p2, p3] = curve(e);
   return `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`;
 }
+function redactedTag(id) {
+  let h = 2166136261;
+  for (const c of id) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  const abc = "abcdefghijklmnopqrstuvwxyz";
+  const word = (n) => Array.from({ length: n }, () => {
+    h = Math.imul(h ^ h >>> 13, 1540483477);
+    return abc[Math.abs(h) % 26];
+  }).join("");
+  return `${word(5 + Math.abs(h) % 4)} · ${word(4 + Math.abs(h >> 3) % 5)}`;
+}
 function fmtMs(ms) {
   if (!ms) return "—";
   return ms >= 1e3 ? `${(ms / 1e3).toFixed(1)}s` : `${Math.round(ms)}ms`;
@@ -5192,13 +5213,13 @@ function SystemMap() {
   const edgeRefs = reactExports.useRef({});
   const boxRef = reactExports.useRef(null);
   const [snap, setSnap] = reactExports.useState(null);
-  const [selected, setSelected] = reactExports.useState("hub");
+  const [selected, setSelected] = reactExports.useState("api");
   const [ui, setUi] = reactExports.useState({
     paused: false,
     speed: 1,
     traffic: 1,
     autoscale: true,
-    geminiDown: false
+    modelDown: false
   });
   reactExports.useEffect(() => {
     const sim2 = new Simulation();
@@ -5295,9 +5316,9 @@ function SystemMap() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: boxRef, className: "rounded-2xl border border-border bg-card/40 p-3 sm:p-5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-end justify-between gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300", children: "Live · getXplain.ai under the hood" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300", children: "Live · flagship system · redacted" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-1 text-xl font-bold tracking-tight sm:text-2xl", children: "Break production. It's a simulation." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 max-w-xl text-xs text-muted-foreground", children: "The real architecture, running as a discrete-event simulation in your browser. Click any node to inspect it, kill its pods, or take Gemini down, and watch retries, restarts and autoscaling handle it." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 max-w-xl text-xs text-muted-foreground", children: "A redacted model of a production system I work on, running as a discrete-event simulation in your browser. Names and internals are withheld. Click any node to inspect it, kill its instances, or take the AI provider down, and watch retries, restarts and autoscaling handle it." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2 font-mono text-[11px]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -5375,11 +5396,11 @@ function SystemMap() {
           "button",
           {
             type: "button",
-            onClick: () => sim?.start("question", true),
+            onClick: () => sim?.start("job", true),
             className: "inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1.5 font-semibold text-primary-foreground hover:opacity-90",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Radar, { className: "h-3.5 w-3.5" }),
-              " Trace a question"
+              " Trace a job"
             ]
           }
         )
@@ -5392,7 +5413,7 @@ function SystemMap() {
         viewBox: "0 0 1100 620",
         className: "min-w-[760px] w-full select-none",
         role: "img",
-        "aria-label": "Architecture map of getXplain.ai with live simulated traffic",
+        "aria-label": "Redacted architecture map with live simulated traffic",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
@@ -5410,12 +5431,13 @@ function SystemMap() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
               ] })
             ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("filter", { id: "sysmap-redact", x: "-10%", y: "-60%", width: "120%", height: "220%", children: /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2.4" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "platform", dashed: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "arq pipeline", dashed: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "core", dashed: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "async pipeline", dashed: true }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
           EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
             "path",
@@ -5439,7 +5461,7 @@ function SystemMap() {
               def: n,
               state: snap?.nodes[n.id] ?? null,
               selected: selected === n.id,
-              geminiDown: n.id === "gemini" && ui.geminiDown,
+              modelDown: n.id === "ai" && ui.modelDown,
               onSelect: () => setSelected(n.id)
             },
             n.id
@@ -5448,9 +5470,9 @@ function SystemMap() {
       }
     ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "GET lesson" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.question, label: "question → lesson pipeline" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.webhook, label: "billing webhook" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "read request" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.job, label: "async job" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.webhook, label: "webhook" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.failed, label: "failure" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.traced, label: "traced request" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto", children: "pods:" }),
@@ -5467,7 +5489,7 @@ function SystemMap() {
           value: s ? `${fmtMs(s.readP50)} / ${fmtMs(s.readP95)}` : "—"
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lesson build p50", value: s ? fmtMs(s.lessonP50) : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "job p50", value: s ? fmtMs(s.jobP50) : "—" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Metric,
         {
@@ -5476,8 +5498,8 @@ function SystemMap() {
           warn: !!s && s.errorRate > 0.02
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "gemini calls", value: s ? `${s.geminiPerSec.toFixed(1)}/s` : "—" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lessons built · reused", value: s ? `${s.built} · ${s.reused}` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "model calls", value: s ? `${s.modelPerSec.toFixed(1)}/s` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "jobs done · early", value: s ? `${s.built} · ${s.reused}` : "—" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Metric,
         {
@@ -5491,7 +5513,15 @@ function SystemMap() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-background/50 p-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Inspector" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1 text-lg font-bold", children: sel.label }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[11px] text-primary", children: sel.sub }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "font-mono text-[11px] text-primary",
+            style: sel.redacted ? { filter: "blur(3px)", userSelect: "none" } : void 0,
+            "aria-label": sel.redacted ? "redacted" : void 0,
+            children: sel.redacted ? redactedTag(sel.id) : sel.sub
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs leading-relaxed text-muted-foreground", children: sel.info }),
         selState && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-2 font-mono text-[11px]", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5", children: [
@@ -5532,20 +5562,20 @@ function SystemMap() {
             }
           )
         ] }),
-        selected === "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        selected === "ai" && /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             type: "button",
-            onClick: () => set("geminiDown", !ui.geminiDown),
-            className: `mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.geminiDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`,
-            children: ui.geminiDown ? "Restore Gemini" : "Simulate a Gemini outage"
+            onClick: () => set("modelDown", !ui.modelDown),
+            className: `mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.modelDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`,
+            children: ui.modelDown ? "Restore the AI provider" : "Simulate an AI provider outage"
           }
         ),
-        !selState && selected !== "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] text-muted-foreground", children: "Managed or external: not something you can kill from here. Try the API hub or a worker." })
+        !selState && selected !== "ai" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] text-muted-foreground", children: "Managed or external: not something you can kill from here. Try the core API or a worker." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TracePanel, { trace: snap?.trace ?? null, now: snap?.now ?? 0 })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground", children: "Services and flows follow the production system; traffic, timings (compressed), replica counts and failures are simulated." })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground", children: "Redacted on purpose: service names, internals and exact topology are withheld or generalised, and blurred tags are placeholders. Traffic, timings (compressed), replica counts and failures are simulated." })
   ] });
 }
 function Zone({
@@ -5591,12 +5621,12 @@ function NodeBox({
   def,
   state,
   selected,
-  geminiDown,
+  modelDown,
   onSelect
 }) {
   const x = def.x - NODE_W / 2;
   const y = def.y - NODE_H / 2;
-  const hot = !!state?.erroredRecently || geminiDown;
+  const hot = !!state?.erroredRecently || modelDown;
   const accent = def.kind === "worker" ? "#a78bfa" : def.kind === "service" || def.kind === "edge" ? "#22d3ee" : def.kind === "external" ? "#fbbf24" : "#94a3b8";
   const util = state?.util ?? 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -5637,7 +5667,8 @@ function NodeBox({
             fontFamily: "ui-monospace, monospace",
             fill: "currentColor",
             opacity: 0.55,
-            children: state?.step ? `step ${state.step}/13 · ${def.sub.split(" ")[0]}` : def.sub
+            filter: !state?.step && def.redacted ? "url(#sysmap-redact)" : void 0,
+            children: state?.step ? `model call ${state.step}` : def.redacted ? redactedTag(def.id) : def.sub
           }
         ),
         state?.pods.slice(0, 9).map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: x + 14 + i * 9, cy: y + 46, r: 3, fill: POD_COLORS[p], children: p === "starting" && /* @__PURE__ */ jsxRuntimeExports.jsx("animate", { attributeName: "opacity", values: "1;.3;1", dur: "0.8s", repeatCount: "indefinite" }) }, i)),
@@ -5679,7 +5710,7 @@ function NodeBox({
             }
           )
         ] }),
-        geminiDown && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+        modelDown && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + NODE_W - 36, y: y - 9, width: 44, height: 18, rx: 9, fill: "#f43f5e" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "text",
@@ -5713,7 +5744,7 @@ function Dot({ c, label }) {
 const SPAN_COLORS = { ok: "#22d3ee", error: "#f43f5e", retry: "#f59e0b" };
 function TracePanel({ trace, now: now2 }) {
   if (!trace) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground", children: "Press “Trace a question” to follow one request through every service, as a distributed trace." });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground", children: "Press “Trace a job” to follow one request through every stage, as a distributed trace." });
   }
   const end = trace.end ?? now2;
   const total = Math.max(1, end - trace.start);
