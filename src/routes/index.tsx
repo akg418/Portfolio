@@ -4,6 +4,7 @@ import { CommandBar } from "@/components/CommandBar";
 import { CupGame } from "@/components/CupGame";
 import { CustomCursor } from "@/components/CustomCursor";
 import { BackToTop } from "@/components/fx/BackToTop";
+import { PlayCar } from "@/components/fx/PlayCar";
 import { Preloader } from "@/components/fx/Preloader";
 import { MouseGlow } from "@/components/MouseGlow";
 import { NavBar } from "@/components/NavBar";
@@ -83,6 +84,7 @@ function Index() {
       <NavBar />
       {mounted && <SessionTimer />}
       {mounted && <BackToTop />}
+      {mounted && <PlayCar />}
 
       <main id="top" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
         <Hero />
