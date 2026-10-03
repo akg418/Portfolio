@@ -47,3 +47,37 @@ export function useVehicle(): VehicleState {
   }, []);
   return state;
 }
+
+// ---- driving, shared with the page and the terminal ------------------------
+
+/** Fired with `detail: boolean` when someone starts or stops driving. */
+export const VEHICLE_DRIVING_EVENT = "vehicle-driving";
+/** Asks the vehicle to hand over the wheel (the `car drive` command). */
+export const VEHICLE_DRIVE_EVENT = "vehicle-drive";
+/** Something tried to open the terminal mid-drive; the vehicle says no. */
+export const VEHICLE_REFUSE_EVENT = "vehicle-refuse";
+
+let driving = false;
+
+export function isVehicleDriving() {
+  return driving;
+}
+
+export function setVehicleDriving(next: boolean) {
+  if (driving === next) return;
+  driving = next;
+  window.dispatchEvent(new CustomEvent<boolean>(VEHICLE_DRIVING_EVENT, { detail: next }));
+}
+
+export function requestDrive() {
+  window.dispatchEvent(new Event(VEHICLE_DRIVE_EVENT));
+}
+
+export function refuseTerminal() {
+  window.dispatchEvent(new Event(VEHICLE_REFUSE_EVENT));
+}
+
+/** Driving needs a keyboard and a fine pointer. */
+export function canDriveHere() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}

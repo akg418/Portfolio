@@ -22,6 +22,7 @@ import { Stats } from "@/components/sections/Stats";
 import { Terminal, type TerminalMode } from "@/components/terminal/Terminal";
 import { useGamingMode } from "@/hooks/useGamingMode";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { VEHICLE_DRIVING_EVENT, isVehicleDriving, refuseTerminal } from "@/hooks/useVehicle";
 import { useSpotlight } from "@/hooks/useSpotlight";
 import { useUsername } from "@/hooks/useUsername";
 import { useVisitCount } from "@/hooks/useVisitCount";
@@ -58,9 +59,25 @@ function Index() {
   useEffect(() => setMounted(true), []);
 
   const changeMode = (mode: WindowMode) => {
+    // No terminal while someone is driving: the car says so instead.
+    if (mode !== "closed" && isVehicleDriving()) {
+      refuseTerminal();
+      return;
+    }
     writeString(STORAGE_KEYS.termMode, mode);
     setTermMode(mode);
   };
+
+  // Taking the wheel closes the terminal, so the keys go to the car.
+  useEffect(() => {
+    const onDriving = (e: Event) => {
+      if (!(e as CustomEvent<boolean>).detail) return;
+      writeString(STORAGE_KEYS.termMode, "closed");
+      setTermMode("closed");
+    };
+    window.addEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+    return () => window.removeEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background text-foreground">

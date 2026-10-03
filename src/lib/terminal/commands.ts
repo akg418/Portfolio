@@ -4,7 +4,14 @@ import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
 import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
-import { VEHICLE_KINDS, VEHICLE_LABELS, readVehicle, setVehicle } from "@/hooks/useVehicle";
+import {
+  VEHICLE_KINDS,
+  VEHICLE_LABELS,
+  canDriveHere,
+  readVehicle,
+  requestDrive,
+  setVehicle,
+} from "@/hooks/useVehicle";
 import { COLOR_KEYS, DEFAULT_COLORS, clearStoredColors, isHex, saveColors } from "./colors";
 import { saveAliases } from "./aliases";
 import type { ColorKey, Command, CommandContext } from "./types";
@@ -280,28 +287,47 @@ export const commands: Command[] = [
   {
     name: "car",
     aliases: ["cars", "vehicle", "garage"],
-    usage: "car [on|off|car|racer|truck|moto]",
+    usage: "car [drive|on|off|car|racer|truck|moto]",
     description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
-    run: ({ args, print }) => {
+    run: ({ args, print, actions }) => {
       const arg = args[0]?.toLowerCase();
       const kind = VEHICLE_KINDS.find((k) => k === arg);
       if (!arg) {
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("drive    click the car bottom-left (desktop) to take the wheel");
+        print("drive    `car drive`, or click the car bottom-left (desktop)");
         print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
         print("crash    knock headings, buttons and images across the page;");
         print("         hits chain into whatever they slide into");
         print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
-        print("Use `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
+        print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
       if (arg === "on" || arg === "off") {
-        setVehicle({ on: arg === "on" });
-        print(
-          arg === "on" ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.",
-        );
+        const on = arg === "on";
+        if (readVehicle().on === on) {
+          print(
+            on
+              ? "It's already on — bottom-left. `car drive` to take the wheel."
+              : "It's already parked. `car on` brings it back.",
+          );
+          return;
+        }
+        setVehicle({ on });
+        print(on ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.");
+        return;
+      }
+      if (arg === "drive" || arg === "play" || arg === "go") {
+        if (!canDriveHere()) {
+          print("Driving needs a keyboard — try it on a desktop.");
+          return;
+        }
+        if (!readVehicle().on) setVehicle({ on: true });
+        print("Closing the terminal… you're driving! Press Stop driving to come back.");
+        actions.close();
+        window.setTimeout(requestDrive, 450);
         return;
       }
       if (kind) {

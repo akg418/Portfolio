@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCcw, Square } from "lucide-react";
 import { VehicleSprite } from "@/components/fx/VehicleSprites";
 import {
+  VEHICLE_DRIVE_EVENT,
   VEHICLE_KINDS,
   VEHICLE_LABELS,
+  VEHICLE_REFUSE_EVENT,
+  canDriveHere,
   setVehicle,
+  setVehicleDriving,
   useVehicle,
   type VehicleKind,
 } from "@/hooks/useVehicle";
@@ -112,6 +116,9 @@ export function PlayCar() {
   /** Switch the vehicle between screen space (idle) and page space (driving). */
   const toPageRef = useRef<() => void>(() => {});
   const toViewportRef = useRef<() => void>(() => {});
+  /** A message the bubble shows over the vehicle while driving, until a time. */
+  const nudgeRef = useRef({ text: "", until: 0 });
+  const [nudge, setNudge] = useState(false);
 
   specRef.current = SPECS[vehicle.kind];
   const enabled = allowed && vehicle.on;
@@ -119,7 +126,7 @@ export function PlayCar() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setAllowed(true);
-    setCanDrive(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+    setCanDrive(canDriveHere());
   }, []);
 
   // Turned off from the terminal mid-drive: hand the page back.
@@ -127,6 +134,7 @@ export function PlayCar() {
     if (!vehicle.on && drivingRef.current) {
       drivingRef.current = false;
       setDriving(false);
+      setVehicleDriving(false);
     }
   }, [vehicle.on]);
 
@@ -483,7 +491,11 @@ export function PlayCar() {
       const body = car.firstElementChild as HTMLElement | null;
       if (body)
         body.style.transform = `translate(-50%, -50%) scale(${s.scale * (1 + s.bounce * 0.12)}, ${s.scale * (1 - s.bounce * 0.08)}) rotate(${wobble * 0.6}deg)`;
-      bubble.style.transform = `translate(${s.x - ox}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      // Kept on screen, however close to the edge the vehicle is.
+      const half = bubble.offsetWidth / 2 + 8;
+      const bx = Math.max(half, Math.min(window.innerWidth - half, s.x - ox));
+      bubble.style.transform = `translate(${bx}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      if (isDriving) say(now < nudgeRef.current.until ? nudgeRef.current.text : null);
 
       // The page shakes after a big hit.
       shake *= Math.exp(-dt * 7);
@@ -526,12 +538,36 @@ export function PlayCar() {
     toPageRef.current();
     drivingRef.current = true;
     setDriving(true);
+    setVehicleDriving(true);
   };
   const stop = () => {
     drivingRef.current = false;
     toViewportRef.current();
     setDriving(false);
+    setVehicleDriving(false);
   };
+  const startRef = useRef(start);
+  startRef.current = start;
+
+  // `car drive` from the terminal, and a refused attempt to open the terminal.
+  useEffect(() => {
+    if (!enabled) return;
+    const onDrive = () => startRef.current();
+    let timer = 0;
+    const onRefuse = () => {
+      nudgeRef.current = { text: "stop driving first!", until: performance.now() + 2200 };
+      setNudge(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setNudge(false), 2200);
+    };
+    window.addEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+    window.addEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+    return () => {
+      window.removeEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+      window.removeEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+      window.clearTimeout(timer);
+    };
+  }, [enabled]);
 
   if (!enabled) return null;
 
@@ -594,7 +630,9 @@ export function PlayCar() {
           <button
             type="button"
             onClick={stop}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 hover:border-primary/60 hover:text-primary"
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 hover:border-primary/60 hover:text-primary ${
+              nudge ? "animate-pulse border-amber-400 text-amber-300" : "border-border"
+            }`}
           >
             <Square className="h-3 w-3" /> Stop driving
           </button>
