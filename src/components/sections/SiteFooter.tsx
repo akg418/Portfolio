@@ -1,4 +1,26 @@
+import { useEffect, useState } from "react";
 import { links, profile } from "@/data/profile";
+
+/**
+ * A status light polled from /status.json: the network-tab mystery's clue.
+ * The file says more than the light shows.
+ */
+function StatusLight() {
+  const [status, setStatus] = useState<string | null>(null);
+  useEffect(() => {
+    fetch("/status.json", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: { status?: string } | null) => setStatus(j?.status ?? null))
+      .catch(() => setStatus(null));
+  }, []);
+  if (!status) return null;
+  return (
+    <span className="inline-flex items-center gap-1.5 font-mono" title="live from /status.json">
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+      all systems {status}
+    </span>
+  );
+}
 
 export function SiteFooter() {
   return (
@@ -7,6 +29,7 @@ export function SiteFooter() {
         <span>
           © {new Date().getFullYear()} {profile.name}. Built with care.
         </span>
+        <StatusLight />
         <div className="flex gap-4">
           {links.map((l) => (
             <a

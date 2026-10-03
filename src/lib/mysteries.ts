@@ -18,7 +18,9 @@ export type MysteryId =
   | "outage"
   | "midnight"
   | "console"
-  | "problem";
+  | "problem"
+  | "crawler"
+  | "status";
 
 export type Mystery = { id: MysteryId; title: string; riddle: string; dev?: boolean };
 
@@ -71,6 +73,19 @@ export const MYSTERIES: Mystery[] = [
     title: "Accepted",
     riddle:
       "I set problems for a living. One never left this browser — look where sites keep things.",
+    dev: true,
+  },
+  {
+    id: "crawler",
+    title: "Staff only",
+    riddle:
+      "Alice and Bob keep a classic file for the bots. It names one room they must never enter.",
+    dev: true,
+  },
+  {
+    id: "status",
+    title: "Friday deploy",
+    riddle: "The footer swears all systems are ok. Ask the network where it heard that.",
     dev: true,
   },
 ];

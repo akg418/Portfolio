@@ -107,20 +107,19 @@ export function MysteryHud() {
 
   return (
     <>
-      {count > 0 && (
-        <div className="group fixed left-4 top-20 z-30 hidden sm:block">
-          <button
-            type="button"
-            onClick={() => count === total && setCertificate(true)}
-            aria-describedby="mystery-info"
-            className="flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md"
-          >
-            <Search className="h-3.5 w-3.5" />
-            {count}/{total}
-          </button>
-          <MysteryInfo solved={solved} />
-        </div>
-      )}
+      {/* Always there, from 0/N, so visitors know there is something to find. */}
+      <div className="group fixed left-4 top-20 z-30 hidden sm:block">
+        <button
+          type="button"
+          onClick={() => count === total && setCertificate(true)}
+          aria-describedby="mystery-info"
+          className="flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md"
+        >
+          <Search className="h-3.5 w-3.5" />
+          {count}/{total}
+        </button>
+        <MysteryInfo solved={solved} />
+      </div>
 
       {arcade && (
         <div className="fixed bottom-16 left-1/2 z-[71] flex -translate-x-1/2 items-center gap-2 rounded-full border border-amber-400/60 bg-background/90 px-3 py-1.5 font-mono text-[11px] text-amber-300 shadow-lg">
@@ -275,8 +274,9 @@ function MysteryInfo({ solved }: { solved: string[] }) {
         Mysteries · {solved.length}/{MYSTERIES.length} found
       </div>
       <p className="mt-1.5 text-muted-foreground">
-        Hidden challenges scattered around this site. Nothing announces them — you just found
-        {solved.length > 1 ? " some" : " one"}. Each riddle below hints at one still locked.
+        {solved.length === 0
+          ? "Hidden challenges scattered around this site. Nothing announces them, but every one leaves a clue somewhere on the page. Each riddle below points at one."
+          : `Hidden challenges scattered around this site. You've found ${solved.length === 1 ? "one" : "some"}. Each riddle below points at one still locked.`}
       </p>
 
       <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground">

@@ -348,11 +348,8 @@ export const commands: Command[] = [
     description: "the hidden mysteries you have found",
     run: ({ print }) => {
       const solved = solvedMysteries();
-      if (!solved.length) {
-        print("command not found: mysteries. Try `help`.");
-        return;
-      }
       print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      if (!solved.length) print("Hidden around the site. Every one leaves a clue — look closely.");
       for (const m of MYSTERIES) {
         const done = solved.includes(m.id);
         const tag = m.dev ? " [dev]" : "";
@@ -360,6 +357,43 @@ export const commands: Command[] = [
       }
       if (solved.length === MYSTERIES.length)
         print("All of them. Click the counter for your certificate.");
+    },
+  },
+  {
+    name: "ssh",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const target = rawArgs.trim().toLowerCase();
+      if (target === "alice@ahmed.dev") {
+        print("Connecting to ahmed.dev…");
+        print("Welcome back, Alice. Last login: the ACPC finals, from a balloon.");
+        print('alice@ahmed.dev:~$ cat notes.txt → "tabs."');
+        confetti();
+        solveMystery("crawler");
+        return;
+      }
+      if (target.endsWith("@ahmed.dev")) {
+        print(`${target}: Permission denied (publickey). Only Alice left her login lying around.`);
+        return;
+      }
+      print("ssh: Could not resolve hostname. Try a user @ahmed.dev.");
+    },
+  },
+  {
+    name: "deploy",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const flags = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (flags === "--force friday") {
+        print("Deploying to production… on a Friday… with --force.");
+        print("🔥 Every check skipped. Nothing caught fire this time. Bold.");
+        confetti();
+        solveMystery("status");
+        return;
+      }
+      print("deploy: refusing to deploy without the release checklist's last item.");
     },
   },
   {

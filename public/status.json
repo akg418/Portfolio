@@ -1,0 +1,10 @@
+{
+  "service": "ahmed.dev",
+  "status": "ok",
+  "region": "cairo-1",
+  "checks": { "terminal": "ok", "robots": "ok", "balloons": "ok" },
+  "debug": {
+    "note": "release checklist, last item, rot13'd so nobody reads it by accident",
+    "todo": "qrcybl --sbepr sevqnl"
+  }
+}

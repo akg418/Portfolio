@@ -507,6 +507,11 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
             key={name}
             onClick={() => poke(name)}
             data-cursor="Poke"
+            title={
+              name === "alice"
+                ? "Alice · keeps the site's robots.txt tidy"
+                : "Bob · also reads robots.txt, every morning"
+            }
             className="pointer-events-auto absolute left-0 cursor-pointer will-change-transform"
             style={{
               bottom: r.grounded ? FLOOR_PX : LINE_PX,
