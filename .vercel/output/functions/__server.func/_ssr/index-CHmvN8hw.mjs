@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-hn8Eyvk6.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BhyQramZ.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -851,7 +851,7 @@ function MysteryInfo({ solved }) {
     {
       id: "mystery-info",
       role: "tooltip",
-      className: "invisible absolute left-0 top-full mt-2 max-h-[calc(100vh-8rem)] w-[340px] overflow-y-auto translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
+      className: "invisible absolute left-0 top-full mt-2 max-h-[min(55vh,calc(100vh-13rem))] w-[340px] overflow-y-auto overscroll-contain [scrollbar-width:thin] translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-amber-300", children: [
           "Mysteries · ",
