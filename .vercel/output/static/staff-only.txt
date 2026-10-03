@@ -1,0 +1,8 @@
+STAFF ONLY — robots keep out.
+
+If you are reading this, you are not a robot. Good.
+Alice left her login here, encoded so the crawlers would not get it:
+
+    c3NoIGFsaWNlQGFobWVkLmRldg==
+
+The terminal on the site knows what to do with it.

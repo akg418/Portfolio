@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { links, profile } from "@/data/profile";
+import { solveMystery } from "@/lib/mysteries";
 
 /**
  * A conference badge on a lanyard, hanging into the hero. Grab it, pull it,
@@ -67,6 +68,15 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
   const strapRef = useRef<SVGPathElement>(null);
   const [size, setSize] = useState<Size>(DESKTOP);
   const [flipped, setFlipped] = useState(false);
+  /** Seven flips in a visit reveal the VIP pass (a hidden mystery). */
+  const [flips, setFlips] = useState(0);
+  const flip = () => {
+    setFlipped((f) => !f);
+    setFlips((n) => {
+      if (n + 1 === 7) solveMystery("badge");
+      return n + 1;
+    });
+  };
   const [held, setHeld] = useState(false);
   const strapId = useId();
 
@@ -249,7 +259,7 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
     s.grab = null;
     s.asleep = false;
     setHeld(false);
-    if (clicked) setFlipped((f) => !f);
+    if (clicked) flip();
   };
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -354,7 +364,7 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setFlipped((f) => !f);
+            flip();
           }
         }}
       >
@@ -381,6 +391,23 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d1224] via-transparent to-transparent" />
                 <div className="absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" />
+                {/* Seven punch holes under the slot, one per flip: the persistence mystery's clue. */}
+                <div
+                  className="absolute left-1/2 top-6 flex -translate-x-1/2 gap-1"
+                  title={flips >= 7 ? "VIP" : "punch card · 7 holes"}
+                  aria-hidden
+                >
+                  {Array.from({ length: 7 }, (_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 w-1.5 rounded-full border ${
+                        i < Math.min(flips, 7)
+                          ? "border-amber-300 bg-amber-300"
+                          : "border-white/50 bg-[#0d1224]/70"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
               <div className="flex flex-1 flex-col px-4 pb-3 pt-1">
                 <div className="font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300">
@@ -441,6 +468,11 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
                   </a>
                 ))}
               </div>
+              {flips >= 7 && (
+                <div className="mt-3 rounded border border-amber-300/60 px-2 py-1 text-center font-mono text-[9px] font-bold uppercase tracking-widest text-amber-300">
+                  ★ VIP pass · persistence noted
+                </div>
+              )}
               <div className="mt-auto font-mono text-[8px] uppercase tracking-widest text-white/35">
                 Click to flip back
               </div>

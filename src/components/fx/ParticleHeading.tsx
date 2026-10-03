@@ -325,7 +325,9 @@ export function ParticleHeading({ lines, className }: { lines: Line[]; className
   }, [lines]);
 
   return (
-    <div className="relative">
+    // Not selectable: the visible words are particles, and a selection box over
+    // the hidden text underneath only looks broken. Screen readers still read it.
+    <div className="relative select-none">
       <h2
         ref={headingRef}
         className={className}

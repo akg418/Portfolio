@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-BSL8HNT3.css";
+const appCss = "/assets/styles-CMvMroHG.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -325,6 +325,8 @@ const STORAGE_KEYS = {
   visits: "visits",
   gamingMode: "gamingMode",
   robots: "robots",
+  vehicle: "vehicle",
+  mysteries: "mysteries",
   termMode: "termMode_v2",
   termColors: "term-colors",
   termAliases: "term-aliases",
@@ -485,7 +487,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-68NryKN4.mjs");
+const $$splitComponentImporter = () => import("./index-BNNMEt4B.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -510,28 +512,28 @@ const router = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
 export {
   STORAGE_KEYS as S,
   THEME_EVENT as T,
-  applyTheme as a,
+  writeJson as a,
   readJson as b,
-  writeJson as c,
-  domainParts as d,
-  competitions as e,
-  problemSetting as f,
+  applyTheme as c,
+  readFlag as d,
+  writeFlag as e,
+  domainParts as f,
   getStoredTheme as g,
-  education as h,
-  experiences as i,
-  links as j,
-  roles as k,
+  competitions as h,
+  problemSetting as i,
+  education as j,
+  experiences as k,
   linkOf as l,
-  projects as m,
-  stats as n,
-  readString as o,
+  links as m,
+  roles as n,
+  projects as o,
   profile as p,
-  writeString as q,
-  readFlag as r,
+  stats as q,
+  readString as r,
   skills as s,
   toggleTheme as t,
   readNumber as u,
   removeKey as v,
-  writeFlag as w,
+  writeString as w,
   router as x
 };

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Activity, Pause, Play, Radar, Skull, Zap } from "lucide-react";
 import { Simulation, type Flow, type Trace } from "@/lib/sysmap/sim";
+import { solveMystery } from "@/lib/mysteries";
 import {
   EDGES,
   NODES,
@@ -15,15 +16,16 @@ import {
 } from "@/lib/sysmap/topology";
 
 /**
- * getXplain.ai, live: the production architecture as a running simulation.
- * Requests and pipeline jobs flow across the map as packets; pods, queues and
- * load update as they go. Kill a pod, take Gemini down, spike the traffic or
- * trace a single question end to end, and watch the system cope.
+ * The flagship system, live and redacted: a generic model of its shape as a
+ * running simulation. Service names and internals are withheld and some tags
+ * are blurred on purpose. Requests and pipeline jobs flow across the map as
+ * packets; instances, queues and load update as they go. Kill an instance,
+ * take the AI provider down, spike the traffic or trace one job end to end.
  */
 
 const COLORS: Record<Flow | "failed" | "traced", string> = {
   read: "#22d3ee",
-  question: "#a78bfa",
+  job: "#a78bfa",
   webhook: "#fbbf24",
   failed: "#f43f5e",
   traced: "#ffffff",
@@ -52,6 +54,22 @@ function pathD(e: (typeof EDGES)[number]) {
   return `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`;
 }
 
+/**
+ * Placeholder for a withheld detail: letters derived from the node's generic
+ * id, never from the real name, so un-blurring it reveals nothing.
+ */
+function redactedTag(id: string) {
+  let h = 2166136261;
+  for (const c of id) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  const abc = "abcdefghijklmnopqrstuvwxyz";
+  const word = (n: number) =>
+    Array.from({ length: n }, () => {
+      h = Math.imul(h ^ (h >>> 13), 0x5bd1e995);
+      return abc[Math.abs(h) % 26];
+    }).join("");
+  return `${word(5 + (Math.abs(h) % 4))} · ${word(4 + (Math.abs(h >> 3) % 5))}`;
+}
+
 function fmtMs(ms: number) {
   if (!ms) return "—";
   return ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${Math.round(ms)}ms`;
@@ -63,13 +81,15 @@ export function SystemMap() {
   const edgeRefs = useRef<Record<string, SVGPathElement | null>>({});
   const boxRef = useRef<HTMLDivElement>(null);
   const [snap, setSnap] = useState<Snapshot | null>(null);
-  const [selected, setSelected] = useState<string>("hub");
+  const [incident, setIncident] = useState(false);
+  const incidentSeen = useRef(false);
+  const [selected, setSelected] = useState<string>("api");
   const [ui, setUi] = useState({
     paused: false,
     speed: 1,
     traffic: 1,
     autoscale: true,
-    geminiDown: false,
+    modelDown: false,
   });
 
   useEffect(() => {
@@ -146,6 +166,13 @@ export function SystemMap() {
         lastSnap = t;
         const nodes: Snapshot["nodes"] = {};
         for (const n of NODES) nodes[n.id] = sim.nodeState(n.id);
+        // Every core API instance down at once: a full outage (a hidden mystery).
+        const api = nodes.api;
+        if (!incidentSeen.current && api && api.pods.length && !api.pods.includes("ready")) {
+          incidentSeen.current = true;
+          setIncident(true);
+          solveMystery("outage");
+        }
         setSnap({
           nodes,
           stats: sim.stats(),
@@ -179,14 +206,15 @@ export function SystemMap() {
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300">
-            Live · getXplain.ai under the hood
+            Live · flagship system · redacted
           </div>
           <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">
             Break production. It's a simulation.
           </h3>
           <p className="mt-1 max-w-xl text-xs text-muted-foreground">
-            The real architecture, running as a discrete-event simulation in your browser. Click any
-            node to inspect it, kill its pods, or take Gemini down, and watch retries, restarts and
+            A redacted model of a production system I work on, running as a discrete-event
+            simulation in your browser. Names and internals are withheld. Click any node to inspect
+            it, kill its instances, or take the AI provider down, and watch retries, restarts and
             autoscaling handle it.
           </p>
         </div>
@@ -243,10 +271,10 @@ export function SystemMap() {
           </button>
           <button
             type="button"
-            onClick={() => sim?.start("question", true)}
+            onClick={() => sim?.start("job", true)}
             className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1.5 font-semibold text-primary-foreground hover:opacity-90"
           >
-            <Radar className="h-3.5 w-3.5" /> Trace a question
+            <Radar className="h-3.5 w-3.5" /> Trace a job
           </button>
         </div>
       </div>
@@ -255,12 +283,33 @@ export function SystemMap() {
         ← swipe the map · tap a node →
       </div>
       {/* The map */}
-      <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+      <div className="relative -mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+        {incident && (
+          <div className="absolute left-1/2 top-4 z-10 w-[min(92%,420px)] -translate-x-1/2 rounded-xl border border-rose-500/60 bg-background/95 p-4 font-mono text-xs shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-rose-400">INC-404 · SEV-1</span>
+              <button
+                type="button"
+                onClick={() => setIncident(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                dismiss
+              </button>
+            </div>
+            <p className="mt-2 text-foreground">
+              Core API has no ready instances. Every request is a 504.
+            </p>
+            <p className="mt-1 text-muted-foreground">
+              Root cause: someone broke prod. It was you. Recovery: automatic, give it a few
+              seconds.
+            </p>
+          </div>
+        )}
         <svg
           viewBox="0 0 1100 620"
           className="min-w-[760px] w-full select-none"
           role="img"
-          aria-label="Architecture map of getXplain.ai with live simulated traffic"
+          aria-label="Redacted architecture map with live simulated traffic"
         >
           <defs>
             <filter id="sysmap-glow" x="-200%" y="-200%" width="500%" height="500%">
@@ -278,6 +327,9 @@ export function SystemMap() {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
+            <filter id="sysmap-redact" x="-10%" y="-60%" width="120%" height="220%">
+              <feGaussianBlur stdDeviation="2.4" />
+            </filter>
             <pattern id="sysmap-grid" width="22" height="22" patternUnits="userSpaceOnUse">
               <circle cx="1" cy="1" r="1" fill="currentColor" opacity="0.08" />
             </pattern>
@@ -286,8 +338,8 @@ export function SystemMap() {
 
           {/* Zones */}
           <Zone x={12} y={100} w={156} h={430} label="clients" />
-          <Zone x={178} y={200} w={530} h={400} label="platform" dashed />
-          <Zone x={716} y={24} w={168} h={576} label="arq pipeline" dashed />
+          <Zone x={178} y={200} w={530} h={400} label="core" dashed />
+          <Zone x={716} y={24} w={168} h={576} label="async pipeline" dashed />
           <Zone x={920} y={185} w={170} h={360} label="external" />
 
           {EDGES.map((e) => (
@@ -313,7 +365,7 @@ export function SystemMap() {
               def={n}
               state={snap?.nodes[n.id] ?? null}
               selected={selected === n.id}
-              geminiDown={n.id === "gemini" && ui.geminiDown}
+              modelDown={n.id === "ai" && ui.modelDown}
               onSelect={() => setSelected(n.id)}
             />
           ))}
@@ -322,9 +374,9 @@ export function SystemMap() {
 
       {/* Legend */}
       <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground">
-        <Dot c={COLORS.read} label="GET lesson" />
-        <Dot c={COLORS.question} label="question → lesson pipeline" />
-        <Dot c={COLORS.webhook} label="billing webhook" />
+        <Dot c={COLORS.read} label="read request" />
+        <Dot c={COLORS.job} label="async job" />
+        <Dot c={COLORS.webhook} label="webhook" />
         <Dot c={COLORS.failed} label="failure" />
         <Dot c={COLORS.traced} label="traced request" />
         <span className="ml-auto">pods:</span>
@@ -340,14 +392,14 @@ export function SystemMap() {
           label="GET p50 / p95"
           value={s ? `${fmtMs(s.readP50)} / ${fmtMs(s.readP95)}` : "—"}
         />
-        <Metric label="lesson build p50" value={s ? fmtMs(s.lessonP50) : "—"} />
+        <Metric label="job p50" value={s ? fmtMs(s.jobP50) : "—"} />
         <Metric
           label="error rate (5s)"
           value={s ? `${(s.errorRate * 100).toFixed(1)}%` : "—"}
           warn={!!s && s.errorRate > 0.02}
         />
-        <Metric label="gemini calls" value={s ? `${s.geminiPerSec.toFixed(1)}/s` : "—"} />
-        <Metric label="lessons built · reused" value={s ? `${s.built} · ${s.reused}` : "—"} />
+        <Metric label="model calls" value={s ? `${s.modelPerSec.toFixed(1)}/s` : "—"} />
+        <Metric label="jobs done · early" value={s ? `${s.built} · ${s.reused}` : "—"} />
         <Metric
           label="retries · dead-lettered"
           value={s ? `${s.retries} · ${s.deadLettered}` : "—"}
@@ -362,7 +414,13 @@ export function SystemMap() {
             Inspector
           </div>
           <div className="mt-1 text-lg font-bold">{sel.label}</div>
-          <div className="font-mono text-[11px] text-primary">{sel.sub}</div>
+          <div
+            className="font-mono text-[11px] text-primary"
+            style={sel.redacted ? { filter: "blur(3px)", userSelect: "none" } : undefined}
+            aria-label={sel.redacted ? "redacted" : undefined}
+          >
+            {sel.redacted ? redactedTag(sel.id) : sel.sub}
+          </div>
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{sel.info}</p>
           {selState && (
             <div className="mt-3 space-y-2 font-mono text-[11px]">
@@ -384,6 +442,11 @@ export function SystemMap() {
                 load {Math.round(selState.util * 100)}% · queued {selState.queued}
                 {sel.max ? ` · autoscale ${sel.min}–${sel.max}` : ""}
               </div>
+              {selected === "api" && (
+                <div className="text-amber-300/80">
+                  SLO: never 0/{selState.pods.length} ready. (Instances restart in ~3s.)
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => sim?.killPod(selected)}
@@ -393,18 +456,18 @@ export function SystemMap() {
               </button>
             </div>
           )}
-          {selected === "gemini" && (
+          {selected === "ai" && (
             <button
               type="button"
-              onClick={() => set("geminiDown", !ui.geminiDown)}
-              className={`mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.geminiDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`}
+              onClick={() => set("modelDown", !ui.modelDown)}
+              className={`mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.modelDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`}
             >
-              {ui.geminiDown ? "Restore Gemini" : "Simulate a Gemini outage"}
+              {ui.modelDown ? "Restore the AI provider" : "Simulate an AI provider outage"}
             </button>
           )}
-          {!selState && selected !== "gemini" && (
+          {!selState && selected !== "ai" && (
             <p className="mt-3 font-mono text-[10px] text-muted-foreground">
-              Managed or external: not something you can kill from here. Try the API hub or a
+              Managed or external: not something you can kill from here. Try the core API or a
               worker.
             </p>
           )}
@@ -414,7 +477,8 @@ export function SystemMap() {
       </div>
 
       <p className="mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground">
-        Services and flows follow the production system; traffic, timings (compressed), replica
+        Redacted on purpose: service names, internals and exact topology are withheld or
+        generalised, and blurred tags are placeholders. Traffic, timings (compressed), replica
         counts and failures are simulated.
       </p>
     </div>
@@ -469,18 +533,18 @@ function NodeBox({
   def,
   state,
   selected,
-  geminiDown,
+  modelDown,
   onSelect,
 }: {
   def: NodeDef;
   state: ReturnType<Simulation["nodeState"]> | null;
   selected: boolean;
-  geminiDown: boolean;
+  modelDown: boolean;
   onSelect: () => void;
 }) {
   const x = def.x - NODE_W / 2;
   const y = def.y - NODE_H / 2;
-  const hot = !!state?.erroredRecently || geminiDown;
+  const hot = !!state?.erroredRecently || modelDown;
   const accent =
     def.kind === "worker"
       ? "#a78bfa"
@@ -529,8 +593,9 @@ function NodeBox({
         fontFamily="ui-monospace, monospace"
         fill="currentColor"
         opacity={0.55}
+        filter={!state?.step && def.redacted ? "url(#sysmap-redact)" : undefined}
       >
-        {state?.step ? `step ${state.step}/13 · ${def.sub.split(" ")[0]}` : def.sub}
+        {state?.step ? `model call ${state.step}` : def.redacted ? redactedTag(def.id) : def.sub}
       </text>
 
       {/* Pods */}
@@ -581,7 +646,7 @@ function NodeBox({
           </text>
         </g>
       )}
-      {geminiDown && (
+      {modelDown && (
         <g>
           <rect x={x + NODE_W - 36} y={y - 9} width={44} height={18} rx={9} fill="#f43f5e" />
           <text
@@ -628,8 +693,7 @@ function TracePanel({ trace, now }: { trace: Trace | null; now: number }) {
   if (!trace) {
     return (
       <div className="flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground">
-        Press “Trace a question” to follow one request through every service, as a distributed
-        trace.
+        Press “Trace a job” to follow one request through every stage, as a distributed trace.
       </div>
     );
   }

@@ -1,0 +1,9 @@
+# robots.txt for ahmed.dev
+# Maintained by Alice and Bob, who live at the bottom of the page.
+#
+# Search engines: everything is yours, except one room.
+# Humans: we only told the bots to stay out. We never said anything about you.
+
+User-agent: *
+Allow: /
+Disallow: /staff-only.txt

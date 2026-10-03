@@ -4,6 +4,15 @@ import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
 import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
+import { MYSTERIES, confetti, fnv, solveMystery, solvedMysteries } from "@/lib/mysteries";
+import {
+  VEHICLE_KINDS,
+  VEHICLE_LABELS,
+  canDriveHere,
+  readVehicle,
+  requestDrive,
+  setVehicle,
+} from "@/hooks/useVehicle";
 import { COLOR_KEYS, DEFAULT_COLORS, clearStoredColors, isHex, saveColors } from "./colors";
 import { saveAliases } from "./aliases";
 import type { ColorKey, Command, CommandContext } from "./types";
@@ -114,6 +123,7 @@ export const commands: Command[] = [
     run: ({ print, printHelp }) => {
       print(HELP_HEADER);
       for (const command of commands) {
+        if (command.hidden) continue;
         printHelp(command.usage ?? command.name, command.description);
       }
     },
@@ -277,6 +287,162 @@ export const commands: Command[] = [
     },
   },
   {
+    name: "car",
+    aliases: ["cars", "vehicle", "garage"],
+    usage: "car [drive|on|off|car|racer|truck|moto]",
+    description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
+    run: ({ args, print, actions }) => {
+      const arg = args[0]?.toLowerCase();
+      const kind = VEHICLE_KINDS.find((k) => k === arg);
+      if (!arg) {
+        const v = readVehicle();
+        print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
+        print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
+        print("drive    `car drive`, or click the car bottom-left (desktop)");
+        print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
+        print("crash    knock headings, buttons and images across the page;");
+        print("         hits chain into whatever they slide into");
+        print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
+        print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("fun fact it can't resist the ACPC track. it drives right into the party.");
+        print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
+        return;
+      }
+      if (arg === "on" || arg === "off") {
+        const on = arg === "on";
+        if (readVehicle().on === on) {
+          print(
+            on
+              ? "It's already on — bottom-left. `car drive` to take the wheel."
+              : "It's already parked. `car on` brings it back.",
+          );
+          return;
+        }
+        setVehicle({ on });
+        print(on ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.");
+        return;
+      }
+      if (arg === "drive" || arg === "play" || arg === "go") {
+        if (!canDriveHere()) {
+          print("Driving needs a keyboard — try it on a desktop.");
+          return;
+        }
+        if (!readVehicle().on) setVehicle({ on: true });
+        print("Closing the terminal… you're driving! Press Stop driving to come back.");
+        actions.close();
+        window.setTimeout(requestDrive, 450);
+        return;
+      }
+      if (kind) {
+        setVehicle({ on: true, kind });
+        print(`Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it to drive.`);
+        return;
+      }
+      print("Usage: car [on|off|car|racer|truck|moto]");
+    },
+  },
+  {
+    name: "mysteries",
+    aliases: ["mystery", "secrets"],
+    hidden: true,
+    description: "the hidden mysteries you have found",
+    run: ({ print }) => {
+      const solved = solvedMysteries();
+      print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      if (!solved.length) print("Hidden around the site. Every one leaves a clue — look closely.");
+      for (const m of MYSTERIES) {
+        const done = solved.includes(m.id);
+        const tag = m.dev ? " [dev]" : "";
+        print(done ? `  ✔ ${m.title}${tag}` : `  ? ???${tag} — ${m.riddle}`);
+      }
+      if (solved.length === MYSTERIES.length)
+        print("All of them. Click the counter for your certificate.");
+    },
+  },
+  {
+    name: "ssh",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const target = rawArgs.trim().toLowerCase();
+      if (target === "alice@ahmed.dev") {
+        print("Connecting to ahmed.dev…");
+        print("Welcome back, Alice. Last login: the ACPC finals, from a balloon.");
+        print('alice@ahmed.dev:~$ cat notes.txt → "tabs."');
+        confetti();
+        solveMystery("crawler");
+        return;
+      }
+      if (target.endsWith("@ahmed.dev")) {
+        print(`${target}: Permission denied (publickey). Only Alice left her login lying around.`);
+        return;
+      }
+      print("ssh: Could not resolve hostname. Try a user @ahmed.dev.");
+    },
+  },
+  {
+    name: "deploy",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const flags = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (flags === "--force friday") {
+        print("Deploying to production… on a Friday… with --force.");
+        print("🔥 Every check skipped. Nothing caught fire this time. Bold.");
+        confetti();
+        solveMystery("status");
+        return;
+      }
+      print("deploy: refusing to deploy without the release checklist's last item.");
+    },
+  },
+  {
+    name: "hire",
+    hidden: true,
+    description: "",
+    run: ({ print }) => {
+      print("hire: permission denied");
+      print("(only root can make offers. you know how to become root.)");
+    },
+  },
+  {
+    name: "sudo",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const what = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (what === "hire ahmed" || what === "hire ahmed khaled") {
+        print("[sudo] password for recruiter: ••••••••");
+        print(
+          "Permission granted. 🎉 Offer letter queued — the fastest way to send it is `email`.",
+        );
+        confetti();
+        solveMystery("sudo");
+        return;
+      }
+      print(`${what || "you"} is not in the sudoers file. This incident will be reported.`);
+    },
+  },
+  {
+    name: "submit",
+    hidden: true,
+    description: "",
+    run: ({ args, print }) => {
+      const answer = (args[0] ?? "").replace(/[^0-9]/g, "");
+      if (!answer) {
+        print("Usage: submit <answer>");
+        return;
+      }
+      print(`Judging… test 1 … test 7 …`);
+      if (fnv(answer) === "3f141389") {
+        print("✅ ACCEPTED · 0.01s · 1 MB. Clean work.");
+        solveMystery("problem");
+      } else {
+        print("❌ WRONG ANSWER on test 1. Read the statement again.");
+      }
+    },
+  },
+  {
     name: "color",
     description: "list | set <key> <#hex> | reset",
     run: runColor,
@@ -359,4 +525,6 @@ export function findCommand(name: string): Command | undefined {
 }
 
 /** Every name and alias, used for tab-completion. */
-export const COMMAND_NAMES: readonly string[] = [...byName.keys()];
+export const COMMAND_NAMES: readonly string[] = [...byName.entries()]
+  .filter(([, c]) => !c.hidden)
+  .map(([n]) => n);

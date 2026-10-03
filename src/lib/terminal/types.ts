@@ -65,5 +65,7 @@ export type Command = {
   /** Shown by `help`; defaults to `name` when the command takes no arguments. */
   usage?: string;
   description: string;
+  /** Left out of `help` and tab-completion: a secret. */
+  hidden?: boolean;
   run(ctx: CommandContext): CommandResult;
 };

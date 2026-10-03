@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-DPMhfLp1.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BwQKlker.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, R as RotateCw, d as GraduationCap, e as MapPin, f as Globe, P as Phone, S as SquareTerminal, g as Sun, h as Moon, i as Play, j as Pause, k as Activity, Z as Zap, l as Radar, m as Skull, D as Download, X } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as Search, b as ArrowUpRight, G as Github, L as Linkedin, c as CodeXml, T as Trophy, F as FileText, B as Briefcase, d as Gamepad2, e as RotateCw, f as GraduationCap, g as MapPin, h as Globe, P as Phone, i as SquareTerminal, j as Sun, k as Moon, D as Download, X, l as Play, m as Pause, n as Activity, Z as Zap, o as Radar, p as Skull, q as Scissors } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -195,7 +195,24 @@ function CupGame() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "game", className: "py-24 border-t border-border", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Gamepad2, { className: "w-5 h-5 text-primary" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: "Gaming mode — Cups & Ball" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: "Gaming mode — Cups & Ball" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "group/cab relative ml-auto", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            "aria-hidden": true,
+            className: "block h-7 w-5 rounded-t-md border border-amber-400/40 bg-amber-400/10 opacity-60 transition-opacity group-hover/cab:opacity-100",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mx-auto mt-1 block h-2.5 w-3 rounded-sm bg-amber-300/40" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "pointer-events-none absolute right-0 top-9 z-20 w-56 rounded-md border border-amber-400/40 bg-background/95 p-2.5 font-mono text-[10px] leading-relaxed text-amber-300 opacity-0 shadow-lg transition-opacity group-hover/cab:opacity-100", children: [
+          "INSERT COIN · PLAYER 1",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          "HI-SCORE: AHMED KHALED _ _ _ _ _",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "no keyboard on this cabinet… just type the missing name." })
+        ] })
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mb-4", children: "Find the cup hiding the ball after the shuffle. Adjust the speed to your reflexes." }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -451,6 +468,1604 @@ function BackToTop() {
       ]
     }
   );
+}
+const USERNAME_EVENT = "usernamechange";
+const DEFAULT_USERNAME = "guest";
+function getUsername() {
+  return readString(STORAGE_KEYS.username) || DEFAULT_USERNAME;
+}
+function setStoredUsername(name) {
+  writeString(STORAGE_KEYS.username, name);
+  window.dispatchEvent(new CustomEvent(USERNAME_EVENT, { detail: name }));
+}
+function useUsername() {
+  const [username, setUsername] = reactExports.useState(DEFAULT_USERNAME);
+  reactExports.useEffect(() => {
+    setUsername(getUsername());
+    const onChange = (e) => setUsername(e.detail || DEFAULT_USERNAME);
+    window.addEventListener(USERNAME_EVENT, onChange);
+    return () => window.removeEventListener(USERNAME_EVENT, onChange);
+  }, []);
+  return username;
+}
+const MYSTERIES = [
+  {
+    id: "konami",
+    title: "Old school",
+    riddle: "The arcade cabinet in the Gaming section is missing a third name. My email has it."
+  },
+  {
+    id: "sudo",
+    title: "Root access",
+    riddle: "The badge says “If found, hire”. The terminal agrees — but only for root."
+  },
+  { id: "badge", title: "Persistence", riddle: "The badge has seven punch holes. Fill every one." },
+  {
+    id: "balloons",
+    title: "All accepted",
+    riddle: "A contest is won with every problem accepted. Watch the scoreboard in the balloon box."
+  },
+  {
+    id: "robots",
+    title: "Holy war",
+    riddle: "Alice and Bob disagree about something. Poke each until they say what."
+  },
+  {
+    id: "carParty",
+    title: "Drive-in",
+    riddle: "The car can't resist the ACPC track. Take it there — and don't brake."
+  },
+  {
+    id: "outage",
+    title: "INC-404",
+    riddle: "The core API's SLO says it never reaches 0 ready. Prove it wrong."
+  },
+  {
+    id: "midnight",
+    title: "Night owl",
+    riddle: "A sleeping owl sits by the Cairo clock. It wakes at midnight, Cairo time."
+  },
+  {
+    id: "console",
+    title: "Inspector",
+    riddle: "Developers: read the footer's TODO. The debug hook is still listening.",
+    dev: true
+  },
+  {
+    id: "problem",
+    title: "Accepted",
+    riddle: "I set problems for a living. One never left this browser — look where sites keep things.",
+    dev: true
+  },
+  {
+    id: "crawler",
+    title: "Staff only",
+    riddle: "Alice and Bob keep a classic file for the bots. It names one room they must never enter.",
+    dev: true
+  },
+  {
+    id: "status",
+    title: "Friday deploy",
+    riddle: "The footer swears all systems are ok. Ask the network where it heard that.",
+    dev: true
+  }
+];
+const MYSTERY_EVENT = "mystery-solved";
+function parse$2(v) {
+  if (!Array.isArray(v)) return void 0;
+  const ids = new Set(MYSTERIES.map((m) => m.id));
+  return v.filter((x) => typeof x === "string" && ids.has(x));
+}
+function solvedMysteries() {
+  return readJson(STORAGE_KEYS.mysteries, parse$2) ?? [];
+}
+function solveMystery(id) {
+  const solved = solvedMysteries();
+  if (solved.includes(id)) return false;
+  const next = [...solved, id];
+  writeJson(STORAGE_KEYS.mysteries, next);
+  window.dispatchEvent(
+    new CustomEvent(MYSTERY_EVENT, { detail: { id, solved: next, fresh: true } })
+  );
+  return true;
+}
+function useMysteries() {
+  const [solved, setSolved] = reactExports.useState([]);
+  reactExports.useEffect(() => {
+    setSolved(solvedMysteries());
+    const on = (e) => setSolved(e.detail.solved);
+    window.addEventListener(MYSTERY_EVENT, on);
+    return () => window.removeEventListener(MYSTERY_EVENT, on);
+  }, []);
+  return solved;
+}
+function fnv(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return (h >>> 0).toString(16);
+}
+function confetti(x = window.innerWidth / 2, y = window.innerHeight / 3) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas");
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  c.width = window.innerWidth * dpr;
+  c.height = window.innerHeight * dpr;
+  c.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:120";
+  document.body.appendChild(c);
+  const g = c.getContext("2d");
+  g.scale(dpr, dpr);
+  const colors = ["#22d3ee", "#a855f7", "#fbbf24", "#34d399", "#f472b6", "#f43f5e"];
+  const bits = Array.from({ length: 140 }, () => {
+    const a = Math.random() * Math.PI * 2;
+    const v = 4 + Math.random() * 9;
+    return {
+      x,
+      y,
+      vx: Math.cos(a) * v,
+      vy: Math.sin(a) * v - 6,
+      r: Math.random() * 6,
+      vr: (Math.random() - 0.5) * 0.4,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      w: 5 + Math.random() * 5
+    };
+  });
+  let t = 0;
+  const frame = () => {
+    t++;
+    g.clearRect(0, 0, c.width, c.height);
+    for (const b of bits) {
+      b.vy += 0.25;
+      b.vx *= 0.99;
+      b.x += b.vx;
+      b.y += b.vy;
+      b.r += b.vr;
+      g.save();
+      g.translate(b.x, b.y);
+      g.rotate(b.r);
+      g.globalAlpha = Math.max(0, 1 - t / 160);
+      g.fillStyle = b.c;
+      g.fillRect(-b.w / 2, -b.w / 4, b.w, b.w / 2);
+      g.restore();
+    }
+    if (t < 160) requestAnimationFrame(frame);
+    else c.remove();
+  };
+  requestAnimationFrame(frame);
+}
+const SECRET_WORD = ["g", "o", "m", "a", "a"];
+const KEY_HASH = "a48cea5f";
+const PROBLEM_KEY = "ahmed.dev:problem";
+function MysteryHud() {
+  const solved = useMysteries();
+  const username = useUsername();
+  const [toast, setToast] = reactExports.useState(null);
+  const [certificate, setCertificate] = reactExports.useState(false);
+  const toastTimer = reactExports.useRef(0);
+  reactExports.useEffect(() => {
+    const on = (e) => {
+      const { id, solved: all } = e.detail;
+      const m = MYSTERIES.find((x) => x.id === id);
+      confetti();
+      setToast(`Mystery solved — ${m?.title ?? id} · ${all.length}/${MYSTERIES.length}`);
+      window.clearTimeout(toastTimer.current);
+      toastTimer.current = window.setTimeout(() => setToast(null), 3600);
+      if (all.length === MYSTERIES.length) window.setTimeout(() => setCertificate(true), 1500);
+    };
+    window.addEventListener(MYSTERY_EVENT, on);
+    return () => window.removeEventListener(MYSTERY_EVENT, on);
+  }, []);
+  const [arcade, setArcade] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    document.documentElement.classList.toggle("arcade", arcade);
+  }, [arcade]);
+  reactExports.useEffect(() => {
+    let i = 0;
+    const on = (e) => {
+      const t = e.target;
+      if (t?.closest("input, textarea")) return;
+      const k = e.key.toLowerCase();
+      i = k === SECRET_WORD[i] ? i + 1 : k === SECRET_WORD[0] ? 1 : 0;
+      if (i < SECRET_WORD.length) return;
+      i = 0;
+      setArcade((a) => !a);
+      solveMystery("konami");
+    };
+    window.addEventListener("keydown", on);
+    return () => window.removeEventListener("keydown", on);
+  }, []);
+  reactExports.useEffect(() => {
+    console.log(
+      "%c👀 ahmed.dev%c\n[debug] hook still attached at window.__ahmed — someone forgot to remove it before launch. Start with %c__ahmed.hint()",
+      "font:700 16px ui-monospace,monospace;color:#22d3ee",
+      "font:12px ui-monospace,monospace;color:#94a3b8",
+      "font:700 12px ui-monospace,monospace;color:#a855f7"
+    );
+    window.__ahmed = {
+      hint() {
+        return "The key lives in the cascade. Inspect the :root element's custom properties — it's hex. Then call __ahmed.unlock(key).";
+      },
+      unlock(key) {
+        if (typeof key !== "string" || fnv(key.trim().toLowerCase()) !== KEY_HASH)
+          return "Nope. Decode it, don't guess it.";
+        solveMystery("console");
+        return "🔓 Unlocked. Nice digging. (There's one more for you — some things are stored, not shown.)";
+      }
+    };
+    try {
+      localStorage.setItem(
+        PROBLEM_KEY,
+        JSON.stringify({
+          problem: "Popcount Sum",
+          statement: "Let f(i) be the number of 1-bits in the binary form of i. Compute S = f(1) + f(2) + … + f(2^20).",
+          limits: "1 second, and no brute force needed",
+          submit: "Open the terminal and type: submit <S>"
+        })
+      );
+    } catch {
+    }
+  }, []);
+  const count = solved.length;
+  const total = MYSTERIES.length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group fixed left-4 top-20 z-30 hidden sm:block", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => count === total && setCertificate(true),
+          "aria-describedby": "mystery-info",
+          className: "flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "h-3.5 w-3.5" }),
+            count,
+            "/",
+            total
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MysteryInfo, { solved })
+    ] }),
+    arcade && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed bottom-16 left-1/2 z-[71] flex -translate-x-1/2 items-center gap-2 rounded-full border border-amber-400/60 bg-background/90 px-3 py-1.5 font-mono text-[11px] text-amber-300 shadow-lg", children: [
+      "🕹 arcade mode · type GOMAA again to exit",
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setArcade(false),
+          className: "rounded-full border border-amber-400/50 px-2 py-0.5 hover:bg-amber-400/10",
+          children: "exit"
+        }
+      )
+    ] }),
+    toast && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-[110] -translate-x-1/2 rounded-full border border-amber-400/60 bg-background/90 px-4 py-2 font-mono text-xs text-amber-300 shadow-lg backdrop-blur-md", children: [
+      "🔍 ",
+      toast,
+      count === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-muted-foreground", children: "· type `mysteries` in the terminal" })
+    ] }),
+    certificate && /* @__PURE__ */ jsxRuntimeExports.jsx(Certificate, { username, onClose: () => setCertificate(false) })
+  ] });
+}
+function Certificate({ username, onClose }) {
+  const canvasRef = reactExports.useRef(null);
+  const date = (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+  reactExports.useEffect(() => {
+    const c = canvasRef.current;
+    const g = c?.getContext("2d");
+    if (!c || !g) return;
+    const W = 1200;
+    const H = 800;
+    c.width = W;
+    c.height = H;
+    const bg = g.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#0b1224");
+    bg.addColorStop(1, "#1e1440");
+    g.fillStyle = bg;
+    g.fillRect(0, 0, W, H);
+    const edge = g.createLinearGradient(0, 0, W, 0);
+    edge.addColorStop(0, "#22d3ee");
+    edge.addColorStop(1, "#a855f7");
+    g.strokeStyle = edge;
+    g.lineWidth = 6;
+    g.strokeRect(36, 36, W - 72, H - 72);
+    g.textAlign = "center";
+    g.fillStyle = "#94a3b8";
+    g.font = "600 22px ui-monospace, monospace";
+    g.fillText("AHMED.DEV · CERTIFICATE OF CURIOSITY", W / 2, 140);
+    g.fillStyle = "#fff";
+    g.font = "800 64px system-ui, sans-serif";
+    g.fillText("You found everything.", W / 2, 260);
+    g.fillStyle = edge;
+    g.font = "800 72px system-ui, sans-serif";
+    g.fillText(username, W / 2, 380);
+    g.fillStyle = "#cbd5e1";
+    g.font = "400 26px system-ui, sans-serif";
+    g.fillText(`solved all ${MYSTERIES.length} hidden mysteries on ahmed.dev`, W / 2, 450);
+    g.font = "600 22px ui-monospace, monospace";
+    g.fillStyle = "#fbbf24";
+    const titles = MYSTERIES.map((m) => m.title);
+    const half = Math.ceil(titles.length / 2);
+    g.fillText(titles.slice(0, half).join(" · "), W / 2, 520);
+    g.fillText(titles.slice(half).join(" · "), W / 2, 556);
+    g.fillStyle = "#94a3b8";
+    g.font = "400 22px ui-monospace, monospace";
+    g.fillText(date, W / 2, 640);
+    g.fillText("Verdict: ACCEPTED", W / 2, 680);
+  }, [username, date]);
+  const download = () => {
+    const a = document.createElement("a");
+    a.href = canvasRef.current.toDataURL("image/png");
+    a.download = "ahmed-dev-certificate.png";
+    a.click();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "fixed inset-0 z-[115] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm",
+      onClick: onClose,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "w-full max-w-2xl rounded-2xl border border-border bg-background p-4",
+          onClick: (e) => e.stopPropagation(),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("canvas", { ref: canvasRef, className: "w-full rounded-lg" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-xs", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "You clearly pay attention — let's talk: there's a line for you in Contact." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: download,
+                    className: "inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 font-semibold text-primary-foreground",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "h-3.5 w-3.5" }),
+                      " Download"
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: onClose,
+                    className: "inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-3.5 w-3.5" }),
+                      " Close"
+                    ]
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      )
+    }
+  );
+}
+function MysteryInfo({ solved }) {
+  const forAll = MYSTERIES.filter((m) => !m.dev);
+  const forDevs = MYSTERIES.filter((m) => m.dev);
+  const row = (m) => {
+    const done = solved.includes(m.id);
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: done ? "text-emerald-400" : "text-muted-foreground", children: done ? "✔" : "?" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: done ? "text-foreground" : "text-muted-foreground", children: done ? m.title : m.riddle })
+    ] }, m.id);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      id: "mystery-info",
+      role: "tooltip",
+      className: "invisible absolute left-0 top-full mt-2 max-h-[min(55vh,calc(100vh-13rem))] w-[340px] overflow-y-auto overscroll-contain [scrollbar-width:thin] translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-amber-300", children: [
+          "Mysteries · ",
+          solved.length,
+          "/",
+          MYSTERIES.length,
+          " found"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1.5 text-muted-foreground", children: solved.length === 0 ? "Hidden challenges scattered around this site. Nothing announces them, but every one leaves a clue somewhere on the page. Each riddle below points at one." : `Hidden challenges scattered around this site. You've found ${solved.length === 1 ? "one" : "some"}. Each riddle below points at one still locked.` }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 text-[10px] uppercase tracking-widest text-foreground", children: [
+          "For everyone · ",
+          forAll.length
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground", children: "Things to click, drive, type, poke or wait for." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-1.5 space-y-1", children: forAll.map(row) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 text-[10px] uppercase tracking-widest text-foreground", children: [
+          "For developers · ",
+          forDevs.length
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground", children: "Need the browser DevTools: the console, styles, storage." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-1.5 space-y-1", children: forDevs.map(row) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 border-t border-border pt-2.5 text-muted-foreground", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "Secret commands:" }),
+          " the terminal knows commands that",
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "help" }),
+          " doesn't list. One of them is",
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "mysteries" }),
+          ", which shows this list too."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 text-muted-foreground", children: [
+          "Progress is saved in this browser. Find all ",
+          MYSTERIES.length,
+          " for a certificate."
+        ] })
+      ]
+    }
+  );
+}
+const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+const COLORS$1 = [
+  "#ef4444",
+  "#f59e0b",
+  "#22c55e",
+  "#3b82f6",
+  "#a855f7",
+  "#ec4899",
+  "#06b6d4",
+  "#f97316"
+];
+const LINKS = 9;
+const GRAVITY$2 = 900;
+const LIFT = 2200;
+const DAMPING$2 = 0.985;
+const ITERATIONS$2 = 6;
+const RADIUS = 26;
+const BLOW_RADIUS = 90;
+const BLOW_FORCE = 1400;
+const DRAG_PX$1 = 5;
+const REINFLATE_MS = 3500;
+const INFLATE_MS = 650;
+const HEIGHT = 280;
+const PARTY_EVENT = "acpc-party";
+function ContestBalloons({
+  backdrop,
+  controls
+}) {
+  const boxRef = reactExports.useRef(null);
+  const svgRef = reactExports.useRef(null);
+  const [pops, setPops] = reactExports.useState(0);
+  const cutSet = reactExports.useRef(/* @__PURE__ */ new Set());
+  const [freed, setFreed] = reactExports.useState([]);
+  const state = reactExports.useRef({ balloons: [], shreds: [], pointer: null, grab: null, booms: [] });
+  reactExports.useEffect(() => {
+    const box = boxRef.current;
+    const svg = svgRef.current;
+    if (!box || !svg) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const s = state.current;
+    const W = () => box.clientWidth;
+    const anchorX = (b) => b.anchor * W();
+    s.balloons = LETTERS.map((_, i) => {
+      const anchor = (i + 0.5) / LETTERS.length;
+      const len = 120 + i * 37 % 5 * 18;
+      const pts = [];
+      for (let k = 0; k <= LINKS; k++) {
+        const x = anchor * W();
+        const y = HEIGHT - k / LINKS * len;
+        pts.push({ x, y, px: x, py: y });
+      }
+      return {
+        anchor,
+        len,
+        pts,
+        sway: Math.random() * 10,
+        popped: false,
+        poppedAt: 0,
+        scale: 1,
+        cut: false
+      };
+    });
+    const NS = "http://www.w3.org/2000/svg";
+    const strings = [];
+    const bodies = [];
+    const shredLayer = document.createElementNS(NS, "g");
+    const boomLayer = document.createElementNS(NS, "g");
+    svg.replaceChildren();
+    s.balloons.forEach((_, i) => {
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "currentColor");
+      path.setAttribute("stroke-opacity", "0.45");
+      path.setAttribute("stroke-width", "1.2");
+      svg.appendChild(path);
+      strings.push(path);
+    });
+    s.balloons.forEach((_, i) => {
+      const g = document.createElementNS(NS, "g");
+      g.setAttribute("data-balloon", String(i));
+      g.style.cursor = "grab";
+      const c = COLORS$1[i % COLORS$1.length];
+      g.innerHTML = `
+        <path d="M0,-1 l-3.5,6 h7 z" fill="${c}"/>
+        <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${c}"/>
+        <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity="0.45" transform="rotate(-20 -${RADIUS * 0.3} -${RADIUS * 1.35})"/>
+        <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#fff" fill-opacity="0.92">${LETTERS[i]}</text>`;
+      svg.appendChild(g);
+      bodies.push(g);
+    });
+    svg.appendChild(shredLayer);
+    svg.appendChild(boomLayer);
+    const centre = (b) => {
+      const k = b.pts[LINKS];
+      const j = b.pts[LINKS - 1];
+      const dx = k.x - j.x;
+      const dy = k.y - j.y;
+      const d = Math.hypot(dx, dy) || 1;
+      return {
+        x: k.x + dx / d * RADIUS * b.scale,
+        y: k.y + dy / d * RADIUS * b.scale,
+        ux: dx / d,
+        uy: dy / d
+      };
+    };
+    const paint = (now2) => {
+      s.balloons.forEach((b, i) => {
+        let d = `M${b.pts[0].x},${b.pts[0].y}`;
+        for (let k2 = 1; k2 < LINKS; k2++) {
+          const p = b.pts[k2];
+          const q = b.pts[k2 + 1];
+          d += ` Q${p.x},${p.y} ${(p.x + q.x) / 2},${(p.y + q.y) / 2}`;
+        }
+        d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
+        strings[i].setAttribute("d", d);
+        strings[i].style.display = b.cut ? "none" : "";
+        const k = b.pts[LINKS];
+        const c = centre(b);
+        const angle = Math.atan2(c.uy, c.ux) * 180 / Math.PI + 90;
+        const g = bodies[i];
+        g.style.display = b.scale < 0.02 ? "none" : "";
+        g.setAttribute("transform", `translate(${k.x},${k.y}) rotate(${angle}) scale(${b.scale})`);
+      });
+      shredLayer.innerHTML = s.shreds.map(
+        (p) => `<rect x="-3" y="-2" width="6" height="4" rx="1" fill="${p.c}" opacity="${Math.min(1, p.life * 2)}" transform="translate(${p.x},${p.y}) rotate(${p.a})"/>`
+      ).join("");
+      boomLayer.innerHTML = s.booms.map((bm) => {
+        const t = (now2 - bm.t) / 600;
+        return `<text x="${bm.x}" y="${bm.y - t * 24}" text-anchor="middle" font-size="16" font-weight="900" font-family="ui-monospace, monospace" fill="currentColor" opacity="${1 - t}">POP!</text>`;
+      }).join("");
+    };
+    const step2 = (dt, now2) => {
+      const w = W();
+      for (const b of s.balloons) {
+        if (b.popped && now2 - b.poppedAt > REINFLATE_MS) {
+          b.popped = false;
+          b.cut = false;
+          b.poppedAt = now2;
+          b.scale = 0;
+        }
+        if (!b.popped && b.scale < 1) b.scale = Math.min(1, (now2 - b.poppedAt) / INFLATE_MS);
+        const lift = b.popped ? 0 : LIFT * b.scale;
+        b.sway += dt;
+        const breeze = Math.sin(b.sway * 0.9) * 60 + Math.sin(b.sway * 2.3 + b.anchor * 9) * 25;
+        b.pts.forEach((p, k) => {
+          if (k === 0) return;
+          const vx = (p.x - p.px) * DAMPING$2;
+          const vy = (p.y - p.py) * DAMPING$2;
+          p.px = p.x;
+          p.py = p.y;
+          let ax = 0;
+          let ay = GRAVITY$2 * 0.15;
+          if (k === LINKS) {
+            ay = GRAVITY$2 - lift;
+            ax = breeze;
+            if (s.pointer && !b.popped) {
+              const c = centre(b);
+              const dx = c.x - s.pointer.x;
+              const dy = c.y - s.pointer.y;
+              const d = Math.hypot(dx, dy);
+              if (d < BLOW_RADIUS && d > 1) {
+                const f = (1 - d / BLOW_RADIUS) * BLOW_FORCE;
+                ax += dx / d * f * 4;
+                ay += dy / d * f * 4;
+              }
+            }
+          }
+          p.x += vx + ax * dt * dt;
+          p.y += vy + ay * dt * dt;
+        });
+        const base = b.pts[0];
+        base.x = base.px = b.anchor * w;
+        base.y = base.py = HEIGHT;
+      }
+      for (let it = 0; it < ITERATIONS$2; it++) {
+        for (const b of s.balloons) {
+          const seg = b.len / LINKS;
+          for (let k = 0; k < LINKS; k++) {
+            const a = b.pts[k];
+            const c = b.pts[k + 1];
+            const dx = c.x - a.x;
+            const dy = c.y - a.y;
+            const d = Math.hypot(dx, dy) || 1e-6;
+            const diff = (d - seg) / d;
+            if (k === 0) {
+              c.x -= dx * diff;
+              c.y -= dy * diff;
+            } else {
+              a.x += dx * diff * 0.5;
+              a.y += dy * diff * 0.5;
+              c.x -= dx * diff * 0.5;
+              c.y -= dy * diff * 0.5;
+            }
+          }
+        }
+        for (let i = 0; i < s.balloons.length; i++) {
+          const A = s.balloons[i];
+          if (A.popped) continue;
+          for (let j = i + 1; j < s.balloons.length; j++) {
+            const B = s.balloons[j];
+            if (B.popped) continue;
+            const ca = centre(A);
+            const cb = centre(B);
+            const dx = cb.x - ca.x;
+            const dy = cb.y - ca.y;
+            const d = Math.hypot(dx, dy) || 1e-6;
+            const min = RADIUS * 1.75 * ((A.scale + B.scale) / 2);
+            if (d < min) {
+              const push = (min - d) / d * 0.5;
+              A.pts[LINKS].x -= dx * push;
+              A.pts[LINKS].y -= dy * push;
+              B.pts[LINKS].x += dx * push;
+              B.pts[LINKS].y += dy * push;
+            }
+          }
+        }
+        if (s.grab) {
+          const b = s.balloons[s.grab.i];
+          const k = b.pts[LINKS];
+          const ax = anchorX(b);
+          let tx = s.grab.x;
+          let ty = s.grab.y + RADIUS;
+          const dx = tx - ax;
+          const dy = ty - HEIGHT;
+          const d = Math.hypot(dx, dy);
+          const max = b.len * 1.05;
+          if (d > max) {
+            tx = ax + dx / d * max;
+            ty = HEIGHT + dy / d * max;
+          }
+          k.x = tx;
+          k.y = ty;
+        }
+        for (const b of s.balloons) {
+          const k = b.pts[LINKS];
+          k.x = Math.max(RADIUS, Math.min(w - RADIUS, k.x));
+          k.y = Math.max(RADIUS * 2.1, Math.min(HEIGHT, k.y));
+        }
+      }
+      for (const p of s.shreds) {
+        p.vy += GRAVITY$2 * dt;
+        p.vx *= 0.98;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.a += p.va * dt;
+        p.life -= dt;
+      }
+      s.shreds = s.shreds.filter((p) => p.life > 0 && p.y < HEIGHT + 40);
+      s.booms = s.booms.filter((bm) => now2 - bm.t < 600);
+    };
+    let raf = 0;
+    let last = performance.now();
+    let visible = false;
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    io.observe(box);
+    for (let i = 0; i < 90; i++) step2(1 / 60, 0);
+    paint(0);
+    if (reduce) return () => io.disconnect();
+    const frame = (now2) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min(1 / 30, (now2 - last) / 1e3);
+      last = now2;
+      if (!visible || document.hidden) return;
+      step2(dt, now2);
+      paint(now2);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, []);
+  reactExports.useEffect(() => {
+    const on = () => {
+      const start = performance.now();
+      const kick = () => {
+        for (const b of state.current.balloons) {
+          const k = b.pts[LINKS];
+          k.px = k.x - (Math.random() - 0.5) * 30;
+          k.py = k.y - (Math.random() - 0.5) * 24;
+        }
+        if (performance.now() - start < 4e3) window.setTimeout(kick, 160);
+      };
+      kick();
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => window.removeEventListener(PARTY_EVENT, on);
+  }, []);
+  const local = (e) => {
+    const r = boxRef.current.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+  const pop = (i) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const k = b.pts[LINKS];
+    const cy = k.y - RADIUS;
+    for (let n = 0; n < 16; n++) {
+      const a = Math.random() * Math.PI * 2;
+      const v = 150 + Math.random() * 260;
+      s.shreds.push({
+        x: k.x,
+        y: cy,
+        vx: Math.cos(a) * v,
+        vy: Math.sin(a) * v - 120,
+        a: Math.random() * 360,
+        va: (Math.random() - 0.5) * 900,
+        life: 0.9 + Math.random() * 0.5,
+        c: COLORS$1[i % COLORS$1.length]
+      });
+    }
+    s.booms.push({ x: k.x, y: cy - RADIUS, t: performance.now() });
+    b.popped = true;
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    setPops((n) => n + 1);
+  };
+  const cut = (i) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const box = boxRef.current;
+    if (!b || b.popped || !box) return;
+    const k = b.pts[LINKS];
+    const r = box.getBoundingClientRect();
+    b.popped = true;
+    b.cut = true;
+    cutSet.current.add(i);
+    setFreed([...cutSet.current]);
+    if (cutSet.current.size === LETTERS.length) {
+      solveMystery("balloons");
+    }
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    launch(r.left + window.scrollX + k.x, r.top + window.scrollY + k.y, i);
+  };
+  const onDown = (e) => {
+    const target = e.target.closest("[data-balloon]");
+    if (!target || e.button !== 0) return;
+    const i = Number(target.getAttribute("data-balloon"));
+    if (state.current.balloons[i]?.popped) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const p = local(e);
+    state.current.grab = { i, x: p.x, y: p.y, sx: p.x, sy: p.y, moved: false };
+  };
+  const onMove = (e) => {
+    const s = state.current;
+    const p = local(e);
+    s.pointer = e.pointerType === "mouse" ? p : null;
+    const g = s.grab;
+    if (!g) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
+    g.x = p.x;
+    g.y = p.y;
+    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$1) g.moved = true;
+  };
+  const onUp = () => {
+    const s = state.current;
+    const g = s.grab;
+    if (!g) return;
+    s.grab = null;
+    if (!g.moved) pop(g.i);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        ref: boxRef,
+        onPointerDown: onDown,
+        onPointerMove: onMove,
+        onPointerUp: onUp,
+        onPointerCancel: onUp,
+        onLostPointerCapture: onUp,
+        onPointerLeave: () => {
+          state.current.pointer = null;
+        },
+        "data-cursor": "Pop",
+        "data-party-zone": true,
+        className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
+        style: { height: HEIGHT },
+        children: [
+          backdrop,
+          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" }),
+          freed.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pointer-events-none absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2 py-1.5 font-mono text-[9px] backdrop-blur-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-1 uppercase tracking-widest text-muted-foreground", children: [
+              "set free · ",
+              freed.length,
+              "/",
+              LETTERS.length
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-0.5", children: LETTERS.map((l, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                className: `flex h-4 w-4 items-center justify-center rounded-sm font-bold ${freed.includes(i) ? "bg-emerald-500/80 text-black" : "bg-foreground/10 text-muted-foreground"}`,
+                children: l
+              },
+              l
+            )) })
+          ] }),
+          LETTERS.map((letter, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": `Cut balloon ${letter} loose`,
+              "data-cursor": "Cut",
+              onPointerEnter: (e) => e.pointerType === "mouse" && cut(i),
+              onPointerDown: (e) => {
+                e.stopPropagation();
+                cut(i);
+              },
+              onClick: () => cut(i),
+              className: "absolute bottom-0 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary",
+              style: { left: `${(i + 0.5) / LETTERS.length * 100}%` },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scissors, { className: "h-3 w-3" })
+            },
+            letter
+          ))
+        ]
+      }
+    ),
+    controls,
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, click to pop, or cut its string" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
+    ] })
+  ] });
+}
+const FLY = { v0: 90, max: 560, accel: 170 };
+function launch(x, y, i) {
+  const color = COLORS$1[i % COLORS$1.length];
+  const el = document.createElement("div");
+  el.setAttribute("aria-hidden", "true");
+  el.style.cssText = "position:absolute;left:0;top:0;z-index:30;pointer-events:none;will-change:transform,opacity";
+  el.innerHTML = `
+    <svg width="60" height="120" viewBox="-30 -60 60 120" style="overflow:visible">
+      <path d="M0,4 C6,24 -6,40 2,58" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>
+      <path d="M0,-1 l-3.5,6 h7 z" fill="${color}"/>
+      <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${color}"/>
+      <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity=".45"/>
+      <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, monospace" fill="#fff" fill-opacity=".92">${LETTERS[i]}</text>
+    </svg>`;
+  el.style.color = getComputedStyle(document.body).color;
+  document.body.appendChild(el);
+  const first = document.querySelector("main > section");
+  const lost = first ? first.getBoundingClientRect().bottom + window.scrollY - 120 : 400;
+  let v = FLY.v0;
+  let t = 0;
+  let fade = 1;
+  let last = performance.now();
+  const frame = (now2) => {
+    const dt = Math.min(0.05, (now2 - last) / 1e3);
+    last = now2;
+    t += dt;
+    v = Math.min(FLY.max, v + FLY.accel * dt);
+    y -= v * dt;
+    const sway = Math.sin(t * 1.6 + i) * 26;
+    if (y < lost) fade -= dt * 0.9;
+    el.style.opacity = String(Math.max(0, fade));
+    el.style.transform = `translate(${x + sway - 30}px, ${y - 60}px) rotate(${Math.sin(t * 1.6 + i + 0.8) * 9}deg) scale(${0.6 + 0.4 * Math.max(0, fade)})`;
+    if (fade > 0 && y > -200) requestAnimationFrame(frame);
+    else el.remove();
+  };
+  requestAnimationFrame(frame);
+}
+function Beams({ y1, y2, reach }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: "0.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: `M${reach} ${y1} L${reach + 50} ${y1 - 13} L${reach + 50} ${y1 + 5} Z`,
+        fill: "#fde68a",
+        opacity: "0.35"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: `M${reach} ${y2} L${reach + 50} ${y2 - 5} L${reach + 50} ${y2 + 13} Z`,
+        fill: "#fde68a",
+        opacity: "0.35"
+      }
+    )
+  ] });
+}
+function Car({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "52", height: "34", viewBox: "0 0 52 34", className: "overflow-visible", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "v-car", x1: "0", y1: "0", x2: "1", y2: "1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0", stopColor: "#22d3ee" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "#a855f7" })
+    ] }) }),
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 9, y2: 25, reach: 46 }),
+    [
+      [9, 1],
+      [33, 1],
+      [9, 27],
+      [33, 27]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "10", height: "6", rx: "2", fill: "#0f172a" }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "3", y: "4", width: "44", height: "26", rx: "11", fill: "url(#v-car)" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "6", y: "7", width: "38", height: "5", rx: "2.5", fill: "#fff", opacity: "0.25" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "15", y: "8", width: "20", height: "18", rx: "6", fill: "#0b1224", opacity: "0.85" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "29", y: "10", width: "5", height: "14", rx: "2.5", fill: "#7dd3fc", opacity: "0.75" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "16", y: "10", width: "4", height: "14", rx: "2", fill: "#7dd3fc", opacity: "0.4" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "10", r: "2.4", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "24", r: "2.4", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "8", width: "2", height: "5", rx: "1", fill: "#f43f5e" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "21", width: "2", height: "5", rx: "1", fill: "#f43f5e" })
+  ] });
+}
+function Racer({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "60", height: "30", viewBox: "0 0 60 30", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 9, y2: 21, reach: 56 }),
+    [
+      [8, 0],
+      [40, 0],
+      [8, 24],
+      [40, 24]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "12", height: "6", rx: "2", fill: "#0f172a" }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M4 7 Q4 4 8 4 L44 5 Q58 9 58 15 Q58 21 44 25 L8 26 Q4 26 4 23 Z", fill: "#f43f5e" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "10", y: "13.5", width: "44", height: "3", fill: "#fff", opacity: "0.85" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M22 8 L36 9 Q40 15 36 21 L22 22 Q19 15 22 8 Z", fill: "#0b1224", opacity: "0.9" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M33 10 Q36 15 33 20", stroke: "#7dd3fc", strokeWidth: "2", fill: "none", opacity: "0.8" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "1", y: "3", width: "4", height: "24", rx: "1.5", fill: "#111827" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "56", cy: "10", r: "1.8", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "56", cy: "20", r: "1.8", fill: "#fef08a" })
+  ] });
+}
+function Truck({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "68", height: "48", viewBox: "0 0 68 48", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 14, y2: 34, reach: 64 }),
+    [
+      [8, 0],
+      [44, 0],
+      [8, 38],
+      [44, 38]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "16", height: "10", rx: "3", fill: "#0f172a" }),
+      [2, 6, 10].map((o) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + o, y, width: "2", height: "10", fill: "#334155" }, o))
+    ] }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2", y: "7", width: "64", height: "34", rx: "7", fill: "#fbbf24" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "4", y: "10", width: "34", height: "28", rx: "3", fill: "#b45309", opacity: "0.55" }),
+    [14, 22, 30].map((x) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y: "12", width: "2", height: "24", fill: "#78350f", opacity: "0.5" }, x)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "42", y: "11", width: "20", height: "26", rx: "4", fill: "#0b1224", opacity: "0.9" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "56", y: "13", width: "4", height: "22", rx: "2", fill: "#7dd3fc", opacity: "0.75" }),
+    [16, 22, 28, 34].map((y) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "48", cy: y, r: "1.5", fill: "#fef08a" }, y)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "64", y: "12", width: "3", height: "24", rx: "1.5", fill: "#111827" })
+  ] });
+}
+function Moto({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "46", height: "20", viewBox: "0 0 46 20", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M42 10 L92 -4 L92 24 Z", fill: "#fde68a", opacity: "0.18" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "1", y: "7", width: "12", height: "6", rx: "3", fill: "#0f172a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "33", y: "7", width: "12", height: "6", rx: "3", fill: "#0f172a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "9", y: "6", width: "27", height: "8", rx: "4", fill: "#a855f7" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "22", y: "1", width: "3", height: "18", rx: "1.5", fill: "#cbd5e1" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "17", cy: "10", rx: "7", ry: "6", fill: "#0b1224" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "20", cy: "10", r: "4.2", fill: "#22d3ee" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "21.5", y: "8", width: "2", height: "4", rx: "1", fill: "#0b1224", opacity: "0.7" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "43", cy: "10", r: "1.8", fill: "#fef08a" })
+  ] });
+}
+const SPRITES = {
+  car: Car,
+  racer: Racer,
+  truck: Truck,
+  moto: Moto
+};
+function VehicleSprite({ kind, lights }) {
+  const S = SPRITES[kind];
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block drop-shadow-[0_6px_6px_rgba(0,0,0,0.45)]", children: /* @__PURE__ */ jsxRuntimeExports.jsx(S, { lights }) });
+}
+const VEHICLE_EVENT = "vehicle";
+const VEHICLE_KINDS = ["car", "racer", "truck", "moto"];
+const VEHICLE_LABELS = {
+  car: "Hatchback",
+  racer: "Racer",
+  truck: "Monster truck",
+  moto: "Motorcycle"
+};
+const DEFAULT = { on: true, kind: "car" };
+function parse$1(value) {
+  if (typeof value !== "object" || value === null) return void 0;
+  const raw = value;
+  const kind = VEHICLE_KINDS.find((k) => k === raw.kind) ?? DEFAULT.kind;
+  return { on: raw.on !== false, kind };
+}
+function readVehicle() {
+  return readJson(STORAGE_KEYS.vehicle, parse$1) ?? { ...DEFAULT };
+}
+function setVehicle(patch) {
+  const next = { ...readVehicle(), ...patch };
+  writeJson(STORAGE_KEYS.vehicle, next);
+  window.dispatchEvent(new CustomEvent(VEHICLE_EVENT, { detail: next }));
+  return next;
+}
+function useVehicle() {
+  const [state, setState] = reactExports.useState(DEFAULT);
+  reactExports.useEffect(() => {
+    setState(readVehicle());
+    const onChange = (e) => setState(e.detail);
+    window.addEventListener(VEHICLE_EVENT, onChange);
+    return () => window.removeEventListener(VEHICLE_EVENT, onChange);
+  }, []);
+  return state;
+}
+const VEHICLE_DRIVING_EVENT = "vehicle-driving";
+const VEHICLE_DRIVE_EVENT = "vehicle-drive";
+const VEHICLE_REFUSE_EVENT = "vehicle-refuse";
+let driving = false;
+function isVehicleDriving() {
+  return driving;
+}
+function setVehicleDriving(next) {
+  if (driving === next) return;
+  driving = next;
+  window.dispatchEvent(new CustomEvent(VEHICLE_DRIVING_EVENT, { detail: next }));
+}
+function requestDrive() {
+  window.dispatchEvent(new Event(VEHICLE_DRIVE_EVENT));
+}
+function refuseTerminal() {
+  window.dispatchEvent(new Event(VEHICLE_REFUSE_EVENT));
+}
+function canDriveHere() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
+const SPECS = {
+  car: { accel: 950, max: 580, steer: 3.4, radius: 17, power: 1, rebound: 0.35 },
+  racer: { accel: 1450, max: 860, steer: 3, radius: 17, power: 1.35, rebound: 0.3 },
+  truck: { accel: 650, max: 420, steer: 2.3, radius: 25, power: 3.2, rebound: 0.05 },
+  moto: { accel: 1300, max: 760, steer: 4.8, radius: 12, power: 0.85, rebound: 0.45 }
+};
+const BRAKE = 1600;
+const DRAG = 1.6;
+const TURBO = 1.55;
+const IDLE_SPEED = 38;
+const IDLE_SCALE = 0.62;
+const IDLE_LIFT = 118;
+const IDLE_LEFT = 28;
+const IDLE_SPAN = 200;
+const PUSH = 0.14;
+const SPIN = 0.09;
+const SLIDE_FRICTION = 0.93;
+const ASKED_KEY = "car-asked";
+function alreadyAsked() {
+  try {
+    return sessionStorage.getItem(ASKED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+const CANDIDATES = "main h1, main h2, main h3, main h4, main p, main a, main button, main img, main li, main [class*='rounded-md'], main [class*='rounded-full']";
+function PlayCar() {
+  const vehicle = useVehicle();
+  const carRef = reactExports.useRef(null);
+  const bubbleRef = reactExports.useRef(null);
+  const fxRef = reactExports.useRef(null);
+  const [driving2, setDriving] = reactExports.useState(false);
+  const [canDrive, setCanDrive] = reactExports.useState(false);
+  const [allowed, setAllowed] = reactExports.useState(false);
+  const [moved, setMoved] = reactExports.useState(0);
+  const drivingRef = reactExports.useRef(false);
+  const specRef = reactExports.useRef(SPECS.car);
+  const resetRef = reactExports.useRef(() => {
+  });
+  const toPageRef = reactExports.useRef(() => {
+  });
+  const toViewportRef = reactExports.useRef(() => {
+  });
+  const nudgeRef = reactExports.useRef({ text: "", until: 0 });
+  const [nudge, setNudge] = reactExports.useState(false);
+  specRef.current = SPECS[vehicle.kind];
+  const enabled = allowed && vehicle.on;
+  reactExports.useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setAllowed(true);
+    setCanDrive(canDriveHere());
+  }, []);
+  reactExports.useEffect(() => {
+    if (!vehicle.on && drivingRef.current) {
+      drivingRef.current = false;
+      setDriving(false);
+      setVehicleDriving(false);
+    }
+  }, [vehicle.on]);
+  reactExports.useEffect(() => {
+    if (!enabled) return;
+    const car = carRef.current;
+    const bubble = bubbleRef.current;
+    const fxLayer = fxRef.current;
+    const main = document.querySelector("main");
+    const zone = () => {
+      const x0 = IDLE_LEFT;
+      return {
+        x0,
+        x1: Math.min(window.innerWidth - 40, x0 + IDLE_SPAN),
+        y: window.innerHeight - IDLE_LIFT
+      };
+    };
+    const z0 = zone();
+    const s = {
+      x: z0.x0 + 20,
+      y: z0.y,
+      a: 0,
+      v: 0,
+      steer: 0,
+      bounce: 0,
+      scale: IDLE_SCALE,
+      dir: 1
+    };
+    let phase = "drive";
+    let phaseUntil = 0;
+    let nextAsk = performance.now() + 4e3;
+    const keys = /* @__PURE__ */ new Set();
+    let pushed = [];
+    let lastScan = 0;
+    let puffs = [];
+    let rings = [];
+    let shake = 0;
+    let raf = 0;
+    let last = performance.now();
+    let movedCount = 0;
+    let partyUntil = 0;
+    let heardMusic = false;
+    const say = (text) => {
+      bubble.textContent = text ?? "";
+      bubble.style.opacity = text ? "1" : "0";
+    };
+    const scan = () => {
+      const keep = new Map(pushed.map((p) => [p.el, p]));
+      const out = [];
+      const chosen = /* @__PURE__ */ new Set();
+      for (const el of document.querySelectorAll(CANDIDATES)) {
+        if (el.closest("header, [role=dialog], .fixed, canvas, svg")) continue;
+        let ancestor = el.parentElement;
+        let nested = false;
+        while (ancestor && !nested) {
+          if (chosen.has(ancestor)) nested = true;
+          ancestor = ancestor.parentElement;
+        }
+        if (nested) continue;
+        const prev = keep.get(el);
+        const r = el.getBoundingClientRect();
+        const dx = prev?.dx ?? 0;
+        const dy = prev?.dy ?? 0;
+        const w = r.width;
+        const h = r.height;
+        if (w < 8 || h < 8 || w > window.innerWidth * 0.7 || h > 360) continue;
+        chosen.add(el);
+        out.push(
+          prev ? { ...prev, x: r.left + window.scrollX - dx, y: r.top + window.scrollY - dy, w, h } : {
+            el,
+            x: r.left + window.scrollX,
+            y: r.top + window.scrollY,
+            w,
+            h,
+            m: Math.min(5, Math.max(0.5, w * h / 6e3)),
+            dx: 0,
+            dy: 0,
+            vx: 0,
+            vy: 0,
+            rot: 0,
+            vr: 0
+          }
+        );
+      }
+      pushed = out;
+    };
+    const puff = (x, y, c) => {
+      puffs.push({ x, y, t: 0, s: 4 + Math.random() * 5, c });
+      if (puffs.length > 90) puffs.shift();
+    };
+    const markMoved = (p) => {
+      if (p.el.dataset.carMoved) return false;
+      p.el.dataset.carMoved = "1";
+      movedCount++;
+      return true;
+    };
+    const collide = () => {
+      const spec = specRef.current;
+      const R = spec.radius;
+      let any = false;
+      for (const p of pushed) {
+        const left = p.x + p.dx;
+        const top = p.y + p.dy;
+        if (Math.abs(top + p.h / 2 - s.y) > p.h / 2 + R + 40) continue;
+        const cx = Math.max(left, Math.min(s.x, left + p.w));
+        const cy = Math.max(top, Math.min(s.y, top + p.h));
+        const ddx = s.x - cx;
+        const ddy = s.y - cy;
+        const d2 = ddx * ddx + ddy * ddy;
+        if (d2 > R * R) continue;
+        const d = Math.sqrt(d2) || 1;
+        const nx = d2 > 0.01 ? ddx / d : -Math.cos(s.a);
+        const ny = d2 > 0.01 ? ddy / d : -Math.sin(s.a);
+        const speed = Math.abs(s.v);
+        if (speed < 15) continue;
+        const k = speed * PUSH * spec.power / p.m;
+        p.vx -= nx * k;
+        p.vy -= ny * k;
+        p.vr += (Math.random() - 0.5) * speed * SPIN * spec.power / p.m;
+        s.x += nx * (R - d + 1);
+        s.y += ny * (R - d + 1);
+        s.v *= spec.rebound ? -spec.rebound : 0.85;
+        s.bounce = 1;
+        any = markMoved(p) || any;
+        for (let i = 0; i < 5; i++) puff(cx, cy);
+        const force = speed * spec.power;
+        if (force > 380) {
+          rings.push({ x: cx, y: cy, t: 0, r: Math.min(140, force / 4) });
+          shake = Math.min(1, shake + force / 900);
+        }
+      }
+      if (any) setMoved(movedCount);
+    };
+    const cascade = () => {
+      let any = false;
+      for (const a of pushed) {
+        const va = Math.hypot(a.vx, a.vy);
+        if (va < 1.2) continue;
+        const ax = a.x + a.dx;
+        const ay = a.y + a.dy;
+        for (const b of pushed) {
+          if (b === a) continue;
+          const bx = b.x + b.dx;
+          const by = b.y + b.dy;
+          if (ax > bx + b.w || ax + a.w < bx || ay > by + b.h || ay + a.h < by) continue;
+          const share = a.m / (a.m + b.m) * 0.8;
+          b.vx += a.vx * share;
+          b.vy += a.vy * share;
+          b.vr += (Math.random() - 0.5) * va * 0.3;
+          a.vx *= 0.55;
+          a.vy *= 0.55;
+          any = markMoved(b) || any;
+        }
+      }
+      if (any) setMoved(movedCount);
+    };
+    const slide = () => {
+      for (const p of pushed) {
+        if (!p.vx && !p.vy && !p.vr) continue;
+        p.dx += p.vx;
+        p.dy += p.vy;
+        p.rot += p.vr;
+        p.vx *= SLIDE_FRICTION;
+        p.vy *= SLIDE_FRICTION;
+        p.vr *= SLIDE_FRICTION;
+        if (Math.abs(p.vx) < 0.02) p.vx = 0;
+        if (Math.abs(p.vy) < 0.02) p.vy = 0;
+        if (Math.abs(p.vr) < 0.01) p.vr = 0;
+        p.el.style.translate = `${p.dx.toFixed(1)}px ${p.dy.toFixed(1)}px`;
+        p.el.style.rotate = `${p.rot.toFixed(2)}deg`;
+      }
+    };
+    resetRef.current = () => {
+      for (const el of document.querySelectorAll("[data-car-moved]")) {
+        el.style.translate = "";
+        el.style.rotate = "";
+        delete el.dataset.carMoved;
+      }
+      for (const p of pushed) Object.assign(p, { dx: 0, dy: 0, vx: 0, vy: 0, rot: 0, vr: 0 });
+      movedCount = 0;
+      setMoved(0);
+    };
+    toPageRef.current = () => {
+      say(null);
+      phase = "drive";
+      s.x += window.scrollX;
+      s.y += window.scrollY - 60;
+      s.a = -Math.PI / 2;
+      scan();
+    };
+    toViewportRef.current = () => {
+      nudgeRef.current = { text: "", until: 0 };
+      say(null);
+      const z = zone();
+      s.x = Math.max(z.x0, Math.min(z.x1, s.x - window.scrollX));
+      s.y = z.y;
+      s.v = 0;
+      s.dir = 1;
+      nextAsk = performance.now() + 5e3;
+    };
+    const onKey = (e) => {
+      if (!drivingRef.current) return;
+      const t = e.target;
+      if (t?.closest("input, textarea, [contenteditable=true]")) return;
+      const map = {
+        arrowup: "up",
+        w: "up",
+        arrowdown: "down",
+        s: "down",
+        arrowleft: "left",
+        a: "left",
+        arrowright: "right",
+        d: "right",
+        " ": "brake",
+        shift: "turbo"
+      };
+      const m = map[e.key.toLowerCase()];
+      if (!m) return;
+      e.preventDefault();
+      if (e.type === "keydown") keys.add(m);
+      else keys.delete(m);
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("keyup", onKey);
+    const clearKeys = () => keys.clear();
+    window.addEventListener("blur", clearKeys);
+    const frame = (now2) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min(0.033, (now2 - last) / 1e3);
+      last = now2;
+      const isDriving = drivingRef.current;
+      const spec = specRef.current;
+      if (isDriving) {
+        if (now2 - lastScan > 1500) {
+          lastScan = now2;
+          scan();
+        }
+        const turbo = keys.has("turbo");
+        const max = spec.max * (turbo ? TURBO : 1);
+        const throttle = (keys.has("up") ? 1 : 0) - (keys.has("down") ? 1 : 0);
+        if (throttle > 0) s.v += (s.v < 0 ? BRAKE : spec.accel * (turbo ? 1.5 : 1)) * dt;
+        else if (throttle < 0) s.v -= (s.v > 0 ? BRAKE : spec.accel * 0.6) * dt;
+        s.v -= s.v * DRAG * dt;
+        if (keys.has("brake")) s.v -= s.v * 6 * dt;
+        s.v = Math.max(-240, Math.min(max, s.v));
+        const turn = (keys.has("right") ? 1 : 0) - (keys.has("left") ? 1 : 0);
+        s.steer += (turn - s.steer) * Math.min(1, dt * 10);
+        const grip = Math.min(1, Math.abs(s.v) / 140);
+        s.a += s.steer * spec.steer * grip * Math.sign(s.v || 1) * dt;
+        s.x += Math.cos(s.a) * s.v * dt;
+        s.y += Math.sin(s.a) * s.v * dt;
+        const R = spec.radius;
+        const maxX = document.documentElement.scrollWidth - R;
+        const maxY = document.documentElement.scrollHeight - R;
+        if (s.x < R || s.x > maxX || s.y < R || s.y > maxY) {
+          s.x = Math.max(R, Math.min(maxX, s.x));
+          s.y = Math.max(R, Math.min(maxY, s.y));
+          s.v *= -0.3;
+          s.bounce = 1;
+        }
+        collide();
+        cascade();
+        slide();
+        const zone2 = document.querySelector("[data-party-zone]");
+        const zr = zone2?.getBoundingClientRect();
+        if (!heardMusic && zr && zr.top < window.innerHeight && zr.bottom > 0) {
+          heardMusic = true;
+          if (!solvedMysteries().includes("carParty"))
+            nudgeRef.current = { text: "♪ hear that? let's go!", until: now2 + 2500 };
+        }
+        if (now2 > partyUntil && Math.abs(s.v) > 150) {
+          const r = zr;
+          const vx = s.x - window.scrollX;
+          const vy = s.y - window.scrollY;
+          if (r && vx > r.left && vx < r.right && vy > r.top && vy < r.bottom) {
+            partyUntil = now2 + 6e3;
+            window.dispatchEvent(new Event(PARTY_EVENT));
+            solveMystery("carParty");
+          }
+        }
+        const sy = s.y - window.scrollY;
+        const vh = window.innerHeight;
+        const lo = vh * 0.3;
+        const hi = vh * 0.65;
+        if (sy < lo || sy > hi) {
+          window.scrollTo({
+            top: window.scrollY + (sy < lo ? sy - lo : sy - hi) * 0.18,
+            behavior: "instant"
+          });
+        }
+        const back = { x: s.x - Math.cos(s.a) * R * 1.1, y: s.y - Math.sin(s.a) * R * 1.1 };
+        if (turbo && throttle > 0) {
+          for (let i = 0; i < 2; i++) puff(back.x, back.y, i ? "#f59e0b" : "#22d3ee");
+        } else if (throttle !== 0 && Math.abs(s.v) < 260 || Math.abs(s.steer) > 0.6 && Math.abs(s.v) > 220) {
+          if (Math.random() < 0.5) puff(back.x, back.y);
+        }
+        s.scale += (1 - s.scale) * Math.min(1, dt * 8);
+      } else {
+        const z = zone();
+        s.y = z.y;
+        s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);
+        if (canDrive && phase === "drive" && now2 > nextAsk && !alreadyAsked()) {
+          try {
+            sessionStorage.setItem(ASKED_KEY, "1");
+          } catch {
+          }
+          phase = "ask1";
+          phaseUntil = now2 + 1700;
+          say("want play!");
+        } else if (phase === "ask1" && now2 > phaseUntil) {
+          phase = "ask2";
+          phaseUntil = now2 + 2400;
+          say("click on me");
+        } else if (phase === "ask2" && now2 > phaseUntil) {
+          phase = "drive";
+          say(null);
+        }
+        const want = phase === "drive" ? IDLE_SPEED : 0;
+        s.v += (want - s.v) * Math.min(1, dt * 3);
+        if (s.x > z.x1) s.dir = -1;
+        if (s.x < z.x0) s.dir = 1;
+        const heading = s.dir === 1 ? 0 : Math.PI;
+        let diff = heading - s.a;
+        diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+        s.a += diff * Math.min(1, dt * 5);
+        s.x += Math.cos(s.a) * s.v * dt;
+        if (phase === "drive" && Math.random() < 0.02) puff(s.x - Math.cos(s.a) * 12, s.y + 2);
+        if (phase !== "drive") s.bounce = Math.max(s.bounce, Math.abs(Math.sin(now2 / 160)) * 0.4);
+      }
+      s.bounce *= Math.exp(-dt * 6);
+      const ox = isDriving ? window.scrollX : 0;
+      const oy = isDriving ? window.scrollY : 0;
+      const wobble = Math.sin(now2 / 90) * (0.6 + Math.min(1, Math.abs(s.v) / 300)) + s.bounce * Math.sin(now2 / 30) * 4;
+      car.style.transform = `translate(${s.x - ox}px, ${s.y - oy}px) rotate(${s.a}rad)`;
+      const body = car.firstElementChild;
+      if (body)
+        body.style.transform = `translate(-50%, -50%) scale(${s.scale * (1 + s.bounce * 0.12)}, ${s.scale * (1 - s.bounce * 0.08)}) rotate(${wobble * 0.6}deg)`;
+      const half = bubble.offsetWidth / 2 + 8;
+      const bx = Math.max(half, Math.min(window.innerWidth - half, s.x - ox));
+      bubble.style.transform = `translate(${bx}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      if (isDriving) say(now2 < nudgeRef.current.until ? nudgeRef.current.text : null);
+      shake *= Math.exp(-dt * 7);
+      if (main) {
+        main.style.translate = shake > 0.02 ? `${((Math.random() - 0.5) * shake * 14).toFixed(1)}px ${((Math.random() - 0.5) * shake * 10).toFixed(1)}px` : "";
+      }
+      puffs = puffs.filter((p) => (p.t += dt) < 0.7);
+      rings = rings.filter((r) => (r.t += dt) < 0.5);
+      fxLayer.innerHTML = puffs.map((p) => {
+        const k = p.t / 0.7;
+        return `<span style="position:absolute;left:0;top:0;width:${p.s}px;height:${p.s}px;border-radius:999px;background:${p.c ?? "currentColor"};opacity:${(1 - k) * (p.c ? 0.7 : 0.35)};transform:translate(${p.x - ox - p.s / 2}px,${p.y - oy - p.s / 2 - k * 10}px) scale(${1 + k * 1.5})"></span>`;
+      }).join("") + rings.map((r) => {
+        const k = r.t / 0.5;
+        const size = r.r * 2 * (0.2 + k);
+        return `<span style="position:absolute;left:0;top:0;width:${size}px;height:${size}px;border-radius:999px;border:2px solid #22d3ee;opacity:${1 - k};transform:translate(${r.x - ox - size / 2}px,${r.y - oy - size / 2}px)"></span>`;
+      }).join("");
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("keyup", onKey);
+      window.removeEventListener("blur", clearKeys);
+      if (main) main.style.translate = "";
+    };
+  }, [enabled, canDrive]);
+  const start = () => {
+    if (!canDrive || drivingRef.current) return;
+    toPageRef.current();
+    drivingRef.current = true;
+    setDriving(true);
+    setVehicleDriving(true);
+  };
+  const stop = () => {
+    drivingRef.current = false;
+    resetRef.current();
+    toViewportRef.current();
+    setDriving(false);
+    setVehicleDriving(false);
+  };
+  const startRef = reactExports.useRef(start);
+  startRef.current = start;
+  reactExports.useEffect(() => {
+    if (!enabled) return;
+    const onDrive = () => startRef.current();
+    let timer = 0;
+    const onRefuse = () => {
+      nudgeRef.current = { text: "stop driving first!", until: performance.now() + 2200 };
+      setNudge(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setNudge(false), 2200);
+    };
+    window.addEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+    window.addEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+    return () => {
+      window.removeEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+      window.removeEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+      window.clearTimeout(timer);
+    };
+  }, [enabled]);
+  if (!enabled) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: fxRef,
+        "aria-hidden": true,
+        className: "pointer-events-none fixed inset-0 z-40 text-muted-foreground"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: bubbleRef,
+        "aria-hidden": true,
+        className: "pointer-events-none fixed left-0 top-0 z-50 whitespace-nowrap rounded-full border border-primary/50 bg-background/90 px-2.5 py-1 font-mono text-[11px] font-semibold text-primary shadow-lg transition-opacity duration-300",
+        style: { opacity: 0, transform: "translate(-200px, -200px)" }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: carRef,
+        className: "fixed left-0 top-0 z-40",
+        style: { transform: "translate(-200px, -200px)" },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: start,
+            "data-cursor": driving2 ? void 0 : canDrive ? "Drive" : void 0,
+            "aria-label": canDrive ? `Drive the ${VEHICLE_LABELS[vehicle.kind].toLowerCase()}` : "A little car",
+            className: `block transition-opacity duration-300 ${driving2 ? "cursor-default opacity-100" : canDrive ? "cursor-pointer opacity-50 hover:opacity-100" : "pointer-events-none opacity-40"}`,
+            style: { transform: "translate(-50%, -50%)" },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(VehicleSprite, { kind: vehicle.kind, lights: driving2 })
+          }
+        )
+      }
+    ),
+    driving2 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex overflow-hidden rounded-full border border-border", children: VEHICLE_KINDS.map((k) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setVehicle({ kind: k }),
+          className: `px-2.5 py-1 ${vehicle.kind === k ? "bg-primary text-primary-foreground" : "hover:text-primary"}`,
+          children: VEHICLE_LABELS[k]
+        },
+        k
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-muted-foreground", children: [
+        "↑↓←→ / WASD · shift turbo · space brake",
+        moved > 0 ? ` · ${moved} knocked over` : ""
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: stop,
+          className: `inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 hover:border-primary/60 hover:text-primary ${nudge ? "animate-pulse border-amber-400 text-amber-300" : "border-border"}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Square, { className: "h-3 w-3" }),
+            " Stop driving"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => resetRef.current(),
+          className: "inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 font-semibold text-primary-foreground hover:opacity-90",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "h-3 w-3" }),
+            " Reset website"
+          ]
+        }
+      )
+    ] })
+  ] });
 }
 const SEEN_KEY = "preloader-seen";
 const COUNT_MS = 1400;
@@ -1231,6 +2846,44 @@ function RobotWorld({ walkway }) {
       for (const t of timers) window.clearTimeout(t);
     };
   }, [walkway, robots]);
+  const pokes = reactExports.useRef({ alice: 0, bob: 0, argued: false });
+  const poke = (name) => {
+    const p = pokes.current;
+    p[name]++;
+    const say = (who, text) => {
+      world.current[who] = { ...world.current[who], say: text };
+      paint();
+    };
+    if (!p.argued && p.alice >= 3 && p.bob >= 3) {
+      p.argued = true;
+      const lines2 = [
+        ["alice", "tabs."],
+        ["bob", "spaces."],
+        ["alice", "TABS."],
+        ["bob", "4 spaces!"],
+        ["alice", "…we're done."]
+      ];
+      lines2.forEach(([who, text], i) => {
+        window.setTimeout(() => {
+          say(other(who), null);
+          say(who, text);
+        }, i * 1300);
+      });
+      window.setTimeout(() => {
+        say("alice", null);
+        say("bob", null);
+        solveMystery("robots");
+      }, lines2.length * 1300);
+      return;
+    }
+    const replies = {
+      alice: ["hi!", "hey", "ask Bob about tabs. go on.", "…", ":|"],
+      bob: ["beep?", "hello", "Alice is wrong about tabs.", "…", ":|"]
+    };
+    const lines = replies[name];
+    say(name, lines[Math.min(p[name] - 1, lines.length - 1)]);
+    window.setTimeout(() => say(name, null), 1300);
+  };
   if (!ready.current) return null;
   const { ball } = world.current;
   return (
@@ -1263,7 +2916,10 @@ function RobotWorld({ walkway }) {
             return /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "div",
               {
-                className: "absolute left-0 will-change-transform",
+                onClick: () => poke(name),
+                "data-cursor": "Poke",
+                title: name === "alice" ? "Alice · keeps the site's robots.txt tidy" : "Bob · also reads robots.txt, every morning",
+                className: "pointer-events-auto absolute left-0 cursor-pointer will-change-transform",
                 style: {
                   bottom: r.grounded ? FLOOR_PX : LINE_PX,
                   transform: `translateX(${r.x}px)`,
@@ -1596,351 +3252,6 @@ function Scramble({ text }) {
   }, [inView, text]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { ref, "aria-label": text, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-hidden": true, children: shown }) });
 }
-const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
-const COLORS$1 = [
-  "#ef4444",
-  "#f59e0b",
-  "#22c55e",
-  "#3b82f6",
-  "#a855f7",
-  "#ec4899",
-  "#06b6d4",
-  "#f97316"
-];
-const LINKS = 9;
-const GRAVITY$2 = 900;
-const LIFT = 2200;
-const DAMPING$2 = 0.985;
-const ITERATIONS$2 = 6;
-const RADIUS = 26;
-const BLOW_RADIUS = 90;
-const BLOW_FORCE = 1400;
-const DRAG_PX$1 = 5;
-const REINFLATE_MS = 3500;
-const INFLATE_MS = 650;
-const HEIGHT = 280;
-function ContestBalloons({
-  backdrop,
-  controls
-}) {
-  const boxRef = reactExports.useRef(null);
-  const svgRef = reactExports.useRef(null);
-  const [pops, setPops] = reactExports.useState(0);
-  const state = reactExports.useRef({ balloons: [], shreds: [], pointer: null, grab: null, booms: [] });
-  reactExports.useEffect(() => {
-    const box = boxRef.current;
-    const svg = svgRef.current;
-    if (!box || !svg) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const s = state.current;
-    const W = () => box.clientWidth;
-    const anchorX = (b) => b.anchor * W();
-    s.balloons = LETTERS.map((_, i) => {
-      const anchor = (i + 0.5) / LETTERS.length;
-      const len = 120 + i * 37 % 5 * 18;
-      const pts = [];
-      for (let k = 0; k <= LINKS; k++) {
-        const x = anchor * W();
-        const y = HEIGHT - k / LINKS * len;
-        pts.push({ x, y, px: x, py: y });
-      }
-      return { anchor, len, pts, sway: Math.random() * 10, popped: false, poppedAt: 0, scale: 1 };
-    });
-    const NS = "http://www.w3.org/2000/svg";
-    const strings = [];
-    const bodies = [];
-    const shredLayer = document.createElementNS(NS, "g");
-    const boomLayer = document.createElementNS(NS, "g");
-    svg.replaceChildren();
-    s.balloons.forEach((_, i) => {
-      const path = document.createElementNS(NS, "path");
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", "currentColor");
-      path.setAttribute("stroke-opacity", "0.45");
-      path.setAttribute("stroke-width", "1.2");
-      svg.appendChild(path);
-      strings.push(path);
-    });
-    s.balloons.forEach((_, i) => {
-      const g = document.createElementNS(NS, "g");
-      g.setAttribute("data-balloon", String(i));
-      g.style.cursor = "grab";
-      const c = COLORS$1[i % COLORS$1.length];
-      g.innerHTML = `
-        <path d="M0,-1 l-3.5,6 h7 z" fill="${c}"/>
-        <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${c}"/>
-        <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity="0.45" transform="rotate(-20 -${RADIUS * 0.3} -${RADIUS * 1.35})"/>
-        <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#fff" fill-opacity="0.92">${LETTERS[i]}</text>`;
-      svg.appendChild(g);
-      bodies.push(g);
-    });
-    svg.appendChild(shredLayer);
-    svg.appendChild(boomLayer);
-    const centre = (b) => {
-      const k = b.pts[LINKS];
-      const j = b.pts[LINKS - 1];
-      const dx = k.x - j.x;
-      const dy = k.y - j.y;
-      const d = Math.hypot(dx, dy) || 1;
-      return {
-        x: k.x + dx / d * RADIUS * b.scale,
-        y: k.y + dy / d * RADIUS * b.scale,
-        ux: dx / d,
-        uy: dy / d
-      };
-    };
-    const paint = (now2) => {
-      s.balloons.forEach((b, i) => {
-        let d = `M${b.pts[0].x},${b.pts[0].y}`;
-        for (let k2 = 1; k2 < LINKS; k2++) {
-          const p = b.pts[k2];
-          const q = b.pts[k2 + 1];
-          d += ` Q${p.x},${p.y} ${(p.x + q.x) / 2},${(p.y + q.y) / 2}`;
-        }
-        d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
-        strings[i].setAttribute("d", d);
-        const k = b.pts[LINKS];
-        const c = centre(b);
-        const angle = Math.atan2(c.uy, c.ux) * 180 / Math.PI + 90;
-        const g = bodies[i];
-        g.style.display = b.scale < 0.02 ? "none" : "";
-        g.setAttribute("transform", `translate(${k.x},${k.y}) rotate(${angle}) scale(${b.scale})`);
-      });
-      shredLayer.innerHTML = s.shreds.map(
-        (p) => `<rect x="-3" y="-2" width="6" height="4" rx="1" fill="${p.c}" opacity="${Math.min(1, p.life * 2)}" transform="translate(${p.x},${p.y}) rotate(${p.a})"/>`
-      ).join("");
-      boomLayer.innerHTML = s.booms.map((bm) => {
-        const t = (now2 - bm.t) / 600;
-        return `<text x="${bm.x}" y="${bm.y - t * 24}" text-anchor="middle" font-size="16" font-weight="900" font-family="ui-monospace, monospace" fill="currentColor" opacity="${1 - t}">POP!</text>`;
-      }).join("");
-    };
-    const step2 = (dt, now2) => {
-      const w = W();
-      for (const b of s.balloons) {
-        if (b.popped && now2 - b.poppedAt > REINFLATE_MS) {
-          b.popped = false;
-          b.poppedAt = now2;
-          b.scale = 0;
-        }
-        if (!b.popped && b.scale < 1) b.scale = Math.min(1, (now2 - b.poppedAt) / INFLATE_MS);
-        const lift = b.popped ? 0 : LIFT * b.scale;
-        b.sway += dt;
-        const breeze = Math.sin(b.sway * 0.9) * 60 + Math.sin(b.sway * 2.3 + b.anchor * 9) * 25;
-        b.pts.forEach((p, k) => {
-          if (k === 0) return;
-          const vx = (p.x - p.px) * DAMPING$2;
-          const vy = (p.y - p.py) * DAMPING$2;
-          p.px = p.x;
-          p.py = p.y;
-          let ax = 0;
-          let ay = GRAVITY$2 * 0.15;
-          if (k === LINKS) {
-            ay = GRAVITY$2 - lift;
-            ax = breeze;
-            if (s.pointer && !b.popped) {
-              const c = centre(b);
-              const dx = c.x - s.pointer.x;
-              const dy = c.y - s.pointer.y;
-              const d = Math.hypot(dx, dy);
-              if (d < BLOW_RADIUS && d > 1) {
-                const f = (1 - d / BLOW_RADIUS) * BLOW_FORCE;
-                ax += dx / d * f * 4;
-                ay += dy / d * f * 4;
-              }
-            }
-          }
-          p.x += vx + ax * dt * dt;
-          p.y += vy + ay * dt * dt;
-        });
-        const base = b.pts[0];
-        base.x = base.px = b.anchor * w;
-        base.y = base.py = HEIGHT;
-      }
-      for (let it = 0; it < ITERATIONS$2; it++) {
-        for (const b of s.balloons) {
-          const seg = b.len / LINKS;
-          for (let k = 0; k < LINKS; k++) {
-            const a = b.pts[k];
-            const c = b.pts[k + 1];
-            const dx = c.x - a.x;
-            const dy = c.y - a.y;
-            const d = Math.hypot(dx, dy) || 1e-6;
-            const diff = (d - seg) / d;
-            if (k === 0) {
-              c.x -= dx * diff;
-              c.y -= dy * diff;
-            } else {
-              a.x += dx * diff * 0.5;
-              a.y += dy * diff * 0.5;
-              c.x -= dx * diff * 0.5;
-              c.y -= dy * diff * 0.5;
-            }
-          }
-        }
-        for (let i = 0; i < s.balloons.length; i++) {
-          const A = s.balloons[i];
-          if (A.popped) continue;
-          for (let j = i + 1; j < s.balloons.length; j++) {
-            const B = s.balloons[j];
-            if (B.popped) continue;
-            const ca = centre(A);
-            const cb = centre(B);
-            const dx = cb.x - ca.x;
-            const dy = cb.y - ca.y;
-            const d = Math.hypot(dx, dy) || 1e-6;
-            const min = RADIUS * 1.75 * ((A.scale + B.scale) / 2);
-            if (d < min) {
-              const push = (min - d) / d * 0.5;
-              A.pts[LINKS].x -= dx * push;
-              A.pts[LINKS].y -= dy * push;
-              B.pts[LINKS].x += dx * push;
-              B.pts[LINKS].y += dy * push;
-            }
-          }
-        }
-        if (s.grab) {
-          const b = s.balloons[s.grab.i];
-          const k = b.pts[LINKS];
-          const ax = anchorX(b);
-          let tx = s.grab.x;
-          let ty = s.grab.y + RADIUS;
-          const dx = tx - ax;
-          const dy = ty - HEIGHT;
-          const d = Math.hypot(dx, dy);
-          const max = b.len * 1.05;
-          if (d > max) {
-            tx = ax + dx / d * max;
-            ty = HEIGHT + dy / d * max;
-          }
-          k.x = tx;
-          k.y = ty;
-        }
-        for (const b of s.balloons) {
-          const k = b.pts[LINKS];
-          k.x = Math.max(RADIUS, Math.min(w - RADIUS, k.x));
-          k.y = Math.max(RADIUS * 2.1, Math.min(HEIGHT, k.y));
-        }
-      }
-      for (const p of s.shreds) {
-        p.vy += GRAVITY$2 * dt;
-        p.vx *= 0.98;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.a += p.va * dt;
-        p.life -= dt;
-      }
-      s.shreds = s.shreds.filter((p) => p.life > 0 && p.y < HEIGHT + 40);
-      s.booms = s.booms.filter((bm) => now2 - bm.t < 600);
-    };
-    let raf = 0;
-    let last = performance.now();
-    let visible = false;
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-    });
-    io.observe(box);
-    for (let i = 0; i < 90; i++) step2(1 / 60, 0);
-    paint(0);
-    if (reduce) return () => io.disconnect();
-    const frame = (now2) => {
-      raf = requestAnimationFrame(frame);
-      const dt = Math.min(1 / 30, (now2 - last) / 1e3);
-      last = now2;
-      if (!visible || document.hidden) return;
-      step2(dt, now2);
-      paint(now2);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-    };
-  }, []);
-  const local = (e) => {
-    const r = boxRef.current.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
-  };
-  const pop = (i) => {
-    const s = state.current;
-    const b = s.balloons[i];
-    const k = b.pts[LINKS];
-    const cy = k.y - RADIUS;
-    for (let n = 0; n < 16; n++) {
-      const a = Math.random() * Math.PI * 2;
-      const v = 150 + Math.random() * 260;
-      s.shreds.push({
-        x: k.x,
-        y: cy,
-        vx: Math.cos(a) * v,
-        vy: Math.sin(a) * v - 120,
-        a: Math.random() * 360,
-        va: (Math.random() - 0.5) * 900,
-        life: 0.9 + Math.random() * 0.5,
-        c: COLORS$1[i % COLORS$1.length]
-      });
-    }
-    s.booms.push({ x: k.x, y: cy - RADIUS, t: performance.now() });
-    b.popped = true;
-    b.poppedAt = performance.now();
-    b.scale = 0;
-    setPops((n) => n + 1);
-  };
-  const onDown = (e) => {
-    const target = e.target.closest("[data-balloon]");
-    if (!target || e.button !== 0) return;
-    const i = Number(target.getAttribute("data-balloon"));
-    if (state.current.balloons[i]?.popped) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    const p = local(e);
-    state.current.grab = { i, x: p.x, y: p.y, sx: p.x, sy: p.y, moved: false };
-  };
-  const onMove = (e) => {
-    const s = state.current;
-    const p = local(e);
-    s.pointer = e.pointerType === "mouse" ? p : null;
-    const g = s.grab;
-    if (!g) return;
-    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
-    g.x = p.x;
-    g.y = p.y;
-    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$1) g.moved = true;
-  };
-  const onUp = () => {
-    const s = state.current;
-    const g = s.grab;
-    if (!g) return;
-    s.grab = null;
-    if (!g.moved) pop(g.i);
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        ref: boxRef,
-        onPointerDown: onDown,
-        onPointerMove: onMove,
-        onPointerUp: onUp,
-        onPointerCancel: onUp,
-        onLostPointerCapture: onUp,
-        onPointerLeave: () => {
-          state.current.pointer = null;
-        },
-        "data-cursor": "Pop",
-        className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
-        style: { height: HEIGHT },
-        children: [
-          backdrop,
-          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" })
-        ]
-      }
-    ),
-    controls,
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, or click to pop" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
-    ] })
-  ] });
-}
 const music = "/assets/acpc-music-Sbaw3JnV.mp3";
 const group = "/assets/group-DVKU7Npx.jpg";
 const firstToSolve = "/assets/ecpc-first-to-solve-BR9AQIT0.jpg";
@@ -1961,6 +3272,7 @@ const MOMENTS = [
   { src: selfieNight, alt: "The night after, with the whole crew" }
 ];
 const IDLE_SLIDE_MS = 6e3;
+const AUTOPLAYED_KEY = "acpc-autoplayed";
 const PLAY_SLIDE_MS = 5e3;
 const BARS = 14;
 function time(s) {
@@ -2055,6 +3367,78 @@ function AcpcMoments() {
       setPlaying(false);
     }
   };
+  reactExports.useEffect(() => {
+    let timer = 0;
+    const on = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.playbackRate = 1.6;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        audio.playbackRate = 1;
+      }, 4e3);
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => {
+      window.removeEventListener(PARTY_EVENT, on);
+      window.clearTimeout(timer);
+    };
+  }, []);
+  const toggleRef = reactExports.useRef(toggle);
+  toggleRef.current = toggle;
+  const anchorRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const anchor = anchorRef.current;
+    const audio = audioRef.current;
+    if (!anchor || !audio) return;
+    try {
+      if (sessionStorage.getItem(AUTOPLAYED_KEY) === "1") return;
+    } catch {
+    }
+    let inView = false;
+    let pending = false;
+    let done = false;
+    const finish = () => {
+      done = true;
+      pending = false;
+      try {
+        sessionStorage.setItem(AUTOPLAYED_KEY, "1");
+      } catch {
+      }
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+      io.disconnect();
+    };
+    const tryPlay = () => {
+      if (done) return;
+      if (!audio.paused || audio.currentTime > 0) return finish();
+      const activated = navigator.userActivation?.hasBeenActive ?? true;
+      if (!activated) {
+        pending = true;
+        return;
+      }
+      finish();
+      void toggleRef.current();
+    };
+    const onGesture = () => {
+      if (pending && inView) setTimeout(tryPlay, 0);
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        inView = e.isIntersecting;
+        if (inView) tryPlay();
+      },
+      { threshold: 0.6 }
+    );
+    io.observe(anchor);
+    window.addEventListener("pointerdown", onGesture, true);
+    window.addEventListener("keydown", onGesture, true);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+    };
+  }, []);
   const seek = (e) => {
     const audio = audioRef.current;
     if (!audio || !duration) return;
@@ -2182,7 +3566,17 @@ function AcpcMoments() {
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "span",
+      {
+        ref: anchorRef,
+        "aria-hidden": true,
+        className: "pointer-events-none absolute inset-x-0 top-0 h-[280px]"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls })
+  ] });
 }
 function Achievements() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-24 border-t border-border", children: [
@@ -2223,7 +3617,8 @@ function Achievements() {
               children: "Codeforces group"
             }
           ),
-          "."
+          ". ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground/60", children: "One problem never made it there: it is stored somewhere in this very browser." })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
@@ -2596,8 +3991,12 @@ function LocalTime() {
     const id = window.setInterval(() => setTime(now()), 1e3);
     return () => window.clearInterval(id);
   }, []);
+  const hour = time2 ? Number(time2.slice(0, 2)) : -1;
+  const owl = hour === 0;
+  reactExports.useEffect(() => {
+    if (owl) solveMystery("midnight");
+  }, [owl]);
   if (!time2) return null;
-  const hour = Number(time2.slice(0, 2));
   const awake = hour >= 9 && hour < 24;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2 font-mono text-xs text-muted-foreground", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `h-1.5 w-1.5 rounded-full ${awake ? "bg-emerald-400" : "bg-amber-400"}` }),
@@ -2605,7 +4004,20 @@ function LocalTime() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tabular-nums text-foreground", children: time2 }),
     " ·",
     " ",
-    awake ? "probably awake" : "probably asleep"
+    owl ? "probably asleep… definitely solving Codeforces 🦉" : awake ? "probably awake" : "probably asleep",
+    !owl && // A sleeping owl: the night-owl mystery's clue.
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "span",
+      {
+        title: "the owl only wakes at midnight, Cairo time",
+        "aria-label": "a sleeping owl",
+        className: "cursor-help select-none opacity-40 grayscale transition-opacity hover:opacity-90",
+        children: [
+          "🦉",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-0.5 text-[9px]", children: "z" })
+        ]
+      }
+    )
   ] });
 }
 function Magnetic({
@@ -2897,39 +4309,43 @@ function ParticleHeading({ lines, className }) {
       window.removeEventListener("touchend", onTouchEnd);
     };
   }, [lines]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "h2",
-      {
-        ref: headingRef,
-        className,
-        style: live ? { color: "transparent", WebkitTextFillColor: "transparent" } : void 0,
-        children: lines.map((line, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "span",
-            {
-              ref: (el) => {
-                lineRefs.current[i] = el;
-              },
-              className: line.gradient ? "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : void 0,
-              style: live && line.gradient ? { backgroundImage: "none" } : void 0,
-              children: line.text
-            }
-          )
-        ] }, i))
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "canvas",
-      {
-        ref: canvasRef,
-        "aria-hidden": true,
-        className: "pointer-events-none absolute",
-        style: { left: -BLEED, top: -BLEED }
-      }
-    )
-  ] });
+  return (
+    // Not selectable: the visible words are particles, and a selection box over
+    // the hidden text underneath only looks broken. Screen readers still read it.
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative select-none", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "h2",
+        {
+          ref: headingRef,
+          className,
+          style: live ? { color: "transparent", WebkitTextFillColor: "transparent" } : void 0,
+          children: lines.map((line, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+            i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                ref: (el) => {
+                  lineRefs.current[i] = el;
+                },
+                className: line.gradient ? "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : void 0,
+                style: live && line.gradient ? { backgroundImage: "none" } : void 0,
+                children: line.text
+              }
+            )
+          ] }, i))
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "canvas",
+        {
+          ref: canvasRef,
+          "aria-hidden": true,
+          className: "pointer-events-none absolute",
+          style: { left: -BLEED, top: -BLEED }
+        }
+      )
+    ] })
+  );
 }
 function ScrollLit({ text, className }) {
   const ref = reactExports.useRef(null);
@@ -2969,6 +4385,7 @@ function ScrollLit({ text, className }) {
 }
 const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 function Contact() {
+  const found = useMysteries();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "section",
     {
@@ -2984,6 +4401,11 @@ function Contact() {
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LocalTime, {}) }),
+          found.length === MYSTERIES.length && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-3 font-mono text-xs text-amber-300", children: [
+            "★ You found all ",
+            MYSTERIES.length,
+            " mysteries. You clearly pay attention — let's talk."
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             ScrollLit,
             {
@@ -3203,6 +4625,14 @@ function LanyardBadge({ photo, photoAlt }) {
   const strapRef = reactExports.useRef(null);
   const [size, setSize] = reactExports.useState(DESKTOP);
   const [flipped, setFlipped] = reactExports.useState(false);
+  const [flips, setFlips] = reactExports.useState(0);
+  const flip = () => {
+    setFlipped((f) => !f);
+    setFlips((n) => {
+      if (n + 1 === 7) solveMystery("badge");
+      return n + 1;
+    });
+  };
   const [held, setHeld] = reactExports.useState(false);
   const strapId = reactExports.useId();
   const sim = reactExports.useRef(null);
@@ -3350,7 +4780,7 @@ function LanyardBadge({ photo, photoAlt }) {
     s.grab = null;
     s.asleep = false;
     setHeld(false);
-    if (clicked) setFlipped((f) => !f);
+    if (clicked) flip();
   };
   const onDown = (e) => {
     const s = sim.current;
@@ -3458,7 +4888,7 @@ function LanyardBadge({ photo, photoAlt }) {
             onKeyDown: (e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                setFlipped((f) => !f);
+                flip();
               }
             },
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -3485,7 +4915,22 @@ function LanyardBadge({ photo, photoAlt }) {
                             }
                           ),
                           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-[#0d1224] via-transparent to-transparent" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" })
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "div",
+                            {
+                              className: "absolute left-1/2 top-6 flex -translate-x-1/2 gap-1",
+                              title: flips >= 7 ? "VIP" : "punch card · 7 holes",
+                              "aria-hidden": true,
+                              children: Array.from({ length: 7 }, (_, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                "span",
+                                {
+                                  className: `h-1.5 w-1.5 rounded-full border ${i < Math.min(flips, 7) ? "border-amber-300 bg-amber-300" : "border-white/50 bg-[#0d1224]/70"}`
+                                },
+                                i
+                              ))
+                            }
+                          )
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-1 flex-col px-4 pb-3 pt-1", children: [
                           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300", children: profile.domain }),
@@ -3534,6 +4979,7 @@ function LanyardBadge({ photo, photoAlt }) {
                             l.label
                           ))
                         ] }),
+                        flips >= 7 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 rounded border border-amber-300/60 px-2 py-1 text-center font-mono text-[9px] font-bold uppercase tracking-widest text-amber-300", children: "★ VIP pass · persistence noted" }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-auto font-mono text-[8px] uppercase tracking-widest text-white/35", children: "Click to flip back" })
                       ] })
                     ]
@@ -4427,76 +5873,80 @@ function ProjectIndex({
 }
 const NODES = [
   {
-    id: "app",
-    label: "Flutter app",
-    sub: "iOS · Android",
+    id: "mobile",
+    label: "Mobile app",
+    sub: "client",
     x: 90,
     y: 150,
     kind: "client",
-    info: "Learners ask questions by typing, speaking or taking a photo, and open lessons."
+    info: "Where users start requests and async jobs."
   },
   {
-    id: "admin",
-    label: "Admin dashboard",
-    sub: "Next.js",
+    id: "web",
+    label: "Web dashboard",
+    sub: "client",
     x: 90,
     y: 300,
     kind: "client",
-    info: "Internal dashboard reading the same API."
+    info: "A second client of the same API."
   },
   {
-    id: "stripe",
-    label: "Billing webhooks",
-    sub: "Stripe · RevenueCat",
+    id: "payments",
+    label: "Payments",
+    sub: "webhooks",
     x: 90,
     y: 470,
     kind: "external",
-    info: "Subscription events. Entitlement is derived from live subscription state, which is what closed the Premium-downgrade revenue leak."
+    info: "Third-party events arriving as webhooks."
   },
   {
-    id: "ingress",
-    label: "Ingress",
-    sub: "Kubernetes · TLS",
+    id: "edge",
+    label: "Edge",
+    sub: "TLS · routing",
     x: 255,
     y: 300,
     kind: "edge",
     replicas: 2,
     perPod: 64,
-    info: "Terminates TLS and routes only to pods that are Ready."
+    info: "Terminates TLS and routes only to instances that are ready."
   },
   {
-    id: "hub",
-    label: "API hub",
-    sub: "FastAPI · WorkOS + JWT",
+    id: "api",
+    label: "Core API",
+    redacted: true,
+    sub: "",
     x: 430,
     y: 300,
     kind: "service",
     replicas: 3,
     perPod: 12,
-    info: "Owns everything user-facing: auth, learners, lessons, XP, 1v1 challenges, search, webhooks. It coordinates the pipeline by enqueueing jobs rather than doing inference itself."
+    info: "Serves the user-facing API and hands heavy work to the pipeline as queued jobs instead of doing it inline."
   },
   {
-    id: "postgres",
-    label: "PostgreSQL",
-    sub: "pgvector",
+    id: "db",
+    label: "Database",
+    redacted: true,
+    sub: "",
     x: 430,
     y: 525,
     kind: "store",
-    info: "Relational data plus pgvector embeddings for the similarity search."
+    info: "The system of record."
   },
   {
-    id: "redis",
-    label: "Redis",
-    sub: "ARQ job queues",
+    id: "queue",
+    label: "Job queue",
+    redacted: true,
+    sub: "",
     x: 610,
     y: 300,
     kind: "store",
-    info: "Queues between pipeline stages. A stage picks a job up when one of its pods has a free slot."
+    info: "Buffers work between pipeline stages, so each stage takes a job when it has a free slot."
   },
   {
-    id: "similarity",
-    label: "similarity-checker",
-    sub: "embed → pgvector",
+    id: "stage1",
+    label: "Stage 1",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 80,
     kind: "worker",
@@ -4504,12 +5954,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 4,
-    info: "Embeds each incoming question and searches pgvector, so a lesson that already exists is reused instead of rebuilt."
+    info: "First stage. It can finish a job early when the result already exists."
   },
   {
-    id: "enricher",
-    label: "question-enricher",
-    sub: "ARQ worker",
+    id: "stage2",
+    label: "Stage 2",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 195,
     kind: "worker",
@@ -4517,12 +5968,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 4,
-    info: "Enriches the raw question before the lesson is built."
+    info: "Prepares the job for the expensive stage."
   },
   {
-    id: "builder",
-    label: "lesson-builder",
-    sub: "13-step Gemini pipeline",
+    id: "stage3",
+    label: "Stage 3",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 310,
     kind: "worker",
@@ -4530,12 +5982,13 @@ const NODES = [
     min: 1,
     max: 8,
     perPod: 2,
-    info: "Builds the bilingual EN/AR lesson in 13 Gemini steps, then writes it to S3."
+    info: "The long one: a chain of model calls, then the result goes to storage."
   },
   {
-    id: "images",
-    label: "images-manager",
-    sub: "Gemini image · Pillow",
+    id: "stage4",
+    label: "Stage 4",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 425,
     kind: "worker",
@@ -4543,12 +5996,13 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 3,
-    info: "Generates the lesson's illustrations, post-processes them and stores them in S3."
+    info: "Runs in parallel with stage 5 once stage 3 is done."
   },
   {
-    id: "audio",
-    label: "audio-manager",
-    sub: "Gemini TTS",
+    id: "stage5",
+    label: "Stage 5",
+    redacted: true,
+    sub: "",
     x: 800,
     y: 540,
     kind: "worker",
@@ -4556,52 +6010,54 @@ const NODES = [
     min: 1,
     max: 5,
     perPod: 3,
-    info: "Narrates the lesson with Gemini TTS and stores the audio in S3."
+    info: "Runs in parallel with stage 4 once stage 3 is done."
   },
   {
-    id: "gemini",
-    label: "Gemini",
-    sub: "text · image · TTS",
+    id: "ai",
+    label: "AI provider",
+    redacted: true,
+    sub: "",
     x: 1005,
     y: 250,
     kind: "external",
-    info: "External model API. Everything in the pipeline depends on it, so its failures are the ones worth rehearsing."
+    info: "An external model API that the pipeline depends on, which makes its outages the ones worth rehearsing."
   },
   {
-    id: "s3",
-    label: "S3",
-    sub: "lessons · media",
+    id: "store",
+    label: "Object storage",
+    redacted: true,
+    sub: "",
     x: 1005,
     y: 480,
     kind: "store",
-    info: "Lesson JSON, illustrations and narration."
+    info: "Where the pipeline's outputs land."
   }
 ];
 const EDGES = [
-  { a: "app", b: "ingress" },
-  { a: "admin", b: "ingress" },
-  { a: "stripe", b: "ingress" },
-  { a: "ingress", b: "hub" },
-  { a: "hub", b: "redis" },
-  { a: "hub", b: "postgres" },
-  { a: "redis", b: "similarity" },
-  { a: "redis", b: "enricher" },
-  { a: "redis", b: "builder" },
-  { a: "redis", b: "images" },
-  { a: "redis", b: "audio" },
-  { a: "similarity", b: "gemini" },
-  { a: "enricher", b: "gemini" },
-  { a: "builder", b: "gemini" },
-  { a: "images", b: "gemini" },
-  { a: "audio", b: "gemini" },
-  { a: "similarity", b: "postgres", arc: 0 },
-  { a: "builder", b: "s3" },
-  { a: "images", b: "s3" },
-  { a: "audio", b: "s3" },
-  // Workers patch status back to the hub over HTTP.
-  { a: "similarity", b: "hub", callback: true, arc: -70 },
-  { a: "images", b: "hub", callback: true, arc: 60 },
-  { a: "audio", b: "hub", callback: true, arc: 90 }
+  { a: "mobile", b: "edge" },
+  { a: "web", b: "edge" },
+  { a: "payments", b: "edge" },
+  { a: "edge", b: "api" },
+  { a: "api", b: "queue" },
+  { a: "api", b: "db" },
+  { a: "queue", b: "stage1" },
+  { a: "queue", b: "stage2" },
+  { a: "queue", b: "stage3" },
+  { a: "queue", b: "stage4" },
+  { a: "queue", b: "stage5" },
+  { a: "stage1", b: "ai" },
+  { a: "stage2", b: "ai" },
+  { a: "stage3", b: "ai" },
+  { a: "stage4", b: "ai" },
+  { a: "stage5", b: "ai" },
+  { a: "stage1", b: "db", arc: 0 },
+  { a: "stage3", b: "store" },
+  { a: "stage4", b: "store" },
+  { a: "stage5", b: "store" },
+  // Stages report status back to the API.
+  { a: "stage1", b: "api", callback: true, arc: -70 },
+  { a: "stage4", b: "api", callback: true, arc: 60 },
+  { a: "stage5", b: "api", callback: true, arc: 90 }
 ];
 const NODE_W = 150;
 const NODE_H = 54;
@@ -4654,18 +6110,18 @@ const READINESS_MS = 1900;
 const HTTP_TIMEOUT_MS = 3500;
 const MAX_ATTEMPTS = 4;
 const RETRY_BASE_MS = 500;
-const BUILD_STEPS = 13;
+const STEPS = [6, 12];
 const REUSE_RATE = 0.3;
 const WINDOW_MS = 2e4;
 const rand = (a, b) => a + Math.random() * (b - a);
-const RATES = { read: 5, question: 0.9, webhook: 0.25 };
+const RATES = { read: 5, job: 0.9, webhook: 0.25 };
 class Simulation {
   now = 0;
   speed = 1;
   paused = false;
   traffic = 1;
   autoscale = true;
-  geminiDown = false;
+  modelDown = false;
   spikeUntil = -1;
   packets = [];
   services = {};
@@ -4676,11 +6132,11 @@ class Simulation {
   deadLettered = 0;
   failed = 0;
   done = [];
-  geminiCalls = [];
+  modelCalls = [];
   heap = [];
   seq = 0;
   ids = 0;
-  nextArrival = { read: 0, question: 0, webhook: 0 };
+  nextArrival = { read: 0, job: 0, webhook: 0 };
   lengths = {};
   nextScale = 0;
   constructor() {
@@ -4753,13 +6209,13 @@ class Simulation {
     const cutoff = this.now - WINDOW_MS;
     if (this.done.length && this.done[0].t < cutoff)
       this.done = this.done.filter((d) => d.t >= cutoff);
-    if (this.geminiCalls.length && this.geminiCalls[0] < this.now - 5e3)
-      this.geminiCalls = this.geminiCalls.filter((t) => t >= this.now - 5e3);
+    if (this.modelCalls.length && this.modelCalls[0] < this.now - 5e3)
+      this.modelCalls = this.modelCalls.filter((t) => t >= this.now - 5e3);
   }
   // ---- traffic -------------------------------------------------------------
   arrivals(until) {
     const boost = this.now < this.spikeUntil ? 5 : 1;
-    for (const flow of ["read", "question", "webhook"]) {
+    for (const flow of ["read", "job", "webhook"]) {
       const rate = RATES[flow] * this.traffic * boost / 1e3;
       if (rate <= 0) continue;
       if (this.nextArrival[flow] < this.now) this.nextArrival[flow] = this.now;
@@ -4771,10 +6227,10 @@ class Simulation {
     }
   }
   start(flow, traced) {
-    const run = flow === "read" ? this.read : flow === "question" ? this.question : this.webhook;
+    const run = flow === "read" ? this.read : flow === "job" ? this.pipelineJob : this.webhook;
     const t0 = this.now;
     const net = { visual: 0, modelled: 0 };
-    const ms = () => flow === "question" ? this.now - t0 : this.now - t0 - net.visual + net.modelled;
+    const ms = () => flow === "job" ? this.now - t0 : this.now - t0 - net.visual + net.modelled;
     if (traced) this.trace = { id: ++this.ids, spans: [], start: t0 };
     run.call(this, traced, net).then(
       (outcome) => {
@@ -4783,7 +6239,7 @@ class Simulation {
           t: this.now,
           ms: ms(),
           ok: true,
-          built: outcome === "lesson built"
+          built: outcome === "job done"
         });
         if (traced && this.trace) {
           this.trace.end = this.now;
@@ -4881,28 +6337,28 @@ class Simulation {
     await this.sleep(ms);
     if (t.aborted) throw new Aborted("pod killed");
   }
-  async gemini(from, flow, traced, what, ms) {
-    const s = this.span(traced, what, "gemini");
-    await this.travel(from, "gemini", flow, traced);
-    this.geminiCalls.push(this.now);
-    if (this.geminiDown && Math.random() < 0.85) {
+  async model(from, flow, traced, what, ms) {
+    const s = this.span(traced, what, "ai");
+    await this.travel(from, "ai", flow, traced);
+    this.modelCalls.push(this.now);
+    if (this.modelDown && Math.random() < 0.85) {
       await this.sleep(rand(150, 300));
       this.services[from].lastError = this.now;
-      await this.travel("gemini", from, flow, traced, true);
+      await this.travel("ai", from, flow, traced, true);
       this.close(s, "error");
-      throw new ModelError("Gemini 503");
+      throw new ModelError("AI provider 503");
     }
     await this.sleep(ms);
-    await this.travel("gemini", from, flow, traced);
+    await this.travel("ai", from, flow, traced);
     this.close(s);
   }
   /**
-   * One pipeline stage as an ARQ job: wait for a slot, run, and on failure
+   * One pipeline stage of a job: wait for a slot, run, and on failure
    * give the slot back and come back later with exponential backoff.
    */
   async job(stage, traced, run) {
     for (let attempt = 1; ; attempt++) {
-      const q = this.span(traced, `queued · ${stage}`, "redis");
+      const q = this.span(traced, `queued · ${stage}`, "queue");
       const token = await this.acquire(stage);
       this.close(q);
       const s = this.span(traced, attempt > 1 ? `${stage} (attempt ${attempt})` : stage, stage);
@@ -4923,150 +6379,151 @@ class Simulation {
         this.retries++;
         if (e instanceof Aborted) continue;
         const backoff = RETRY_BASE_MS * 2 ** (attempt - 1) * rand(0.8, 1.2);
-        const d = this.span(traced, `backoff ${Math.round(backoff)}ms`, "redis");
+        const d = this.span(traced, `backoff ${Math.round(backoff)}ms`, "queue");
         await this.sleep(backoff);
         this.close(d, "retry");
       }
     }
   }
   // ---- flows ---------------------------------------------------------------
-  /** GET /lessons/{id}: through Ingress to the hub, a Postgres read, and back. */
+  /** A read: through the edge to the API, a database read, and back. */
   async read(traced, net) {
-    const client = Math.random() < 0.8 ? "app" : "admin";
-    await this.travel(client, "ingress", "read", traced, false, net);
-    await this.http(client, "read", traced, "GET /lessons/{id}", net, async (t) => {
+    const client = Math.random() < 0.8 ? "mobile" : "web";
+    await this.travel(client, "edge", "read", traced, false, net);
+    await this.http(client, "read", traced, "GET request", net, async (t) => {
       await this.busy(t, rand(4, 12));
-      const s = this.span(traced, "SELECT lesson", "postgres");
-      await this.travel("hub", "postgres", "read", traced, false, net);
+      const s = this.span(traced, "DB read", "db");
+      await this.travel("api", "db", "read", traced, false, net);
       await this.sleep(rand(4, 18));
-      await this.travel("postgres", "hub", "read", traced, false, net);
+      await this.travel("db", "api", "read", traced, false, net);
       this.close(s);
       if (t.aborted) throw new Aborted("pod killed");
     });
-    await this.travel("ingress", client, "read", traced, false, net);
+    await this.travel("edge", client, "read", traced, false, net);
     return "200 OK";
   }
-  /** A billing webhook updating entitlement from live subscription state. */
+  /** A third-party webhook updating a record. */
   async webhook(traced, net) {
-    await this.travel("stripe", "ingress", "webhook", traced, false, net);
-    await this.http("stripe", "webhook", traced, "POST /webhooks/billing", net, async (t) => {
+    await this.travel("payments", "edge", "webhook", traced, false, net);
+    await this.http("payments", "webhook", traced, "POST webhook", net, async (t) => {
       await this.busy(t, rand(3, 8));
-      const s = this.span(traced, "UPDATE entitlement", "postgres");
-      await this.travel("hub", "postgres", "webhook", traced, false, net);
+      const s = this.span(traced, "DB write", "db");
+      await this.travel("api", "db", "webhook", traced, false, net);
       await this.sleep(rand(6, 20));
-      await this.travel("postgres", "hub", "webhook", traced, false, net);
+      await this.travel("db", "api", "webhook", traced, false, net);
       this.close(s);
     });
-    await this.travel("ingress", "stripe", "webhook", traced, false, net);
+    await this.travel("edge", "payments", "webhook", traced, false, net);
     return "200 OK";
   }
   /**
-   * The hub leg of an HTTP request: Ingress waits for a Ready hub pod (504
+   * The API leg of an HTTP request: the edge waits for a ready instance (504
    * after a while), and a pod dying mid-request turns into a 502.
    */
   async http(client, flow, traced, name, net, handler) {
-    const s = this.span(traced, name, "hub");
+    const s = this.span(traced, name, "api");
     let token;
     try {
-      token = await this.acquire("hub", HTTP_TIMEOUT_MS);
+      token = await this.acquire("api", HTTP_TIMEOUT_MS);
     } catch (e) {
       this.close(s, "error");
-      await this.travel("ingress", client, flow, traced, true, net);
+      await this.travel("edge", client, flow, traced, true, net);
       throw e;
     }
-    await this.travel("ingress", "hub", flow, traced, false, net);
+    await this.travel("edge", "api", flow, traced, false, net);
     try {
       await handler(token);
     } catch (e) {
       this.release(token);
       this.close(s, "error");
-      this.services.hub.lastError = this.now;
-      await this.travel("hub", "ingress", flow, traced, true, net);
-      await this.travel("ingress", client, flow, traced, true, net);
+      this.services.api.lastError = this.now;
+      await this.travel("api", "edge", flow, traced, true, net);
+      await this.travel("edge", client, flow, traced, true, net);
       throw e instanceof Aborted ? new Error("502 · pod killed mid-request") : e;
     }
     this.release(token);
-    await this.travel("hub", "ingress", flow, traced, false, net);
+    await this.travel("api", "edge", flow, traced, false, net);
     this.close(s);
   }
   /**
-   * A learner asks a question. The hub answers 202 at once and enqueues the
-   * job; the pipeline then checks for an existing lesson, enriches, builds in
-   * 13 Gemini steps, and fans out to images and audio in parallel.
+   * An async job. The API answers 202 at once and enqueues it; stage 1 may
+   * finish it early, otherwise it runs through stages 2 and 3 and fans out to
+   * stages 4 and 5 in parallel.
    */
-  async question(traced, _net) {
-    await this.travel("app", "ingress", "question", traced);
-    await this.http("app", "question", traced, "POST /questions → 202", void 0, async (t) => {
+  async pipelineJob(traced, _net) {
+    await this.travel("mobile", "edge", "job", traced);
+    await this.http("mobile", "job", traced, "POST request → 202", void 0, async (t) => {
       await this.busy(t, rand(6, 14));
-      await this.travel("hub", "redis", "question", traced);
-      await this.travel("redis", "hub", "question", traced);
+      await this.travel("api", "queue", "job", traced);
+      await this.travel("queue", "api", "job", traced);
     });
-    void this.travel("ingress", "app", "question", traced);
-    await this.travel("redis", "similarity", "question", traced);
+    void this.travel("edge", "mobile", "job", traced);
+    await this.travel("queue", "stage1", "job", traced);
     let duplicate = false;
-    await this.job("similarity", traced, async (t) => {
-      await this.gemini("similarity", "question", traced, "embed question", rand(200, 380));
-      const s2 = this.span(traced, "pgvector search", "postgres");
-      await this.travel("similarity", "postgres", "question", traced);
+    await this.job("stage1", traced, async (t) => {
+      await this.model("stage1", "job", traced, "model call", rand(200, 380));
+      const s2 = this.span(traced, "DB lookup", "db");
+      await this.travel("stage1", "db", "job", traced);
       await this.sleep(rand(15, 45));
-      await this.travel("postgres", "similarity", "question", traced);
+      await this.travel("db", "stage1", "job", traced);
       this.close(s2);
       if (t.aborted) throw new Aborted("pod killed");
       duplicate = !traced && Math.random() < REUSE_RATE;
     });
     if (duplicate) {
-      await this.travel("similarity", "hub", "question", traced);
+      await this.travel("stage1", "api", "job", traced);
       this.reused++;
-      return "reused an existing lesson";
+      return "finished early (result existed)";
     }
-    await this.travel("similarity", "redis", "question", traced);
-    await this.travel("redis", "enricher", "question", traced);
-    await this.job("enricher", traced, async (t) => {
-      await this.gemini("enricher", "question", traced, "enrich question", rand(350, 650));
+    await this.travel("stage1", "queue", "job", traced);
+    await this.travel("queue", "stage2", "job", traced);
+    await this.job("stage2", traced, async (t) => {
+      await this.model("stage2", "job", traced, "model call", rand(350, 650));
       if (t.aborted) throw new Aborted("pod killed");
     });
-    await this.travel("enricher", "redis", "question", traced);
-    await this.travel("redis", "builder", "question", traced);
-    await this.job("builder", traced, async (t) => {
-      const svc = this.services.builder;
-      for (let i = 1; i <= BUILD_STEPS; i++) {
+    await this.travel("stage2", "queue", "job", traced);
+    await this.travel("queue", "stage3", "job", traced);
+    await this.job("stage3", traced, async (t) => {
+      const svc = this.services.stage3;
+      const steps = Math.round(rand(...STEPS));
+      for (let i = 1; i <= steps; i++) {
         svc.step = i;
-        await this.gemini("builder", "question", traced, `build step ${i}/13`, rand(160, 380));
+        await this.model("stage3", "job", traced, `model call ${i}`, rand(160, 380));
         if (t.aborted) throw new Aborted("pod killed");
       }
-      const s2 = this.span(traced, "PUT lesson.json", "s3");
-      await this.travel("builder", "s3", "question", traced);
-      await this.travel("s3", "builder", "question", traced);
+      const s2 = this.span(traced, "write object", "store");
+      await this.travel("stage3", "store", "job", traced);
+      await this.travel("store", "stage3", "job", traced);
       this.close(s2);
     });
-    await this.travel("builder", "redis", "question", traced);
-    const media = (stage, model, ms) => (async () => {
-      await this.travel("redis", stage, "question", traced);
+    await this.travel("stage3", "queue", "job", traced);
+    const media = (stage, what, ms) => (async () => {
+      await this.travel("queue", stage, "job", traced);
       await this.job(stage, traced, async (t) => {
-        await this.gemini(stage, "question", traced, model, rand(...ms));
-        const s2 = this.span(traced, `PUT ${stage}`, "s3");
-        await this.travel(stage, "s3", "question", traced);
-        await this.travel("s3", stage, "question", traced);
+        await this.model(stage, "job", traced, what, rand(...ms));
+        const s2 = this.span(traced, `PUT ${stage}`, "store");
+        await this.travel(stage, "store", "job", traced);
+        await this.travel("store", stage, "job", traced);
         this.close(s2);
         if (t.aborted) throw new Aborted("pod killed");
       });
-      const p = this.span(traced, `PATCH status (${stage})`, "hub");
-      await this.travel(stage, "hub", "question", traced);
+      const p = this.span(traced, `PATCH status (${stage})`, "api");
+      await this.travel(stage, "api", "job", traced);
       this.close(p);
     })();
     await Promise.all([
-      media("images", "generate illustrations", [1100, 1900]),
-      media("audio", "TTS narration", [800, 1500])
+      media("stage4", "model call", [1100, 1900]),
+      media("stage5", "model call", [800, 1500])
     ]);
-    const s = this.span(traced, "UPDATE lesson ready", "postgres");
-    await this.travel("hub", "postgres", "question", traced);
-    await this.travel("postgres", "hub", "question", traced);
+    const s = this.span(traced, "DB write", "db");
+    await this.travel("api", "db", "job", traced);
+    await this.travel("db", "api", "job", traced);
     this.close(s);
     this.built++;
-    return "lesson built";
+    return "job done";
   }
   // ---- chaos and scaling -------------------------------------------------
-  /** Kills one running pod; Kubernetes restarts it after a back-off. */
+  /** Kills one running instance; it is restarted after a back-off. */
   killPod(id) {
     const svc = this.services[id];
     const victims = svc?.pods.filter((p) => p.state === "ready");
@@ -5135,8 +6592,8 @@ class Simulation {
       errorRate: last5.length ? errors / last5.length : 0,
       readP50: pct("read", 0.5),
       readP95: pct("read", 0.95),
-      lessonP50: pct("question", 0.5, true),
-      geminiPerSec: this.geminiCalls.length / 5,
+      jobP50: pct("job", 0.5, true),
+      modelPerSec: this.modelCalls.length / 5,
       built: this.built,
       reused: this.reused,
       retries: this.retries,
@@ -5157,13 +6614,13 @@ class Simulation {
       util: cap ? busy / cap : svc.waiters.length ? 1 : 0,
       queued: svc.waiters.length,
       erroredRecently: this.now - svc.lastError < 900,
-      step: id === "builder" && busy > 0 ? svc.step : 0
+      step: id === "stage3" && busy > 0 ? svc.step : 0
     };
   }
 }
 const COLORS = {
   read: "#22d3ee",
-  question: "#a78bfa",
+  job: "#a78bfa",
   webhook: "#fbbf24",
   failed: "#f43f5e",
   traced: "#ffffff"
@@ -5182,6 +6639,16 @@ function pathD(e) {
   const [p0, p1, p2, p3] = curve(e);
   return `M${p0.x},${p0.y} C${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}`;
 }
+function redactedTag(id) {
+  let h = 2166136261;
+  for (const c of id) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  const abc = "abcdefghijklmnopqrstuvwxyz";
+  const word = (n) => Array.from({ length: n }, () => {
+    h = Math.imul(h ^ h >>> 13, 1540483477);
+    return abc[Math.abs(h) % 26];
+  }).join("");
+  return `${word(5 + Math.abs(h) % 4)} · ${word(4 + Math.abs(h >> 3) % 5)}`;
+}
 function fmtMs(ms) {
   if (!ms) return "—";
   return ms >= 1e3 ? `${(ms / 1e3).toFixed(1)}s` : `${Math.round(ms)}ms`;
@@ -5192,13 +6659,15 @@ function SystemMap() {
   const edgeRefs = reactExports.useRef({});
   const boxRef = reactExports.useRef(null);
   const [snap, setSnap] = reactExports.useState(null);
-  const [selected, setSelected] = reactExports.useState("hub");
+  const [incident, setIncident] = reactExports.useState(false);
+  const incidentSeen = reactExports.useRef(false);
+  const [selected, setSelected] = reactExports.useState("api");
   const [ui, setUi] = reactExports.useState({
     paused: false,
     speed: 1,
     traffic: 1,
     autoscale: true,
-    geminiDown: false
+    modelDown: false
   });
   reactExports.useEffect(() => {
     const sim2 = new Simulation();
@@ -5268,6 +6737,12 @@ function SystemMap() {
         lastSnap = t;
         const nodes = {};
         for (const n of NODES) nodes[n.id] = sim2.nodeState(n.id);
+        const api = nodes.api;
+        if (!incidentSeen.current && api && api.pods.length && !api.pods.includes("ready")) {
+          incidentSeen.current = true;
+          setIncident(true);
+          solveMystery("outage");
+        }
         setSnap({
           nodes,
           stats: sim2.stats(),
@@ -5295,9 +6770,9 @@ function SystemMap() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: boxRef, className: "rounded-2xl border border-border bg-card/40 p-3 sm:p-5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex flex-wrap items-end justify-between gap-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300", children: "Live · getXplain.ai under the hood" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-[0.25em] text-amber-300", children: "Live · flagship system · redacted" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-1 text-xl font-bold tracking-tight sm:text-2xl", children: "Break production. It's a simulation." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 max-w-xl text-xs text-muted-foreground", children: "The real architecture, running as a discrete-event simulation in your browser. Click any node to inspect it, kill its pods, or take Gemini down, and watch retries, restarts and autoscaling handle it." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 max-w-xl text-xs text-muted-foreground", children: "A redacted model of a production system I work on, running as a discrete-event simulation in your browser. Names and internals are withheld. Click any node to inspect it, kill its instances, or take the AI provider down, and watch retries, restarts and autoscaling handle it." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2 font-mono text-[11px]", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -5375,82 +6850,101 @@ function SystemMap() {
           "button",
           {
             type: "button",
-            onClick: () => sim?.start("question", true),
+            onClick: () => sim?.start("job", true),
             className: "inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1.5 font-semibold text-primary-foreground hover:opacity-90",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Radar, { className: "h-3.5 w-3.5" }),
-              " Trace a question"
+              " Trace a job"
             ]
           }
         )
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-1 font-mono text-[10px] text-muted-foreground sm:hidden", children: "← swipe the map · tap a node →" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "svg",
-      {
-        viewBox: "0 0 1100 620",
-        className: "min-w-[760px] w-full select-none",
-        role: "img",
-        "aria-label": "Architecture map of getXplain.ai with live simulated traffic",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2", result: "b" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow-strong", x: "-300%", y: "-300%", width: "700%", height: "700%", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "4", result: "b" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "platform", dashed: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "arq pipeline", dashed: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
-          EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "path",
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative -mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0", children: [
+      incident && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute left-1/2 top-4 z-10 w-[min(92%,420px)] -translate-x-1/2 rounded-xl border border-rose-500/60 bg-background/95 p-4 font-mono text-xs shadow-2xl backdrop-blur", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-rose-400", children: "INC-404 · SEV-1" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
             {
-              ref: (el) => {
-                edgeRefs.current[edgeKey(e.a, e.b)] = el;
+              type: "button",
+              onClick: () => setIncident(false),
+              className: "text-muted-foreground hover:text-foreground",
+              children: "dismiss"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-foreground", children: "Core API has no ready instances. Every request is a 504." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-muted-foreground", children: "Root cause: someone broke prod. It was you. Recovery: automatic, give it a few seconds." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "svg",
+        {
+          viewBox: "0 0 1100 620",
+          className: "min-w-[760px] w-full select-none",
+          role: "img",
+          "aria-label": "Redacted architecture map with live simulated traffic",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2", result: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow-strong", x: "-300%", y: "-300%", width: "700%", height: "700%", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "4", result: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("filter", { id: "sysmap-redact", x: "-10%", y: "-60%", width: "120%", height: "220%", children: /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2.4" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "core", dashed: true }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "async pipeline", dashed: true }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
+            EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "path",
+              {
+                ref: (el) => {
+                  edgeRefs.current[edgeKey(e.a, e.b)] = el;
+                },
+                d: pathD(e),
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: e.callback ? 1 : 1.4,
+                strokeDasharray: e.callback ? "4 5" : void 0,
+                className: "text-foreground transition-[stroke-opacity] duration-300"
               },
-              d: pathD(e),
-              fill: "none",
-              stroke: "currentColor",
-              strokeWidth: e.callback ? 1 : 1.4,
-              strokeDasharray: e.callback ? "4 5" : void 0,
-              className: "text-foreground transition-[stroke-opacity] duration-300"
-            },
-            edgeKey(e.a, e.b)
-          )),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("g", { ref: packetLayer }),
-          NODES.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            NodeBox,
-            {
-              def: n,
-              state: snap?.nodes[n.id] ?? null,
-              selected: selected === n.id,
-              geminiDown: n.id === "gemini" && ui.geminiDown,
-              onSelect: () => setSelected(n.id)
-            },
-            n.id
-          ))
-        ]
-      }
-    ) }),
+              edgeKey(e.a, e.b)
+            )),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("g", { ref: packetLayer }),
+            NODES.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              NodeBox,
+              {
+                def: n,
+                state: snap?.nodes[n.id] ?? null,
+                selected: selected === n.id,
+                modelDown: n.id === "ai" && ui.modelDown,
+                onSelect: () => setSelected(n.id)
+              },
+              n.id
+            ))
+          ]
+        }
+      )
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "GET lesson" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.question, label: "question → lesson pipeline" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.webhook, label: "billing webhook" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "read request" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.job, label: "async job" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.webhook, label: "webhook" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.failed, label: "failure" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.traced, label: "traced request" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto", children: "pods:" }),
@@ -5467,7 +6961,7 @@ function SystemMap() {
           value: s ? `${fmtMs(s.readP50)} / ${fmtMs(s.readP95)}` : "—"
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lesson build p50", value: s ? fmtMs(s.lessonP50) : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "job p50", value: s ? fmtMs(s.jobP50) : "—" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Metric,
         {
@@ -5476,8 +6970,8 @@ function SystemMap() {
           warn: !!s && s.errorRate > 0.02
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "gemini calls", value: s ? `${s.geminiPerSec.toFixed(1)}/s` : "—" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "lessons built · reused", value: s ? `${s.built} · ${s.reused}` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "model calls", value: s ? `${s.modelPerSec.toFixed(1)}/s` : "—" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Metric, { label: "jobs done · early", value: s ? `${s.built} · ${s.reused}` : "—" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Metric,
         {
@@ -5491,7 +6985,15 @@ function SystemMap() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-background/50 p-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: "Inspector" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1 text-lg font-bold", children: sel.label }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[11px] text-primary", children: sel.sub }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "font-mono text-[11px] text-primary",
+            style: sel.redacted ? { filter: "blur(3px)", userSelect: "none" } : void 0,
+            "aria-label": sel.redacted ? "redacted" : void 0,
+            children: sel.redacted ? redactedTag(sel.id) : sel.sub
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-xs leading-relaxed text-muted-foreground", children: sel.info }),
         selState && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 space-y-2 font-mono text-[11px]", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5", children: [
@@ -5519,6 +7021,11 @@ function SystemMap() {
             selState.queued,
             sel.max ? ` · autoscale ${sel.min}–${sel.max}` : ""
           ] }),
+          selected === "api" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-amber-300/80", children: [
+            "SLO: never 0/",
+            selState.pods.length,
+            " ready. (Instances restart in ~3s.)"
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
@@ -5532,20 +7039,20 @@ function SystemMap() {
             }
           )
         ] }),
-        selected === "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        selected === "ai" && /* @__PURE__ */ jsxRuntimeExports.jsx(
           "button",
           {
             type: "button",
-            onClick: () => set("geminiDown", !ui.geminiDown),
-            className: `mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.geminiDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`,
-            children: ui.geminiDown ? "Restore Gemini" : "Simulate a Gemini outage"
+            onClick: () => set("modelDown", !ui.modelDown),
+            className: `mt-3 inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-[11px] ${ui.modelDown ? "border-emerald-400/50 text-emerald-300" : "border-rose-500/50 text-rose-300 hover:bg-rose-500/10"}`,
+            children: ui.modelDown ? "Restore the AI provider" : "Simulate an AI provider outage"
           }
         ),
-        !selState && selected !== "gemini" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] text-muted-foreground", children: "Managed or external: not something you can kill from here. Try the API hub or a worker." })
+        !selState && selected !== "ai" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] text-muted-foreground", children: "Managed or external: not something you can kill from here. Try the core API or a worker." })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TracePanel, { trace: snap?.trace ?? null, now: snap?.now ?? 0 })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground", children: "Services and flows follow the production system; traffic, timings (compressed), replica counts and failures are simulated." })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-[10px] leading-relaxed text-muted-foreground", children: "Redacted on purpose: service names, internals and exact topology are withheld or generalised, and blurred tags are placeholders. Traffic, timings (compressed), replica counts and failures are simulated." })
   ] });
 }
 function Zone({
@@ -5591,12 +7098,12 @@ function NodeBox({
   def,
   state,
   selected,
-  geminiDown,
+  modelDown,
   onSelect
 }) {
   const x = def.x - NODE_W / 2;
   const y = def.y - NODE_H / 2;
-  const hot = !!state?.erroredRecently || geminiDown;
+  const hot = !!state?.erroredRecently || modelDown;
   const accent = def.kind === "worker" ? "#a78bfa" : def.kind === "service" || def.kind === "edge" ? "#22d3ee" : def.kind === "external" ? "#fbbf24" : "#94a3b8";
   const util = state?.util ?? 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -5637,7 +7144,8 @@ function NodeBox({
             fontFamily: "ui-monospace, monospace",
             fill: "currentColor",
             opacity: 0.55,
-            children: state?.step ? `step ${state.step}/13 · ${def.sub.split(" ")[0]}` : def.sub
+            filter: !state?.step && def.redacted ? "url(#sysmap-redact)" : void 0,
+            children: state?.step ? `model call ${state.step}` : def.redacted ? redactedTag(def.id) : def.sub
           }
         ),
         state?.pods.slice(0, 9).map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: x + 14 + i * 9, cy: y + 46, r: 3, fill: POD_COLORS[p], children: p === "starting" && /* @__PURE__ */ jsxRuntimeExports.jsx("animate", { attributeName: "opacity", values: "1;.3;1", dur: "0.8s", repeatCount: "indefinite" }) }, i)),
@@ -5679,7 +7187,7 @@ function NodeBox({
             }
           )
         ] }),
-        geminiDown && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+        modelDown && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + NODE_W - 36, y: y - 9, width: 44, height: 18, rx: 9, fill: "#f43f5e" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "text",
@@ -5713,7 +7221,7 @@ function Dot({ c, label }) {
 const SPAN_COLORS = { ok: "#22d3ee", error: "#f43f5e", retry: "#f59e0b" };
 function TracePanel({ trace, now: now2 }) {
   if (!trace) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground", children: "Press “Trace a question” to follow one request through every service, as a distributed trace." });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-40 items-center justify-center rounded-xl border border-dashed border-border p-4 text-center font-mono text-[11px] text-muted-foreground", children: "Press “Trace a job” to follow one request through every stage, as a distributed trace." });
   }
   const end = trace.end ?? now2;
   const total = Math.max(1, end - trace.start);
@@ -5806,6 +7314,18 @@ function TierLabel({ n, label, note }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "normal-case tracking-normal text-muted-foreground", children: note })
   ] });
 }
+function StatusLight() {
+  const [status, setStatus] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    fetch("/status.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((j) => setStatus(j?.status ?? null)).catch(() => setStatus(null));
+  }, []);
+  if (!status) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 font-mono", title: "live from /status.json", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-emerald-400" }),
+    "all systems ",
+    status
+  ] });
+}
 function SiteFooter() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "py-10 border-t border-border text-xs text-muted-foreground flex flex-wrap justify-between gap-4", children: [
@@ -5816,6 +7336,7 @@ function SiteFooter() {
         profile.name,
         ". Built with care."
       ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatusLight, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-4", children: links.map((l) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "a",
         {
@@ -5835,7 +7356,8 @@ function SiteFooter() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground font-medium", children: profile.name }),
         " — implementation made by AI."
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-primary/80", children: "Hi there i love u <3 :)" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-primary/80", children: "Hi there i love u <3 :)" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 select-text font-mono text-[10px] text-muted-foreground/40", children: "// TODO(dev): remove the debug hook before launch. it's still listening in the console." })
     ] })
   ] });
 }
@@ -6511,25 +8033,6 @@ function useTerminalWindow(enabled) {
   };
   return { pos, size, onHeaderMouseDown, onResizeMouseDown };
 }
-const USERNAME_EVENT = "usernamechange";
-const DEFAULT_USERNAME = "guest";
-function getUsername() {
-  return readString(STORAGE_KEYS.username) || DEFAULT_USERNAME;
-}
-function setStoredUsername(name) {
-  writeString(STORAGE_KEYS.username, name);
-  window.dispatchEvent(new CustomEvent(USERNAME_EVENT, { detail: name }));
-}
-function useUsername() {
-  const [username, setUsername] = reactExports.useState(DEFAULT_USERNAME);
-  reactExports.useEffect(() => {
-    setUsername(getUsername());
-    const onChange = (e) => setUsername(e.detail || DEFAULT_USERNAME);
-    window.addEventListener(USERNAME_EVENT, onChange);
-    return () => window.removeEventListener(USERNAME_EVENT, onChange);
-  }, []);
-  return username;
-}
 let countedThisLoad = null;
 function useVisitCount() {
   const [visits, setVisits] = reactExports.useState(0);
@@ -6704,6 +8207,7 @@ const commands = [
     run: ({ print, printHelp }) => {
       print(HELP_HEADER);
       for (const command of commands) {
+        if (command.hidden) continue;
         printHelp(command.usage ?? command.name, command.description);
       }
     }
@@ -6859,6 +8363,160 @@ const commands = [
     }
   },
   {
+    name: "car",
+    aliases: ["cars", "vehicle", "garage"],
+    usage: "car [drive|on|off|car|racer|truck|moto]",
+    description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
+    run: ({ args, print, actions }) => {
+      const arg = args[0]?.toLowerCase();
+      const kind = VEHICLE_KINDS.find((k) => k === arg);
+      if (!arg) {
+        const v = readVehicle();
+        print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
+        print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
+        print("drive    `car drive`, or click the car bottom-left (desktop)");
+        print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
+        print("crash    knock headings, buttons and images across the page;");
+        print("         hits chain into whatever they slide into");
+        print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
+        print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("fun fact it can't resist the ACPC track. it drives right into the party.");
+        print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
+        return;
+      }
+      if (arg === "on" || arg === "off") {
+        const on = arg === "on";
+        if (readVehicle().on === on) {
+          print(
+            on ? "It's already on — bottom-left. `car drive` to take the wheel." : "It's already parked. `car on` brings it back."
+          );
+          return;
+        }
+        setVehicle({ on });
+        print(on ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.");
+        return;
+      }
+      if (arg === "drive" || arg === "play" || arg === "go") {
+        if (!canDriveHere()) {
+          print("Driving needs a keyboard — try it on a desktop.");
+          return;
+        }
+        if (!readVehicle().on) setVehicle({ on: true });
+        print("Closing the terminal… you're driving! Press Stop driving to come back.");
+        actions.close();
+        window.setTimeout(requestDrive, 450);
+        return;
+      }
+      if (kind) {
+        setVehicle({ on: true, kind });
+        print(`Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it to drive.`);
+        return;
+      }
+      print("Usage: car [on|off|car|racer|truck|moto]");
+    }
+  },
+  {
+    name: "mysteries",
+    aliases: ["mystery", "secrets"],
+    hidden: true,
+    description: "the hidden mysteries you have found",
+    run: ({ print }) => {
+      const solved = solvedMysteries();
+      print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      if (!solved.length) print("Hidden around the site. Every one leaves a clue — look closely.");
+      for (const m of MYSTERIES) {
+        const done = solved.includes(m.id);
+        const tag = m.dev ? " [dev]" : "";
+        print(done ? `  ✔ ${m.title}${tag}` : `  ? ???${tag} — ${m.riddle}`);
+      }
+      if (solved.length === MYSTERIES.length)
+        print("All of them. Click the counter for your certificate.");
+    }
+  },
+  {
+    name: "ssh",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const target = rawArgs.trim().toLowerCase();
+      if (target === "alice@ahmed.dev") {
+        print("Connecting to ahmed.dev…");
+        print("Welcome back, Alice. Last login: the ACPC finals, from a balloon.");
+        print('alice@ahmed.dev:~$ cat notes.txt → "tabs."');
+        confetti();
+        solveMystery("crawler");
+        return;
+      }
+      if (target.endsWith("@ahmed.dev")) {
+        print(`${target}: Permission denied (publickey). Only Alice left her login lying around.`);
+        return;
+      }
+      print("ssh: Could not resolve hostname. Try a user @ahmed.dev.");
+    }
+  },
+  {
+    name: "deploy",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const flags = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (flags === "--force friday") {
+        print("Deploying to production… on a Friday… with --force.");
+        print("🔥 Every check skipped. Nothing caught fire this time. Bold.");
+        confetti();
+        solveMystery("status");
+        return;
+      }
+      print("deploy: refusing to deploy without the release checklist's last item.");
+    }
+  },
+  {
+    name: "hire",
+    hidden: true,
+    description: "",
+    run: ({ print }) => {
+      print("hire: permission denied");
+      print("(only root can make offers. you know how to become root.)");
+    }
+  },
+  {
+    name: "sudo",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const what = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (what === "hire ahmed" || what === "hire ahmed khaled") {
+        print("[sudo] password for recruiter: ••••••••");
+        print(
+          "Permission granted. 🎉 Offer letter queued — the fastest way to send it is `email`."
+        );
+        confetti();
+        solveMystery("sudo");
+        return;
+      }
+      print(`${what || "you"} is not in the sudoers file. This incident will be reported.`);
+    }
+  },
+  {
+    name: "submit",
+    hidden: true,
+    description: "",
+    run: ({ args, print }) => {
+      const answer = (args[0] ?? "").replace(/[^0-9]/g, "");
+      if (!answer) {
+        print("Usage: submit <answer>");
+        return;
+      }
+      print(`Judging… test 1 … test 7 …`);
+      if (fnv(answer) === "3f141389") {
+        print("✅ ACCEPTED · 0.01s · 1 MB. Clean work.");
+        solveMystery("problem");
+      } else {
+        print("❌ WRONG ANSWER on test 1. Read the statement again.");
+      }
+    }
+  },
+  {
     name: "color",
     description: "list | set <key> <#hex> | reset",
     run: runColor
@@ -6937,7 +8595,7 @@ for (const command of commands) {
 function findCommand(name) {
   return byName.get(name);
 }
-const COMMAND_NAMES = [...byName.keys()];
+const COMMAND_NAMES = [...byName.entries()].filter(([, c]) => !c.hidden).map(([n]) => n);
 const SPLIT_PATTERN = new RegExp(`(${HEX_PATTERN.source})`);
 function renderHexInline(text, baseColor) {
   return text.split(SPLIT_PATTERN).map(
@@ -6993,6 +8651,10 @@ const GREETING = [
   {
     kind: "sys",
     text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize."
+  },
+  {
+    kind: "sys",
+    text: "🚗 See the car bottom-left? Click it to drive (desktop): arrows/WASD, shift turbo, space brake — and crash into anything. `car` for the garage."
   }
 ];
 function Terminal({
@@ -7324,9 +8986,22 @@ function Index() {
   useSpotlight();
   reactExports.useEffect(() => setMounted(true), []);
   const changeMode = (mode) => {
+    if (mode !== "closed" && isVehicleDriving()) {
+      refuseTerminal();
+      return;
+    }
     writeString(STORAGE_KEYS.termMode, mode);
     setTermMode(mode);
   };
+  reactExports.useEffect(() => {
+    const onDriving = (e) => {
+      if (!e.detail) return;
+      writeString(STORAGE_KEYS.termMode, "closed");
+      setTermMode("closed");
+    };
+    window.addEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+    return () => window.removeEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+  }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative min-h-screen overflow-x-clip bg-background text-foreground", children: [
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Preloader, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "aria-hidden": true, className: "grain" }),
@@ -7338,6 +9013,8 @@ function Index() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimer, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(BackToTop, {}),
+    mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(PlayCar, {}),
+    mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MysteryHud, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "relative z-10 max-w-5xl mx-auto px-6 pb-24", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Hero, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Stats, {}),
