@@ -12,8 +12,8 @@ import {
 /**
  * A little vehicle that lives on the page.
  *
- * At rest it drives up and down a short stretch of the terminal bar at the
- * foot of the window, small and faded. Every so often it stops and asks, in a
+ * At rest it drives up and down a short stretch at the bottom-left of the
+ * window, just above the terminal bar, small and faded. Every so often it stops and asks, in a
  * speech bubble, "want play!" and then "click on me". On a desktop, clicking
  * it hands over the wheel: arrow keys or WASD drive it anywhere on the page,
  * Shift is turbo, space brakes, and the window scrolls to follow. There are
@@ -57,8 +57,9 @@ const DRAG = 1.6;
 const TURBO = 1.55;
 const IDLE_SPEED = 38;
 const IDLE_SCALE = 0.62;
-/** The terminal bar is 44px tall; the idle stretch runs along its middle. */
-const BAR_MID = 22;
+/** The idle stretch sits bottom-left, above the terminal bar and the robots' heads. */
+const IDLE_LIFT = 118;
+const IDLE_LEFT = 28;
 const IDLE_SPAN = 200;
 const PUSH = 0.14;
 const SPIN = 0.09;
@@ -127,9 +128,12 @@ export function PlayCar() {
     const main = document.querySelector("main");
 
     const zone = () => {
-      const w = window.innerWidth;
-      const x0 = Math.max(130, w * 0.44);
-      return { x0, x1: Math.min(w - 40, x0 + IDLE_SPAN), y: window.innerHeight - BAR_MID };
+      const x0 = IDLE_LEFT;
+      return {
+        x0,
+        x1: Math.min(window.innerWidth - 40, x0 + IDLE_SPAN),
+        y: window.innerHeight - IDLE_LIFT,
+      };
     };
 
     // Idle: viewport coordinates. Driving: page coordinates.
@@ -421,7 +425,7 @@ export function PlayCar() {
         }
         s.scale += (1 - s.scale) * Math.min(1, dt * 8);
       } else {
-        // Idle: back and forth along a short stretch of the terminal bar.
+        // Idle: back and forth along a short stretch at the bottom-left.
         const z = zone();
         s.y = z.y;
         s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);

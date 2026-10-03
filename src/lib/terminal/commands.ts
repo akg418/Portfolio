@@ -281,7 +281,7 @@ export const commands: Command[] = [
     name: "car",
     aliases: ["cars", "vehicle", "garage"],
     usage: "car [on|off|car|racer|truck|moto]",
-    description: "the little vehicle on the terminal bar: switch it on, off, or swap it",
+    description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
     run: ({ args, print }) => {
       const arg = args[0]?.toLowerCase();
       const kind = VEHICLE_KINDS.find((k) => k === arg);
@@ -289,21 +289,19 @@ export const commands: Command[] = [
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("Use `car off`, `car on`, `car truck`. Click it on the bar to drive (desktop).");
+        print("Use `car off`, `car on`, `car truck`. Click it (bottom-left) to drive, on desktop.");
         return;
       }
       if (arg === "on" || arg === "off") {
         setVehicle({ on: arg === "on" });
         print(
-          arg === "on" ? "Engine on. It's back on the bar." : "Parked. `car on` brings it back.",
+          arg === "on" ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.",
         );
         return;
       }
       if (kind) {
         setVehicle({ on: true, kind });
-        print(
-          `Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it on the bar to drive.`,
-        );
+        print(`Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it to drive.`);
         return;
       }
       print("Usage: car [on|off|car|racer|truck|moto]");
