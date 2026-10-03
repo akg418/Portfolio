@@ -1,38 +1,69 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw, Square } from "lucide-react";
+import { VehicleSprite } from "@/components/fx/VehicleSprites";
+import {
+  VEHICLE_KINDS,
+  VEHICLE_LABELS,
+  setVehicle,
+  useVehicle,
+  type VehicleKind,
+} from "@/hooks/useVehicle";
 
 /**
- * A little car that lives on the page.
+ * A little vehicle that lives on the page.
  *
- * At rest it potters about the bottom corner of the screen, bouncing on its
- * suspension. On a desktop, click it and it is yours: arrow keys (or WASD)
- * drive it anywhere on the page, the window scrolls to follow, and whatever it
- * hits (headings, buttons, chips, images) gets knocked across the page and
- * stays where it lands, until "Reset website" puts everything back.
+ * At rest it drives up and down a short stretch of the terminal bar at the
+ * foot of the window, small and faded. Every so often it stops and asks, in a
+ * speech bubble, "want play!" and then "click on me". On a desktop, clicking
+ * it hands over the wheel: arrow keys or WASD drive it anywhere on the page,
+ * Shift is turbo, space brakes, and the window scrolls to follow. There are
+ * four to choose from (hatchback, racer, monster truck, motorcycle), each
+ * with its own handling and weight, switchable from the driving panel or the
+ * terminal (`car`).
  *
- * - Arcade handling: speed along the heading, steering that scales with
- *   speed, a handbrake, and dust kicked up when it accelerates or turns hard.
- * - Collisions are circle-against-rectangle tests against a cached set of
- *   page elements near the car. A hit pushes the element along the contact
- *   normal by an impulse scaled by its size and spins it a little; the car
- *   bounces back off it. Elements slide to a stop with friction.
- * - Pushed elements move through the individual `translate` and `rotate`
- *   properties, which compose with any transform the page already uses, so
- *   resetting is just clearing them.
+ * Whatever it hits is shoved along the contact normal, harder for a faster,
+ * heavier vehicle and a lighter element, and spins. Knocked elements carry
+ * their momentum into whatever they slide into, so a hard hit sets off a
+ * chain. Big impacts throw a shockwave ring and shake the page. "Reset
+ * website" puts everything back.
  *
- * Nothing renders for anyone who asked for reduced motion.
+ * Moved elements use the individual `translate` and `rotate` properties,
+ * which compose with existing transforms, so resetting is just clearing them.
+ * Keys typed into the terminal or forms are ignored, and nothing renders for
+ * anyone who asked for reduced motion.
  */
 
-const ACCEL = 900;
-const BRAKE = 1500;
-const MAX_FWD = 560;
-const MAX_REV = 220;
+type Spec = {
+  accel: number;
+  max: number;
+  steer: number;
+  radius: number;
+  /** How hard it hits things. */
+  power: number;
+  /** How much it bounces back off what it hits (0 ploughs through). */
+  rebound: number;
+};
+
+const SPECS: Record<VehicleKind, Spec> = {
+  car: { accel: 950, max: 580, steer: 3.4, radius: 17, power: 1, rebound: 0.35 },
+  racer: { accel: 1450, max: 860, steer: 3.0, radius: 17, power: 1.35, rebound: 0.3 },
+  truck: { accel: 650, max: 420, steer: 2.3, radius: 25, power: 3.2, rebound: 0.05 },
+  moto: { accel: 1300, max: 760, steer: 4.8, radius: 12, power: 0.85, rebound: 0.45 },
+};
+
+const BRAKE = 1600;
+const MAX_REV = 240;
 const DRAG = 1.6;
-const STEER = 3.4;
-const RADIUS = 17;
-const IDLE_SPEED = 70;
-const PUSH = 1.25;
-const SLIDE_FRICTION = 0.9;
+const TURBO = 1.55;
+const IDLE_SPEED = 38;
+const IDLE_SCALE = 0.62;
+/** The terminal bar is 44px tall; the idle stretch runs along its middle. */
+const BAR_MID = 22;
+const IDLE_SPAN = 200;
+const PUSH = 0.14;
+const SPIN = 0.09;
+const SLIDE_FRICTION = 0.93;
+const ASK_EVERY: [number, number] = [7000, 12000];
 const CANDIDATES =
   "main h1, main h2, main h3, main h4, main p, main a, main button, main img, main li, main [class*='rounded-md'], main [class*='rounded-full']";
 
@@ -52,65 +83,86 @@ type Pushed = {
   vr: number;
 };
 
-type Puff = { x: number; y: number; t: number; s: number };
+type Puff = { x: number; y: number; t: number; s: number; c?: string };
+type Ring = { x: number; y: number; t: number; r: number };
 
 export function PlayCar() {
+  const vehicle = useVehicle();
   const carRef = useRef<HTMLDivElement>(null);
-  const puffRef = useRef<HTMLDivElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const fxRef = useRef<HTMLDivElement>(null);
   const [driving, setDriving] = useState(false);
   const [canDrive, setCanDrive] = useState(false);
-  const [enabled, setEnabled] = useState(false);
+  const [allowed, setAllowed] = useState(false);
   const [moved, setMoved] = useState(0);
   const drivingRef = useRef(false);
+  const specRef = useRef<Spec>(SPECS.car);
   const resetRef = useRef<() => void>(() => {});
-  /** Switch the car between screen space (idle) and page space (driving). */
+  /** Switch the vehicle between screen space (idle) and page space (driving). */
   const toPageRef = useRef<() => void>(() => {});
   const toViewportRef = useRef<() => void>(() => {});
 
+  specRef.current = SPECS[vehicle.kind];
+  const enabled = allowed && vehicle.on;
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setEnabled(true);
+    setAllowed(true);
     setCanDrive(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
   }, []);
+
+  // Turned off from the terminal mid-drive: hand the page back.
+  useEffect(() => {
+    if (!vehicle.on && drivingRef.current) {
+      drivingRef.current = false;
+      setDriving(false);
+    }
+  }, [vehicle.on]);
 
   useEffect(() => {
     if (!enabled) return;
     const car = carRef.current!;
-    const puffLayer = puffRef.current!;
+    const bubble = bubbleRef.current!;
+    const fxLayer = fxRef.current!;
+    const main = document.querySelector("main");
 
-    // Car state. Idle: viewport coordinates. Driving: page coordinates.
+    const zone = () => {
+      const w = window.innerWidth;
+      const x0 = Math.max(130, w * 0.44);
+      return { x0, x1: Math.min(w - 40, x0 + IDLE_SPAN), y: window.innerHeight - BAR_MID };
+    };
+
+    // Idle: viewport coordinates. Driving: page coordinates.
+    const z0 = zone();
     const s = {
-      x: 60,
-      y: window.innerHeight - 140,
+      x: z0.x0 + 20,
+      y: z0.y,
       a: 0,
       v: 0,
       steer: 0,
       bounce: 0,
-      target: { x: 200, y: window.innerHeight - 150 },
+      scale: IDLE_SCALE,
+      dir: 1 as 1 | -1,
     };
+    let phase: "drive" | "ask1" | "ask2" = "drive";
+    let phaseUntil = 0;
+    let nextAsk = performance.now() + 4000;
     const keys = new Set<string>();
     let pushed: Pushed[] = [];
     let lastScan = 0;
     let puffs: Puff[] = [];
+    let rings: Ring[] = [];
+    let shake = 0;
     let raf = 0;
     let last = performance.now();
     let movedCount = 0;
 
-    const idleBox = () => ({
-      x0: 30,
-      x1: Math.min(window.innerWidth - 60, 340),
-      y0: window.innerHeight - 220,
-      y1: window.innerHeight - 110,
-    });
-    const pickTarget = () => {
-      const b = idleBox();
-      s.target = {
-        x: b.x0 + Math.random() * (b.x1 - b.x0),
-        y: b.y0 + Math.random() * (b.y1 - b.y0),
-      };
+    const say = (text: string | null) => {
+      bubble.textContent = text ?? "";
+      bubble.style.opacity = text ? "1" : "0";
     };
 
-    /** Collects the elements a car could plausibly hit, outermost first, skipping fixed chrome. */
+    /** Collects the elements a vehicle could plausibly hit, outermost first, skipping fixed chrome. */
     const scan = () => {
       const keep = new Map(pushed.map((p) => [p.el, p]));
       const out: Pushed[] = [];
@@ -141,7 +193,7 @@ export function PlayCar() {
                 y: r.top + window.scrollY,
                 w,
                 h,
-                m: Math.min(6, Math.max(0.6, (w * h) / 5000)),
+                m: Math.min(5, Math.max(0.5, (w * h) / 6000)),
                 dx: 0,
                 dy: 0,
                 vx: 0,
@@ -154,45 +206,80 @@ export function PlayCar() {
       pushed = out;
     };
 
-    const puff = (x: number, y: number) => {
-      puffs.push({ x, y, t: 0, s: 4 + Math.random() * 5 });
-      if (puffs.length > 60) puffs.shift();
+    const puff = (x: number, y: number, c?: string) => {
+      puffs.push({ x, y, t: 0, s: 4 + Math.random() * 5, c });
+      if (puffs.length > 90) puffs.shift();
+    };
+
+    const markMoved = (p: Pushed) => {
+      if (p.el.dataset.carMoved) return false;
+      p.el.dataset.carMoved = "1";
+      movedCount++;
+      return true;
     };
 
     const collide = () => {
+      const spec = specRef.current;
+      const R = spec.radius;
       let any = false;
       for (const p of pushed) {
         const left = p.x + p.dx;
         const top = p.y + p.dy;
-        if (Math.abs(top + p.h / 2 - s.y) > p.h / 2 + RADIUS + 40) continue;
+        if (Math.abs(top + p.h / 2 - s.y) > p.h / 2 + R + 40) continue;
         const cx = Math.max(left, Math.min(s.x, left + p.w));
         const cy = Math.max(top, Math.min(s.y, top + p.h));
         const ddx = s.x - cx;
         const ddy = s.y - cy;
         const d2 = ddx * ddx + ddy * ddy;
-        if (d2 > RADIUS * RADIUS) continue;
+        if (d2 > R * R) continue;
         const d = Math.sqrt(d2) || 1;
-        // Normal from the element to the car; inside the box, push along heading.
+        // Normal from the element to the vehicle; inside the box, along the heading.
         const nx = d2 > 0.01 ? ddx / d : -Math.cos(s.a);
         const ny = d2 > 0.01 ? ddy / d : -Math.sin(s.a);
         const speed = Math.abs(s.v);
         if (speed < 15) continue;
-        const k = (speed * PUSH) / p.m;
-        // Away from the car, harder for a faster car and a lighter element.
-        p.vx -= nx * k * 0.05;
-        p.vy -= ny * k * 0.05;
-        p.vr += ((Math.random() - 0.5) * speed * 0.04) / p.m;
-        // The car bounces back and loses speed.
-        s.x += nx * (RADIUS - d + 1);
-        s.y += ny * (RADIUS - d + 1);
-        s.v *= -0.35;
+        // Away from the vehicle: harder for faster, heavier vehicles and lighter elements.
+        const k = (speed * PUSH * spec.power) / p.m;
+        p.vx -= nx * k;
+        p.vy -= ny * k;
+        p.vr += ((Math.random() - 0.5) * speed * SPIN * spec.power) / p.m;
+        s.x += nx * (R - d + 1);
+        s.y += ny * (R - d + 1);
+        s.v *= spec.rebound ? -spec.rebound : 0.85;
         s.bounce = 1;
-        if (!p.el.dataset.carMoved) {
-          p.el.dataset.carMoved = "1";
-          movedCount++;
-          any = true;
+        any = markMoved(p) || any;
+        for (let i = 0; i < 5; i++) puff(cx, cy);
+        const force = speed * spec.power;
+        if (force > 380) {
+          rings.push({ x: cx, y: cy, t: 0, r: Math.min(140, force / 4) });
+          shake = Math.min(1, shake + force / 900);
         }
-        for (let i = 0; i < 4; i++) puff(cx, cy);
+      }
+      if (any) setMoved(movedCount);
+    };
+
+    /** Knocked elements carry their momentum into whatever they slide into. */
+    const cascade = () => {
+      let any = false;
+      for (const a of pushed) {
+        const va = Math.hypot(a.vx, a.vy);
+        if (va < 1.2) continue;
+        const ax = a.x + a.dx;
+        const ay = a.y + a.dy;
+        for (const b of pushed) {
+          if (b === a) continue;
+          const bx = b.x + b.dx;
+          const by = b.y + b.dy;
+          if (ax > bx + b.w || ax + a.w < bx || ay > by + b.h || ay + a.h < by) continue;
+          // Hand over part of the momentum, by mass.
+          const share = (a.m / (a.m + b.m)) * 0.8;
+          b.vx += a.vx * share;
+          b.vy += a.vy * share;
+          b.vr += (Math.random() - 0.5) * va * 0.3;
+          a.vx *= 0.55;
+          a.vy *= 0.55;
+          any = markMoved(b) || any;
+        }
       }
       if (any) setMoved(movedCount);
     };
@@ -225,29 +312,28 @@ export function PlayCar() {
       setMoved(0);
     };
 
-    const toPage = () => {
+    toPageRef.current = () => {
+      say(null);
+      phase = "drive";
       s.x += window.scrollX;
-      s.y += window.scrollY;
+      s.y += window.scrollY - 60;
+      s.a = -Math.PI / 2;
       scan();
     };
-    const toViewport = () => {
-      s.x -= window.scrollX;
-      s.y -= window.scrollY;
-      const b = idleBox();
-      s.x = Math.max(b.x0, Math.min(b.x1, s.x));
-      s.y = Math.max(b.y0, Math.min(b.y1, s.y));
+    toViewportRef.current = () => {
+      const z = zone();
+      s.x = Math.max(z.x0, Math.min(z.x1, s.x - window.scrollX));
+      s.y = z.y;
       s.v = 0;
-      pickTarget();
+      s.dir = 1;
+      nextAsk = performance.now() + 5000;
     };
-    toPageRef.current = toPage;
-    toViewportRef.current = toViewport;
 
     const onKey = (e: KeyboardEvent) => {
       if (!drivingRef.current) return;
       // Typing somewhere (the terminal, a form) is not driving.
       const t = e.target as HTMLElement | null;
       if (t?.closest("input, textarea, [contenteditable=true]")) return;
-      const k = e.key.toLowerCase();
       const map: Record<string, string> = {
         arrowup: "up",
         w: "up",
@@ -258,8 +344,9 @@ export function PlayCar() {
         arrowright: "right",
         d: "right",
         " ": "brake",
+        shift: "turbo",
       };
-      const m = map[k];
+      const m = map[e.key.toLowerCase()];
       if (!m) return;
       e.preventDefault();
       if (e.type === "keydown") keys.add(m);
@@ -274,39 +361,44 @@ export function PlayCar() {
       raf = requestAnimationFrame(frame);
       const dt = Math.min(0.033, (now - last) / 1000);
       last = now;
-      const driving = drivingRef.current;
+      const isDriving = drivingRef.current;
+      const spec = specRef.current;
 
-      if (driving) {
+      if (isDriving) {
         if (now - lastScan > 1500) {
           lastScan = now;
           scan();
         }
+        const turbo = keys.has("turbo");
+        const max = spec.max * (turbo ? TURBO : 1);
         const throttle = (keys.has("up") ? 1 : 0) - (keys.has("down") ? 1 : 0);
-        if (throttle > 0) s.v += (s.v < 0 ? BRAKE : ACCEL) * dt;
-        else if (throttle < 0) s.v -= (s.v > 0 ? BRAKE : ACCEL * 0.6) * dt;
+        if (throttle > 0) s.v += (s.v < 0 ? BRAKE : spec.accel * (turbo ? 1.5 : 1)) * dt;
+        else if (throttle < 0) s.v -= (s.v > 0 ? BRAKE : spec.accel * 0.6) * dt;
         s.v -= s.v * DRAG * dt;
         if (keys.has("brake")) s.v -= s.v * 6 * dt;
-        s.v = Math.max(-MAX_REV, Math.min(MAX_FWD, s.v));
+        s.v = Math.max(-MAX_REV, Math.min(max, s.v));
         const turn = (keys.has("right") ? 1 : 0) - (keys.has("left") ? 1 : 0);
         s.steer += (turn - s.steer) * Math.min(1, dt * 10);
         const grip = Math.min(1, Math.abs(s.v) / 140);
-        s.a += s.steer * STEER * grip * Math.sign(s.v || 1) * dt;
+        s.a += s.steer * spec.steer * grip * Math.sign(s.v || 1) * dt;
         s.x += Math.cos(s.a) * s.v * dt;
         s.y += Math.sin(s.a) * s.v * dt;
 
         // The page is the arena.
-        const maxX = document.documentElement.scrollWidth - RADIUS;
-        const maxY = document.documentElement.scrollHeight - RADIUS;
-        if (s.x < RADIUS || s.x > maxX || s.y < RADIUS || s.y > maxY) {
-          s.x = Math.max(RADIUS, Math.min(maxX, s.x));
-          s.y = Math.max(RADIUS, Math.min(maxY, s.y));
+        const R = spec.radius;
+        const maxX = document.documentElement.scrollWidth - R;
+        const maxY = document.documentElement.scrollHeight - R;
+        if (s.x < R || s.x > maxX || s.y < R || s.y > maxY) {
+          s.x = Math.max(R, Math.min(maxX, s.x));
+          s.y = Math.max(R, Math.min(maxY, s.y));
           s.v *= -0.3;
           s.bounce = 1;
         }
         collide();
+        cascade();
         slide();
 
-        // Keep the car in the middle band of the window.
+        // Keep the vehicle in the middle band of the window.
         const sy = s.y - window.scrollY;
         const vh = window.innerHeight;
         const lo = vh * 0.3;
@@ -318,49 +410,88 @@ export function PlayCar() {
           });
         }
 
-        if (
+        const back = { x: s.x - Math.cos(s.a) * R * 1.1, y: s.y - Math.sin(s.a) * R * 1.1 };
+        if (turbo && throttle > 0) {
+          for (let i = 0; i < 2; i++) puff(back.x, back.y, i ? "#f59e0b" : "#22d3ee");
+        } else if (
           (throttle !== 0 && Math.abs(s.v) < 260) ||
           (Math.abs(s.steer) > 0.6 && Math.abs(s.v) > 220)
         ) {
-          if (Math.random() < 0.5) puff(s.x - Math.cos(s.a) * 18, s.y - Math.sin(s.a) * 18);
+          if (Math.random() < 0.5) puff(back.x, back.y);
         }
+        s.scale += (1 - s.scale) * Math.min(1, dt * 8);
       } else {
-        // Idle: wander toward a target point near the corner.
-        const dx = s.target.x - s.x;
-        const dy = s.target.y - s.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 14) {
-          pickTarget();
-        } else {
-          let diff = Math.atan2(dy, dx) - s.a;
-          diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-          s.a += Math.max(-1, Math.min(1, diff)) * 2.2 * dt;
-          s.v += (IDLE_SPEED * Math.min(1, dist / 60) - s.v) * 2 * dt;
-          s.x += Math.cos(s.a) * s.v * dt;
-          s.y += Math.sin(s.a) * s.v * dt;
+        // Idle: back and forth along a short stretch of the terminal bar.
+        const z = zone();
+        s.y = z.y;
+        s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);
+        if (canDrive && phase === "drive" && now > nextAsk) {
+          phase = "ask1";
+          phaseUntil = now + 1700;
+          say("want play!");
+        } else if (phase === "ask1" && now > phaseUntil) {
+          phase = "ask2";
+          phaseUntil = now + 2400;
+          say("click on me");
+        } else if (phase === "ask2" && now > phaseUntil) {
+          phase = "drive";
+          say(null);
+          nextAsk = now + ASK_EVERY[0] + Math.random() * (ASK_EVERY[1] - ASK_EVERY[0]);
         }
-        if (Math.random() < 0.03) puff(s.x - Math.cos(s.a) * 18, s.y - Math.sin(s.a) * 18);
+
+        const want = phase === "drive" ? IDLE_SPEED : 0;
+        s.v += (want - s.v) * Math.min(1, dt * 3);
+        // Turn round at the ends of the stretch.
+        if (s.x > z.x1) s.dir = -1;
+        if (s.x < z.x0) s.dir = 1;
+        const heading = s.dir === 1 ? 0 : Math.PI;
+        let diff = heading - s.a;
+        diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+        s.a += diff * Math.min(1, dt * 5);
+        s.x += Math.cos(s.a) * s.v * dt;
+        if (phase === "drive" && Math.random() < 0.02) puff(s.x - Math.cos(s.a) * 12, s.y + 2);
+        // A little hop while it asks.
+        if (phase !== "drive") s.bounce = Math.max(s.bounce, Math.abs(Math.sin(now / 160)) * 0.4);
       }
 
       // Draw. Driving positions are page-space; idle ones are already on screen.
       s.bounce *= Math.exp(-dt * 6);
-      const ox = driving ? window.scrollX : 0;
-      const oy = driving ? window.scrollY : 0;
+      const ox = isDriving ? window.scrollX : 0;
+      const oy = isDriving ? window.scrollY : 0;
       const wobble =
         Math.sin(now / 90) * (0.6 + Math.min(1, Math.abs(s.v) / 300)) +
         s.bounce * Math.sin(now / 30) * 4;
       car.style.transform = `translate(${s.x - ox}px, ${s.y - oy}px) rotate(${s.a}rad)`;
       const body = car.firstElementChild as HTMLElement | null;
       if (body)
-        body.style.transform = `translate(-50%, -50%) scale(${1 + s.bounce * 0.12}, ${1 - s.bounce * 0.08}) rotate(${wobble * 0.6}deg)`;
+        body.style.transform = `translate(-50%, -50%) scale(${s.scale * (1 + s.bounce * 0.12)}, ${s.scale * (1 - s.bounce * 0.08)}) rotate(${wobble * 0.6}deg)`;
+      bubble.style.transform = `translate(${s.x - ox}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+
+      // The page shakes after a big hit.
+      shake *= Math.exp(-dt * 7);
+      if (main) {
+        main.style.translate =
+          shake > 0.02
+            ? `${((Math.random() - 0.5) * shake * 14).toFixed(1)}px ${((Math.random() - 0.5) * shake * 10).toFixed(1)}px`
+            : "";
+      }
 
       puffs = puffs.filter((p) => (p.t += dt) < 0.7);
-      puffLayer.innerHTML = puffs
-        .map((p) => {
-          const k = p.t / 0.7;
-          return `<span style="position:absolute;left:0;top:0;width:${p.s}px;height:${p.s}px;border-radius:999px;background:currentColor;opacity:${(1 - k) * 0.35};transform:translate(${p.x - ox - p.s / 2}px,${p.y - oy - p.s / 2 - k * 10}px) scale(${1 + k * 1.5})"></span>`;
-        })
-        .join("");
+      rings = rings.filter((r) => (r.t += dt) < 0.5);
+      fxLayer.innerHTML =
+        puffs
+          .map((p) => {
+            const k = p.t / 0.7;
+            return `<span style="position:absolute;left:0;top:0;width:${p.s}px;height:${p.s}px;border-radius:999px;background:${p.c ?? "currentColor"};opacity:${(1 - k) * (p.c ? 0.7 : 0.35)};transform:translate(${p.x - ox - p.s / 2}px,${p.y - oy - p.s / 2 - k * 10}px) scale(${1 + k * 1.5})"></span>`;
+          })
+          .join("") +
+        rings
+          .map((r) => {
+            const k = r.t / 0.5;
+            const size = r.r * 2 * (0.2 + k);
+            return `<span style="position:absolute;left:0;top:0;width:${size}px;height:${size}px;border-radius:999px;border:2px solid #22d3ee;opacity:${1 - k};transform:translate(${r.x - ox - size / 2}px,${r.y - oy - size / 2}px)"></span>`;
+          })
+          .join("");
     };
     raf = requestAnimationFrame(frame);
     return () => {
@@ -368,8 +499,9 @@ export function PlayCar() {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
       window.removeEventListener("blur", clearKeys);
+      if (main) main.style.translate = "";
     };
-  }, [enabled]);
+  }, [enabled, canDrive]);
 
   const start = () => {
     if (!canDrive || drivingRef.current) return;
@@ -388,9 +520,15 @@ export function PlayCar() {
   return (
     <>
       <div
-        ref={puffRef}
+        ref={fxRef}
         aria-hidden
         className="pointer-events-none fixed inset-0 z-40 text-muted-foreground"
+      />
+      <div
+        ref={bubbleRef}
+        aria-hidden
+        className="pointer-events-none fixed left-0 top-0 z-50 whitespace-nowrap rounded-full border border-primary/50 bg-background/90 px-2.5 py-1 font-mono text-[11px] font-semibold text-primary shadow-lg transition-opacity duration-300"
+        style={{ opacity: 0, transform: "translate(-200px, -200px)" }}
       />
       <div
         ref={carRef}
@@ -401,19 +539,39 @@ export function PlayCar() {
           type="button"
           onClick={start}
           data-cursor={driving ? undefined : canDrive ? "Drive" : undefined}
-          aria-label={canDrive ? "Drive the car" : "A little car"}
-          className={`block ${driving ? "cursor-default" : canDrive ? "cursor-pointer" : "cursor-default"}`}
+          aria-label={
+            canDrive ? `Drive the ${VEHICLE_LABELS[vehicle.kind].toLowerCase()}` : "A little car"
+          }
+          className={`block transition-opacity duration-300 ${
+            driving
+              ? "cursor-default opacity-100"
+              : canDrive
+                ? "cursor-pointer opacity-50 hover:opacity-100"
+                : "pointer-events-none opacity-40"
+          }`}
           style={{ transform: "translate(-50%, -50%)" }}
         >
-          <CarSprite lights={driving} />
+          <VehicleSprite kind={vehicle.kind} lights={driving} />
         </button>
       </div>
 
       {driving && (
-        <div className="fixed left-1/2 top-20 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md">
-          <span className="hidden text-muted-foreground sm:inline">
-            ↑ ↓ ← → or WASD · space to brake
-            {moved > 0 ? ` · ${moved} things knocked over` : ""}
+        <div className="fixed left-1/2 top-20 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md">
+          <div className="flex overflow-hidden rounded-full border border-border">
+            {VEHICLE_KINDS.map((k) => (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setVehicle({ kind: k })}
+                className={`px-2.5 py-1 ${vehicle.kind === k ? "bg-primary text-primary-foreground" : "hover:text-primary"}`}
+              >
+                {VEHICLE_LABELS[k]}
+              </button>
+            ))}
+          </div>
+          <span className="text-muted-foreground">
+            ↑↓←→ / WASD · shift turbo · space brake
+            {moved > 0 ? ` · ${moved} knocked over` : ""}
           </span>
           <button
             type="button"
@@ -432,51 +590,5 @@ export function PlayCar() {
         </div>
       )}
     </>
-  );
-}
-
-/** Top-down, facing right: a round little hatchback in the site's colours. */
-function CarSprite({ lights }: { lights: boolean }) {
-  return (
-    <svg
-      width="52"
-      height="34"
-      viewBox="0 0 52 34"
-      className="overflow-visible drop-shadow-[0_6px_6px_rgba(0,0,0,0.45)]"
-    >
-      <defs>
-        <linearGradient id="car-body" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#22d3ee" />
-          <stop offset="1" stopColor="#a855f7" />
-        </linearGradient>
-      </defs>
-      {lights && (
-        <g opacity="0.5">
-          <path d="M46 9 L96 -4 L96 14 Z" fill="#fde68a" opacity="0.35" />
-          <path d="M46 25 L96 20 L96 38 Z" fill="#fde68a" opacity="0.35" />
-        </g>
-      )}
-      {/* wheels */}
-      {[
-        [9, 1],
-        [33, 1],
-        [9, 27],
-        [33, 27],
-      ].map(([x, y]) => (
-        <rect key={`${x}-${y}`} x={x} y={y} width="10" height="6" rx="2" fill="#0f172a" />
-      ))}
-      {/* body */}
-      <rect x="3" y="4" width="44" height="26" rx="11" fill="url(#car-body)" />
-      <rect x="6" y="7" width="38" height="5" rx="2.5" fill="#fff" opacity="0.25" />
-      {/* cabin */}
-      <rect x="15" y="8" width="20" height="18" rx="6" fill="#0b1224" opacity="0.85" />
-      <rect x="29" y="10" width="5" height="14" rx="2.5" fill="#7dd3fc" opacity="0.75" />
-      <rect x="16" y="10" width="4" height="14" rx="2" fill="#7dd3fc" opacity="0.4" />
-      {/* lights */}
-      <circle cx="45" cy="10" r="2.4" fill={lights ? "#fef08a" : "#fde68a"} />
-      <circle cx="45" cy="24" r="2.4" fill={lights ? "#fef08a" : "#fde68a"} />
-      <rect x="2.5" y="8" width="2" height="5" rx="1" fill="#f43f5e" />
-      <rect x="2.5" y="21" width="2" height="5" rx="1" fill="#f43f5e" />
-    </svg>
   );
 }

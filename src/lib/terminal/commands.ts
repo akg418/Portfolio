@@ -4,6 +4,7 @@ import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
 import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
+import { VEHICLE_KINDS, VEHICLE_LABELS, readVehicle, setVehicle } from "@/hooks/useVehicle";
 import { COLOR_KEYS, DEFAULT_COLORS, clearStoredColors, isHex, saveColors } from "./colors";
 import { saveAliases } from "./aliases";
 import type { ColorKey, Command, CommandContext } from "./types";
@@ -274,6 +275,38 @@ export const commands: Command[] = [
         print(`${survivor} has been waiting for this. Watch the bottom of the page…`);
       else if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
       else print(on ? "Alice and Bob are back." : "Both robots powered down.");
+    },
+  },
+  {
+    name: "car",
+    aliases: ["cars", "vehicle", "garage"],
+    usage: "car [on|off|car|racer|truck|moto]",
+    description: "the little vehicle on the terminal bar: switch it on, off, or swap it",
+    run: ({ args, print }) => {
+      const arg = args[0]?.toLowerCase();
+      const kind = VEHICLE_KINDS.find((k) => k === arg);
+      if (!arg) {
+        const v = readVehicle();
+        print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
+        print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
+        print("Use `car off`, `car on`, `car truck`. Click it on the bar to drive (desktop).");
+        return;
+      }
+      if (arg === "on" || arg === "off") {
+        setVehicle({ on: arg === "on" });
+        print(
+          arg === "on" ? "Engine on. It's back on the bar." : "Parked. `car on` brings it back.",
+        );
+        return;
+      }
+      if (kind) {
+        setVehicle({ on: true, kind });
+        print(
+          `Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it on the bar to drive.`,
+        );
+        return;
+      }
+      print("Usage: car [on|off|car|racer|truck|moto]");
     },
   },
   {
