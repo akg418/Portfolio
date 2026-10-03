@@ -23,24 +23,56 @@ export type MysteryId =
 export type Mystery = { id: MysteryId; title: string; riddle: string; dev?: boolean };
 
 export const MYSTERIES: Mystery[] = [
-  { id: "konami", title: "Old school", riddle: "Type the name hiding in my email address." },
-  { id: "sudo", title: "Root access", riddle: "Ask the terminal for the job — with root." },
-  { id: "badge", title: "Persistence", riddle: "Flip your perspective. Then again. And again." },
+  {
+    id: "konami",
+    title: "Old school",
+    riddle: "The arcade cabinet in the Gaming section is missing a third name. My email has it.",
+  },
+  {
+    id: "sudo",
+    title: "Root access",
+    riddle: "The badge says “If found, hire”. The terminal agrees — but only for root.",
+  },
+  { id: "badge", title: "Persistence", riddle: "The badge has seven punch holes. Fill every one." },
   {
     id: "balloons",
     title: "All accepted",
-    riddle: "AC on every problem: set every balloon free in one visit.",
+    riddle:
+      "A contest is won with every problem accepted. Watch the scoreboard in the balloon box.",
   },
   {
     id: "robots",
     title: "Holy war",
-    riddle: "Alice and Bob have strong opinions. Poke them both.",
+    riddle: "Alice and Bob disagree about something. Poke each until they say what.",
   },
-  { id: "carParty", title: "Drive-in", riddle: "Drive to where the music lives." },
-  { id: "outage", title: "INC-404", riddle: "Take every core instance down at the same time." },
-  { id: "midnight", title: "Night owl", riddle: "Come back when Cairo should be asleep." },
-  { id: "console", title: "Inspector", riddle: "Developers: the console is listening.", dev: true },
-  { id: "problem", title: "Accepted", riddle: "Some things are stored, not shown.", dev: true },
+  {
+    id: "carParty",
+    title: "Drive-in",
+    riddle: "The car can't resist the ACPC track. Take it there — and don't brake.",
+  },
+  {
+    id: "outage",
+    title: "INC-404",
+    riddle: "The core API's SLO says it never reaches 0 ready. Prove it wrong.",
+  },
+  {
+    id: "midnight",
+    title: "Night owl",
+    riddle: "A sleeping owl sits by the Cairo clock. It wakes at midnight, Cairo time.",
+  },
+  {
+    id: "console",
+    title: "Inspector",
+    riddle: "Developers: read the footer's TODO. The debug hook is still listening.",
+    dev: true,
+  },
+  {
+    id: "problem",
+    title: "Accepted",
+    riddle:
+      "I set problems for a living. One never left this browser — look where sites keep things.",
+    dev: true,
+  },
 ];
 
 export const MYSTERY_EVENT = "mystery-solved";

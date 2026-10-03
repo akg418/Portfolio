@@ -28,6 +28,11 @@ export function SiteFooter() {
           by AI.
         </p>
         <p className="mt-2 font-mono text-primary/80">Hi there i love u &lt;3 :)</p>
+        <p className="mt-3 select-text font-mono text-[10px] text-muted-foreground/40">
+          {
+            "// TODO(dev): remove the debug hook before launch. it's still listening in the console."
+          }
+        </p>
       </div>
     </>
   );

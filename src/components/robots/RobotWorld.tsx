@@ -464,8 +464,13 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
       }, lines.length * 1300);
       return;
     }
-    const replies = ["hi!", "hey", "stop poking me", "beep?", ":|"];
-    say(name, replies[Math.min(p[name] - 1, replies.length - 1)]);
+    // Each nudges you toward poking the other one too.
+    const replies: Record<RobotName, string[]> = {
+      alice: ["hi!", "hey", "ask Bob about tabs. go on.", "…", ":|"],
+      bob: ["beep?", "hello", "Alice is wrong about tabs.", "…", ":|"],
+    };
+    const lines = replies[name];
+    say(name, lines[Math.min(p[name] - 1, lines.length - 1)]);
     window.setTimeout(() => say(name, null), 1300);
   };
 
@@ -501,6 +506,7 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
           <div
             key={name}
             onClick={() => poke(name)}
+            data-cursor="Poke"
             className="pointer-events-auto absolute left-0 cursor-pointer will-change-transform"
             style={{
               bottom: r.grounded ? FLOOR_PX : LINE_PX,

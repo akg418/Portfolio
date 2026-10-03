@@ -304,6 +304,7 @@ export const commands: Command[] = [
         print("         hits chain into whatever they slide into");
         print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
         print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("fun fact it can't resist the ACPC track. it drives right into the party.");
         print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
@@ -359,6 +360,15 @@ export const commands: Command[] = [
       }
       if (solved.length === MYSTERIES.length)
         print("All of them. Click the counter for your certificate.");
+    },
+  },
+  {
+    name: "hire",
+    hidden: true,
+    description: "",
+    run: ({ print }) => {
+      print("hire: permission denied");
+      print("(only root can make offers. you know how to become root.)");
     },
   },
   {

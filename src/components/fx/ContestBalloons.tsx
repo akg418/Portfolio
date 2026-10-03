@@ -85,6 +85,8 @@ export function ContestBalloons({
   const svgRef = useRef<SVGSVGElement>(null);
   const [pops, setPops] = useState(0);
   const cutSet = useRef(new Set<number>());
+  /** Letters set free this visit, for the scoreboard that appears after the first. */
+  const [freed, setFreed] = useState<number[]>([]);
   const state = useRef<{
     balloons: Balloon[];
     shreds: Shred[];
@@ -424,6 +426,7 @@ export function ContestBalloons({
     b.cut = true;
     // Every balloon set free in one visit: all problems accepted.
     cutSet.current.add(i);
+    setFreed([...cutSet.current]);
     if (cutSet.current.size === LETTERS.length) {
       solveMystery("balloons");
     }
@@ -480,6 +483,28 @@ export function ContestBalloons({
       >
         {backdrop}
         <svg ref={svgRef} aria-hidden className="absolute inset-0 h-full w-full overflow-visible" />
+        {/* An ICPC-style scoreboard, shown once a balloon has been set free. */}
+        {freed.length > 0 && (
+          <div className="pointer-events-none absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2 py-1.5 font-mono text-[9px] backdrop-blur-sm">
+            <div className="mb-1 uppercase tracking-widest text-muted-foreground">
+              set free · {freed.length}/{LETTERS.length}
+            </div>
+            <div className="flex gap-0.5">
+              {LETTERS.map((l, i) => (
+                <span
+                  key={l}
+                  className={`flex h-4 w-4 items-center justify-center rounded-sm font-bold ${
+                    freed.includes(i)
+                      ? "bg-emerald-500/80 text-black"
+                      : "bg-foreground/10 text-muted-foreground"
+                  }`}
+                >
+                  {l}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
         {/* A tie at the foot of each string: touch it and the balloon is cut loose. */}
         {LETTERS.map((letter, i) => (
           <button

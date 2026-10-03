@@ -391,6 +391,23 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0d1224] via-transparent to-transparent" />
                 <div className="absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" />
+                {/* Seven punch holes under the slot, one per flip: the persistence mystery's clue. */}
+                <div
+                  className="absolute left-1/2 top-6 flex -translate-x-1/2 gap-1"
+                  title={flips >= 7 ? "VIP" : "punch card · 7 holes"}
+                  aria-hidden
+                >
+                  {Array.from({ length: 7 }, (_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 w-1.5 rounded-full border ${
+                        i < Math.min(flips, 7)
+                          ? "border-amber-300 bg-amber-300"
+                          : "border-white/50 bg-[#0d1224]/70"
+                      }`}
+                    />
+                  ))}
+                </div>
               </div>
               <div className="flex flex-1 flex-col px-4 pb-3 pt-1">
                 <div className="font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300">

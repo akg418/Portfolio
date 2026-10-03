@@ -125,6 +125,24 @@ export function CupGame() {
       <div className="flex items-center gap-3 mb-4">
         <Gamepad2 className="w-5 h-5 text-primary" />
         <h2 className="text-3xl font-bold tracking-tight">Gaming mode — Cups & Ball</h2>
+        {/* An old cabinet waiting for a player name: the arcade mystery's clue. */}
+        <span className="group/cab relative ml-auto">
+          <span
+            aria-hidden
+            className="block h-7 w-5 rounded-t-md border border-amber-400/40 bg-amber-400/10 opacity-60 transition-opacity group-hover/cab:opacity-100"
+          >
+            <span className="mx-auto mt-1 block h-2.5 w-3 rounded-sm bg-amber-300/40" />
+          </span>
+          <span className="pointer-events-none absolute right-0 top-9 z-20 w-56 rounded-md border border-amber-400/40 bg-background/95 p-2.5 font-mono text-[10px] leading-relaxed text-amber-300 opacity-0 shadow-lg transition-opacity group-hover/cab:opacity-100">
+            INSERT COIN · PLAYER 1
+            <br />
+            HI-SCORE: AHMED KHALED _ _ _ _ _
+            <br />
+            <span className="text-muted-foreground">
+              no keyboard on this cabinet… just type the missing name.
+            </span>
+          </span>
+        </span>
       </div>
       <p className="text-sm text-muted-foreground mb-4">
         Find the cup hiding the ball after the shuffle. Adjust the speed to your reflexes.

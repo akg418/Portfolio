@@ -42,7 +42,10 @@ export function Achievements() {
               >
                 Codeforces group
               </a>
-              .
+              . {/* The developer problem's clue. */}
+              <span className="text-muted-foreground/60">
+                One problem never made it there: it is stored somewhere in this very browser.
+              </span>
             </p>
           </div>
           <div className="flex items-start gap-2">

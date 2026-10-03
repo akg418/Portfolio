@@ -442,6 +442,11 @@ export function SystemMap() {
                 load {Math.round(selState.util * 100)}% · queued {selState.queued}
                 {sel.max ? ` · autoscale ${sel.min}–${sel.max}` : ""}
               </div>
+              {selected === "api" && (
+                <div className="text-amber-300/80">
+                  SLO: never 0/{selState.pods.length} ready. (Instances restart in ~3s.)
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => sim?.killPod(selected)}

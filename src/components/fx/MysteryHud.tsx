@@ -70,7 +70,7 @@ export function MysteryHud() {
   // Developer puzzles: a console API, and a problem left in localStorage.
   useEffect(() => {
     console.log(
-      "%c👀 ahmed.dev%c\nHey, developer. Something is hiding on `window`. Start with %c__ahmed.hint()",
+      "%c👀 ahmed.dev%c\n[debug] hook still attached at window.__ahmed — someone forgot to remove it before launch. Start with %c__ahmed.hint()",
       "font:700 16px ui-monospace,monospace;color:#22d3ee",
       "font:12px ui-monospace,monospace;color:#94a3b8",
       "font:700 12px ui-monospace,monospace;color:#a855f7",

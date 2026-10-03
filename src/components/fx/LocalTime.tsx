@@ -41,6 +41,16 @@ export function LocalTime() {
         : awake
           ? "probably awake"
           : "probably asleep"}
+      {!owl && (
+        // A sleeping owl: the night-owl mystery's clue.
+        <span
+          title="the owl only wakes at midnight, Cairo time"
+          aria-label="a sleeping owl"
+          className="cursor-help select-none opacity-40 grayscale transition-opacity hover:opacity-90"
+        >
+          🦉<span className="ml-0.5 text-[9px]">z</span>
+        </span>
+      )}
     </span>
   );
 }

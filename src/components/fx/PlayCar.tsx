@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { RotateCcw, Square } from "lucide-react";
 import { PARTY_EVENT } from "@/components/fx/ContestBalloons";
 import { VehicleSprite } from "@/components/fx/VehicleSprites";
-import { solveMystery } from "@/lib/mysteries";
+import { solveMystery, solvedMysteries } from "@/lib/mysteries";
 import {
   VEHICLE_DRIVE_EVENT,
   VEHICLE_KINDS,
@@ -181,6 +181,7 @@ export function PlayCar() {
     let last = performance.now();
     let movedCount = 0;
     let partyUntil = 0;
+    let heardMusic = false;
 
     const say = (text: string | null) => {
       bubble.textContent = text ?? "";
@@ -426,10 +427,17 @@ export function PlayCar() {
         cascade();
         slide();
 
-        // Driving into the ACPC box crashes the party (a hidden mystery).
+        // Driving into the ACPC box crashes the party (a hidden mystery). The
+        // first time the box is on screen mid-drive, the car hears the music.
+        const zone = document.querySelector<HTMLElement>("[data-party-zone]");
+        const zr = zone?.getBoundingClientRect();
+        if (!heardMusic && zr && zr.top < window.innerHeight && zr.bottom > 0) {
+          heardMusic = true;
+          if (!solvedMysteries().includes("carParty"))
+            nudgeRef.current = { text: "♪ hear that? let's go!", until: now + 2500 };
+        }
         if (now > partyUntil && Math.abs(s.v) > 150) {
-          const zone = document.querySelector<HTMLElement>("[data-party-zone]");
-          const r = zone?.getBoundingClientRect();
+          const r = zr;
           const vx = s.x - window.scrollX;
           const vy = s.y - window.scrollY;
           if (r && vx > r.left && vx < r.right && vy > r.top && vy < r.bottom) {
