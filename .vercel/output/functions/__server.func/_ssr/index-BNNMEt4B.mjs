@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BhyQramZ.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BwQKlker.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -536,6 +536,18 @@ const MYSTERIES = [
     title: "Accepted",
     riddle: "I set problems for a living. One never left this browser — look where sites keep things.",
     dev: true
+  },
+  {
+    id: "crawler",
+    title: "Staff only",
+    riddle: "Alice and Bob keep a classic file for the bots. It names one room they must never enter.",
+    dev: true
+  },
+  {
+    id: "status",
+    title: "Friday deploy",
+    riddle: "The footer swears all systems are ok. Ask the network where it heard that.",
+    dev: true
   }
 ];
 const MYSTERY_EVENT = "mystery-solved";
@@ -695,7 +707,7 @@ function MysteryHud() {
   const count = solved.length;
   const total = MYSTERIES.length;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    count > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group fixed left-4 top-20 z-30 hidden sm:block", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group fixed left-4 top-20 z-30 hidden sm:block", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
@@ -860,11 +872,7 @@ function MysteryInfo({ solved }) {
           MYSTERIES.length,
           " found"
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1.5 text-muted-foreground", children: [
-          "Hidden challenges scattered around this site. Nothing announces them — you just found",
-          solved.length > 1 ? " some" : " one",
-          ". Each riddle below hints at one still locked."
-        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1.5 text-muted-foreground", children: solved.length === 0 ? "Hidden challenges scattered around this site. Nothing announces them, but every one leaves a clue somewhere on the page. Each riddle below points at one." : `Hidden challenges scattered around this site. You've found ${solved.length === 1 ? "one" : "some"}. Each riddle below points at one still locked.` }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 text-[10px] uppercase tracking-widest text-foreground", children: [
           "For everyone · ",
           forAll.length
@@ -2910,6 +2918,7 @@ function RobotWorld({ walkway }) {
               {
                 onClick: () => poke(name),
                 "data-cursor": "Poke",
+                title: name === "alice" ? "Alice · keeps the site's robots.txt tidy" : "Bob · also reads robots.txt, every morning",
                 className: "pointer-events-auto absolute left-0 cursor-pointer will-change-transform",
                 style: {
                   bottom: r.grounded ? FLOOR_PX : LINE_PX,
@@ -7305,6 +7314,18 @@ function TierLabel({ n, label, note }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "normal-case tracking-normal text-muted-foreground", children: note })
   ] });
 }
+function StatusLight() {
+  const [status, setStatus] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    fetch("/status.json", { cache: "no-store" }).then((r) => r.ok ? r.json() : null).then((j) => setStatus(j?.status ?? null)).catch(() => setStatus(null));
+  }, []);
+  if (!status) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5 font-mono", title: "live from /status.json", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-emerald-400" }),
+    "all systems ",
+    status
+  ] });
+}
 function SiteFooter() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "py-10 border-t border-border text-xs text-muted-foreground flex flex-wrap justify-between gap-4", children: [
@@ -7315,6 +7336,7 @@ function SiteFooter() {
         profile.name,
         ". Built with care."
       ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StatusLight, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-4", children: links.map((l) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "a",
         {
@@ -8400,11 +8422,8 @@ const commands = [
     description: "the hidden mysteries you have found",
     run: ({ print }) => {
       const solved = solvedMysteries();
-      if (!solved.length) {
-        print("command not found: mysteries. Try `help`.");
-        return;
-      }
       print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      if (!solved.length) print("Hidden around the site. Every one leaves a clue — look closely.");
       for (const m of MYSTERIES) {
         const done = solved.includes(m.id);
         const tag = m.dev ? " [dev]" : "";
@@ -8412,6 +8431,43 @@ const commands = [
       }
       if (solved.length === MYSTERIES.length)
         print("All of them. Click the counter for your certificate.");
+    }
+  },
+  {
+    name: "ssh",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const target = rawArgs.trim().toLowerCase();
+      if (target === "alice@ahmed.dev") {
+        print("Connecting to ahmed.dev…");
+        print("Welcome back, Alice. Last login: the ACPC finals, from a balloon.");
+        print('alice@ahmed.dev:~$ cat notes.txt → "tabs."');
+        confetti();
+        solveMystery("crawler");
+        return;
+      }
+      if (target.endsWith("@ahmed.dev")) {
+        print(`${target}: Permission denied (publickey). Only Alice left her login lying around.`);
+        return;
+      }
+      print("ssh: Could not resolve hostname. Try a user @ahmed.dev.");
+    }
+  },
+  {
+    name: "deploy",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const flags = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (flags === "--force friday") {
+        print("Deploying to production… on a Friday… with --force.");
+        print("🔥 Every check skipped. Nothing caught fire this time. Bold.");
+        confetti();
+        solveMystery("status");
+        return;
+      }
+      print("deploy: refusing to deploy without the release checklist's last item.");
     }
   },
   {
