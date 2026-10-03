@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-DpkIvbXR.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-hn8Eyvk6.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -195,7 +195,24 @@ function CupGame() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "game", className: "py-24 border-t border-border", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Gamepad2, { className: "w-5 h-5 text-primary" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: "Gaming mode — Cups & Ball" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-bold tracking-tight", children: "Gaming mode — Cups & Ball" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "group/cab relative ml-auto", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            "aria-hidden": true,
+            className: "block h-7 w-5 rounded-t-md border border-amber-400/40 bg-amber-400/10 opacity-60 transition-opacity group-hover/cab:opacity-100",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mx-auto mt-1 block h-2.5 w-3 rounded-sm bg-amber-300/40" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "pointer-events-none absolute right-0 top-9 z-20 w-56 rounded-md border border-amber-400/40 bg-background/95 p-2.5 font-mono text-[10px] leading-relaxed text-amber-300 opacity-0 shadow-lg transition-opacity group-hover/cab:opacity-100", children: [
+          "INSERT COIN · PLAYER 1",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          "HI-SCORE: AHMED KHALED _ _ _ _ _",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "no keyboard on this cabinet… just type the missing name." })
+        ] })
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mb-4", children: "Find the cup hiding the ball after the shuffle. Adjust the speed to your reflexes." }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -472,24 +489,54 @@ function useUsername() {
   return username;
 }
 const MYSTERIES = [
-  { id: "konami", title: "Old school", riddle: "Type the name hiding in my email address." },
-  { id: "sudo", title: "Root access", riddle: "Ask the terminal for the job — with root." },
-  { id: "badge", title: "Persistence", riddle: "Flip your perspective. Then again. And again." },
+  {
+    id: "konami",
+    title: "Old school",
+    riddle: "The arcade cabinet in the Gaming section is missing a third name. My email has it."
+  },
+  {
+    id: "sudo",
+    title: "Root access",
+    riddle: "The badge says “If found, hire”. The terminal agrees — but only for root."
+  },
+  { id: "badge", title: "Persistence", riddle: "The badge has seven punch holes. Fill every one." },
   {
     id: "balloons",
     title: "All accepted",
-    riddle: "AC on every problem: set every balloon free in one visit."
+    riddle: "A contest is won with every problem accepted. Watch the scoreboard in the balloon box."
   },
   {
     id: "robots",
     title: "Holy war",
-    riddle: "Alice and Bob have strong opinions. Poke them both."
+    riddle: "Alice and Bob disagree about something. Poke each until they say what."
   },
-  { id: "carParty", title: "Drive-in", riddle: "Drive to where the music lives." },
-  { id: "outage", title: "INC-404", riddle: "Take every core instance down at the same time." },
-  { id: "midnight", title: "Night owl", riddle: "Come back when Cairo should be asleep." },
-  { id: "console", title: "Inspector", riddle: "Developers: the console is listening.", dev: true },
-  { id: "problem", title: "Accepted", riddle: "Some things are stored, not shown.", dev: true }
+  {
+    id: "carParty",
+    title: "Drive-in",
+    riddle: "The car can't resist the ACPC track. Take it there — and don't brake."
+  },
+  {
+    id: "outage",
+    title: "INC-404",
+    riddle: "The core API's SLO says it never reaches 0 ready. Prove it wrong."
+  },
+  {
+    id: "midnight",
+    title: "Night owl",
+    riddle: "A sleeping owl sits by the Cairo clock. It wakes at midnight, Cairo time."
+  },
+  {
+    id: "console",
+    title: "Inspector",
+    riddle: "Developers: read the footer's TODO. The debug hook is still listening.",
+    dev: true
+  },
+  {
+    id: "problem",
+    title: "Accepted",
+    riddle: "I set problems for a living. One never left this browser — look where sites keep things.",
+    dev: true
+  }
 ];
 const MYSTERY_EVENT = "mystery-solved";
 function parse$2(v) {
@@ -616,7 +663,7 @@ function MysteryHud() {
   }, []);
   reactExports.useEffect(() => {
     console.log(
-      "%c👀 ahmed.dev%c\nHey, developer. Something is hiding on `window`. Start with %c__ahmed.hint()",
+      "%c👀 ahmed.dev%c\n[debug] hook still attached at window.__ahmed — someone forgot to remove it before launch. Start with %c__ahmed.hint()",
       "font:700 16px ui-monospace,monospace;color:#22d3ee",
       "font:12px ui-monospace,monospace;color:#94a3b8",
       "font:700 12px ui-monospace,monospace;color:#a855f7"
@@ -881,6 +928,7 @@ function ContestBalloons({
   const svgRef = reactExports.useRef(null);
   const [pops, setPops] = reactExports.useState(0);
   const cutSet = reactExports.useRef(/* @__PURE__ */ new Set());
+  const [freed, setFreed] = reactExports.useState([]);
   const state = reactExports.useRef({ balloons: [], shreds: [], pointer: null, grab: null, booms: [] });
   reactExports.useEffect(() => {
     const box = boxRef.current;
@@ -1177,6 +1225,7 @@ function ContestBalloons({
     b.popped = true;
     b.cut = true;
     cutSet.current.add(i);
+    setFreed([...cutSet.current]);
     if (cutSet.current.size === LETTERS.length) {
       solveMystery("balloons");
     }
@@ -1232,6 +1281,22 @@ function ContestBalloons({
         children: [
           backdrop,
           /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" }),
+          freed.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pointer-events-none absolute right-2 top-2 rounded-md border border-border bg-background/80 px-2 py-1.5 font-mono text-[9px] backdrop-blur-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-1 uppercase tracking-widest text-muted-foreground", children: [
+              "set free · ",
+              freed.length,
+              "/",
+              LETTERS.length
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-0.5", children: LETTERS.map((l, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                className: `flex h-4 w-4 items-center justify-center rounded-sm font-bold ${freed.includes(i) ? "bg-emerald-500/80 text-black" : "bg-foreground/10 text-muted-foreground"}`,
+                children: l
+              },
+              l
+            )) })
+          ] }),
           LETTERS.map((letter, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
@@ -1555,6 +1620,7 @@ function PlayCar() {
     let last = performance.now();
     let movedCount = 0;
     let partyUntil = 0;
+    let heardMusic = false;
     const say = (text) => {
       bubble.textContent = text ?? "";
       bubble.style.opacity = text ? "1" : "0";
@@ -1776,9 +1842,15 @@ function PlayCar() {
         collide();
         cascade();
         slide();
+        const zone2 = document.querySelector("[data-party-zone]");
+        const zr = zone2?.getBoundingClientRect();
+        if (!heardMusic && zr && zr.top < window.innerHeight && zr.bottom > 0) {
+          heardMusic = true;
+          if (!solvedMysteries().includes("carParty"))
+            nudgeRef.current = { text: "♪ hear that? let's go!", until: now2 + 2500 };
+        }
         if (now2 > partyUntil && Math.abs(s.v) > 150) {
-          const zone2 = document.querySelector("[data-party-zone]");
-          const r = zone2?.getBoundingClientRect();
+          const r = zr;
           const vx = s.x - window.scrollX;
           const vy = s.y - window.scrollY;
           if (r && vx > r.left && vx < r.right && vy > r.top && vy < r.bottom) {
@@ -2776,14 +2848,14 @@ function RobotWorld({ walkway }) {
     };
     if (!p.argued && p.alice >= 3 && p.bob >= 3) {
       p.argued = true;
-      const lines = [
+      const lines2 = [
         ["alice", "tabs."],
         ["bob", "spaces."],
         ["alice", "TABS."],
         ["bob", "4 spaces!"],
         ["alice", "…we're done."]
       ];
-      lines.forEach(([who, text], i) => {
+      lines2.forEach(([who, text], i) => {
         window.setTimeout(() => {
           say(other(who), null);
           say(who, text);
@@ -2793,11 +2865,15 @@ function RobotWorld({ walkway }) {
         say("alice", null);
         say("bob", null);
         solveMystery("robots");
-      }, lines.length * 1300);
+      }, lines2.length * 1300);
       return;
     }
-    const replies = ["hi!", "hey", "stop poking me", "beep?", ":|"];
-    say(name, replies[Math.min(p[name] - 1, replies.length - 1)]);
+    const replies = {
+      alice: ["hi!", "hey", "ask Bob about tabs. go on.", "…", ":|"],
+      bob: ["beep?", "hello", "Alice is wrong about tabs.", "…", ":|"]
+    };
+    const lines = replies[name];
+    say(name, lines[Math.min(p[name] - 1, lines.length - 1)]);
     window.setTimeout(() => say(name, null), 1300);
   };
   if (!ready.current) return null;
@@ -2833,6 +2909,7 @@ function RobotWorld({ walkway }) {
               "div",
               {
                 onClick: () => poke(name),
+                "data-cursor": "Poke",
                 className: "pointer-events-auto absolute left-0 cursor-pointer will-change-transform",
                 style: {
                   bottom: r.grounded ? FLOOR_PX : LINE_PX,
@@ -3531,7 +3608,8 @@ function Achievements() {
               children: "Codeforces group"
             }
           ),
-          "."
+          ". ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground/60", children: "One problem never made it there: it is stored somewhere in this very browser." })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-2", children: [
@@ -3917,7 +3995,20 @@ function LocalTime() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tabular-nums text-foreground", children: time2 }),
     " ·",
     " ",
-    owl ? "probably asleep… definitely solving Codeforces 🦉" : awake ? "probably awake" : "probably asleep"
+    owl ? "probably asleep… definitely solving Codeforces 🦉" : awake ? "probably awake" : "probably asleep",
+    !owl && // A sleeping owl: the night-owl mystery's clue.
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "span",
+      {
+        title: "the owl only wakes at midnight, Cairo time",
+        "aria-label": "a sleeping owl",
+        className: "cursor-help select-none opacity-40 grayscale transition-opacity hover:opacity-90",
+        children: [
+          "🦉",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-0.5 text-[9px]", children: "z" })
+        ]
+      }
+    )
   ] });
 }
 function Magnetic({
@@ -4815,7 +4906,22 @@ function LanyardBadge({ photo, photoAlt }) {
                             }
                           ),
                           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-[#0d1224] via-transparent to-transparent" }),
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" })
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute left-1/2 top-2.5 h-2 w-9 -translate-x-1/2 rounded-full bg-[#0d1224] ring-1 ring-white/20" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "div",
+                            {
+                              className: "absolute left-1/2 top-6 flex -translate-x-1/2 gap-1",
+                              title: flips >= 7 ? "VIP" : "punch card · 7 holes",
+                              "aria-hidden": true,
+                              children: Array.from({ length: 7 }, (_, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                "span",
+                                {
+                                  className: `h-1.5 w-1.5 rounded-full border ${i < Math.min(flips, 7) ? "border-amber-300 bg-amber-300" : "border-white/50 bg-[#0d1224]/70"}`
+                                },
+                                i
+                              ))
+                            }
+                          )
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-1 flex-col px-4 pb-3 pt-1", children: [
                           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300", children: profile.domain }),
@@ -6906,6 +7012,11 @@ function SystemMap() {
             selState.queued,
             sel.max ? ` · autoscale ${sel.min}–${sel.max}` : ""
           ] }),
+          selected === "api" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-amber-300/80", children: [
+            "SLO: never 0/",
+            selState.pods.length,
+            " ready. (Instances restart in ~3s.)"
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
             {
@@ -7223,7 +7334,8 @@ function SiteFooter() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground font-medium", children: profile.name }),
         " — implementation made by AI."
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-primary/80", children: "Hi there i love u <3 :)" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-primary/80", children: "Hi there i love u <3 :)" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 select-text font-mono text-[10px] text-muted-foreground/40", children: "// TODO(dev): remove the debug hook before launch. it's still listening in the console." })
     ] })
   ] });
 }
@@ -8246,6 +8358,7 @@ const commands = [
         print("         hits chain into whatever they slide into");
         print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
         print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("fun fact it can't resist the ACPC track. it drives right into the party.");
         print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
@@ -8299,6 +8412,15 @@ const commands = [
       }
       if (solved.length === MYSTERIES.length)
         print("All of them. Click the counter for your certificate.");
+    }
+  },
+  {
+    name: "hire",
+    hidden: true,
+    description: "",
+    run: ({ print }) => {
+      print("hire: permission denied");
+      print("(only root can make offers. you know how to become root.)");
     }
   },
   {
