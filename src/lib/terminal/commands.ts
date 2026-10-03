@@ -289,7 +289,12 @@ export const commands: Command[] = [
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("Use `car off`, `car on`, `car truck`. Click it (bottom-left) to drive, on desktop.");
+        print("drive    click the car bottom-left (desktop) to take the wheel");
+        print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
+        print("crash    knock headings, buttons and images across the page;");
+        print("         hits chain into whatever they slide into");
+        print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
+        print("Use `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
       if (arg === "on" || arg === "off") {

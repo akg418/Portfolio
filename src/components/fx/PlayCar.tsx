@@ -14,7 +14,8 @@ import {
  *
  * At rest it drives up and down a short stretch at the bottom-left of the
  * window, just above the terminal bar, small and faded. Every so often it stops and asks, in a
- * speech bubble, "want play!" and then "click on me". On a desktop, clicking
+ * speech bubble, "want play!" and then "click on me" (once per session; the
+ * terminal greeting and `car` explain the rest). On a desktop, clicking
  * it hands over the wheel: arrow keys or WASD drive it anywhere on the page,
  * Shift is turbo, space brakes, and the window scrolls to follow. There are
  * four to choose from (hatchback, racer, monster truck, motorcycle), each
@@ -64,7 +65,16 @@ const IDLE_SPAN = 200;
 const PUSH = 0.14;
 const SPIN = 0.09;
 const SLIDE_FRICTION = 0.93;
-const ASK_EVERY: [number, number] = [7000, 12000];
+/** The "want play!" bubble shows once per browser session. */
+const ASKED_KEY = "car-asked";
+
+function alreadyAsked() {
+  try {
+    return sessionStorage.getItem(ASKED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 const CANDIDATES =
   "main h1, main h2, main h3, main h4, main p, main a, main button, main img, main li, main [class*='rounded-md'], main [class*='rounded-full']";
 
@@ -429,7 +439,12 @@ export function PlayCar() {
         const z = zone();
         s.y = z.y;
         s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);
-        if (canDrive && phase === "drive" && now > nextAsk) {
+        if (canDrive && phase === "drive" && now > nextAsk && !alreadyAsked()) {
+          try {
+            sessionStorage.setItem(ASKED_KEY, "1");
+          } catch {
+            /* private mode: it may ask again next load */
+          }
           phase = "ask1";
           phaseUntil = now + 1700;
           say("want play!");
@@ -440,7 +455,6 @@ export function PlayCar() {
         } else if (phase === "ask2" && now > phaseUntil) {
           phase = "drive";
           say(null);
-          nextAsk = now + ASK_EVERY[0] + Math.random() * (ASK_EVERY[1] - ASK_EVERY[0]);
         }
 
         const want = phase === "drive" ? IDLE_SPEED : 0;

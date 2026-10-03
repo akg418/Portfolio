@@ -26,6 +26,10 @@ const GREETING: Line[] = [
     kind: "sys",
     text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize.",
   },
+  {
+    kind: "sys",
+    text: "🚗 See the car bottom-left? Click it to drive (desktop): arrows/WASD, shift turbo, space brake — and crash into anything. `car` for the garage.",
+  },
 ];
 
 export function Terminal({
