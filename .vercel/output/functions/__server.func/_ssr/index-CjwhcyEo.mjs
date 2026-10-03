@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-CW147PXg.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-DpkIvbXR.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -574,7 +574,6 @@ function confetti(x = window.innerWidth / 2, y = window.innerHeight / 3) {
   requestAnimationFrame(frame);
 }
 const SECRET_WORD = ["g", "o", "m", "a", "a"];
-const ARCADE_MS = 2e4;
 const KEY_HASH = "a48cea5f";
 const PROBLEM_KEY = "ahmed.dev:problem";
 function MysteryHud() {
@@ -596,9 +595,12 @@ function MysteryHud() {
     window.addEventListener(MYSTERY_EVENT, on);
     return () => window.removeEventListener(MYSTERY_EVENT, on);
   }, []);
+  const [arcade, setArcade] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    document.documentElement.classList.toggle("arcade", arcade);
+  }, [arcade]);
   reactExports.useEffect(() => {
     let i = 0;
-    let timer = 0;
     const on = (e) => {
       const t = e.target;
       if (t?.closest("input, textarea")) return;
@@ -606,19 +608,11 @@ function MysteryHud() {
       i = k === SECRET_WORD[i] ? i + 1 : k === SECRET_WORD[0] ? 1 : 0;
       if (i < SECRET_WORD.length) return;
       i = 0;
-      document.documentElement.classList.add("arcade");
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        () => document.documentElement.classList.remove("arcade"),
-        ARCADE_MS
-      );
+      setArcade((a) => !a);
       solveMystery("konami");
     };
     window.addEventListener("keydown", on);
-    return () => {
-      window.removeEventListener("keydown", on);
-      window.clearTimeout(timer);
-    };
+    return () => window.removeEventListener("keydown", on);
   }, []);
   reactExports.useEffect(() => {
     console.log(
@@ -654,21 +648,36 @@ function MysteryHud() {
   const count = solved.length;
   const total = MYSTERIES.length;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-    count > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        type: "button",
-        onClick: () => count === total && setCertificate(true),
-        title: count === total ? "All found — open your certificate" : "Mysteries found · type `mysteries` in the terminal",
-        className: "fixed left-4 top-20 z-30 hidden items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md sm:flex",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "h-3.5 w-3.5" }),
-          count,
-          "/",
-          total
-        ]
-      }
-    ),
+    count > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "group fixed left-4 top-20 z-30 hidden sm:block", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => count === total && setCertificate(true),
+          "aria-describedby": "mystery-info",
+          className: "flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "h-3.5 w-3.5" }),
+            count,
+            "/",
+            total
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(MysteryInfo, { solved })
+    ] }),
+    arcade && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed bottom-16 left-1/2 z-[71] flex -translate-x-1/2 items-center gap-2 rounded-full border border-amber-400/60 bg-background/90 px-3 py-1.5 font-mono text-[11px] text-amber-300 shadow-lg", children: [
+      "🕹 arcade mode · type GOMAA again to exit",
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setArcade(false),
+          className: "rounded-full border border-amber-400/50 px-2 py-0.5 hover:bg-amber-400/10",
+          children: "exit"
+        }
+      )
+    ] }),
     toast && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-[110] -translate-x-1/2 rounded-full border border-amber-400/60 bg-background/90 px-4 py-2 font-mono text-xs text-amber-300 shadow-lg backdrop-blur-md", children: [
       "🔍 ",
       toast,
@@ -777,6 +786,66 @@ function Certificate({ username, onClose }) {
           ]
         }
       )
+    }
+  );
+}
+function MysteryInfo({ solved }) {
+  const forAll = MYSTERIES.filter((m) => !m.dev);
+  const forDevs = MYSTERIES.filter((m) => m.dev);
+  const row = (m) => {
+    const done = solved.includes(m.id);
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: done ? "text-emerald-400" : "text-muted-foreground", children: done ? "✔" : "?" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: done ? "text-foreground" : "text-muted-foreground", children: done ? m.title : m.riddle })
+    ] }, m.id);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      id: "mystery-info",
+      role: "tooltip",
+      className: "invisible absolute left-0 top-full mt-2 max-h-[calc(100vh-8rem)] w-[340px] overflow-y-auto translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-amber-300", children: [
+          "Mysteries · ",
+          solved.length,
+          "/",
+          MYSTERIES.length,
+          " found"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-1.5 text-muted-foreground", children: [
+          "Hidden challenges scattered around this site. Nothing announces them — you just found",
+          solved.length > 1 ? " some" : " one",
+          ". Each riddle below hints at one still locked."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 text-[10px] uppercase tracking-widest text-foreground", children: [
+          "For everyone · ",
+          forAll.length
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground", children: "Things to click, drive, type, poke or wait for." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-1.5 space-y-1", children: forAll.map(row) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 text-[10px] uppercase tracking-widest text-foreground", children: [
+          "For developers · ",
+          forDevs.length
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground", children: "Need the browser DevTools: the console, styles, storage." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-1.5 space-y-1", children: forDevs.map(row) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 border-t border-border pt-2.5 text-muted-foreground", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: "Secret commands:" }),
+          " the terminal knows commands that",
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "help" }),
+          " doesn't list. One of them is",
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: "mysteries" }),
+          ", which shows this list too."
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 text-muted-foreground", children: [
+          "Progress is saved in this browser. Find all ",
+          MYSTERIES.length,
+          " for a certificate."
+        ] })
+      ]
     }
   );
 }
