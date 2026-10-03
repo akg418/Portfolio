@@ -343,6 +343,9 @@ export function PlayCar() {
       scan();
     };
     toViewportRef.current = () => {
+      // Whatever the bubble was saying mid-drive ends with the drive.
+      nudgeRef.current = { text: "", until: 0 };
+      say(null);
       const z = zone();
       s.x = Math.max(z.x0, Math.min(z.x1, s.x - window.scrollX));
       s.y = z.y;
@@ -542,6 +545,8 @@ export function PlayCar() {
   };
   const stop = () => {
     drivingRef.current = false;
+    // Stopping puts the website back the way it was.
+    resetRef.current();
     toViewportRef.current();
     setDriving(false);
     setVehicleDriving(false);
