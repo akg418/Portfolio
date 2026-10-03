@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BubHzfKa.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-CHJK-8gx.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -609,7 +609,14 @@ const IDLE_SPAN = 200;
 const PUSH = 0.14;
 const SPIN = 0.09;
 const SLIDE_FRICTION = 0.93;
-const ASK_EVERY = [7e3, 12e3];
+const ASKED_KEY = "car-asked";
+function alreadyAsked() {
+  try {
+    return sessionStorage.getItem(ASKED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
 const CANDIDATES = "main h1, main h2, main h3, main h4, main p, main a, main button, main img, main li, main [class*='rounded-md'], main [class*='rounded-full']";
 function PlayCar() {
   const vehicle = useVehicle();
@@ -918,7 +925,11 @@ function PlayCar() {
         const z = zone();
         s.y = z.y;
         s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);
-        if (canDrive && phase === "drive" && now2 > nextAsk) {
+        if (canDrive && phase === "drive" && now2 > nextAsk && !alreadyAsked()) {
+          try {
+            sessionStorage.setItem(ASKED_KEY, "1");
+          } catch {
+          }
           phase = "ask1";
           phaseUntil = now2 + 1700;
           say("want play!");
@@ -929,7 +940,6 @@ function PlayCar() {
         } else if (phase === "ask2" && now2 > phaseUntil) {
           phase = "drive";
           say(null);
-          nextAsk = now2 + ASK_EVERY[0] + Math.random() * (ASK_EVERY[1] - ASK_EVERY[0]);
         }
         const want = phase === "drive" ? IDLE_SPEED : 0;
         s.v += (want - s.v) * Math.min(1, dt * 3);
@@ -7517,7 +7527,12 @@ const commands = [
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("Use `car off`, `car on`, `car truck`. Click it (bottom-left) to drive, on desktop.");
+        print("drive    click the car bottom-left (desktop) to take the wheel");
+        print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
+        print("crash    knock headings, buttons and images across the page;");
+        print("         hits chain into whatever they slide into");
+        print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
+        print("Use `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
       if (arg === "on" || arg === "off") {
@@ -7670,6 +7685,10 @@ const GREETING = [
   {
     kind: "sys",
     text: "Type `help` to see what I can do. Drag the title bar to move · drag the corner to resize."
+  },
+  {
+    kind: "sys",
+    text: "🚗 See the car bottom-left? Click it to drive (desktop): arrows/WASD, shift turbo, space brake — and crash into anything. `car` for the garage."
   }
 ];
 function Terminal({
