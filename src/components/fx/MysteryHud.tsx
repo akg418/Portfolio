@@ -11,18 +11,8 @@ import {
   type MysteryEvent,
 } from "@/lib/mysteries";
 
-const KONAMI = [
-  "arrowup",
-  "arrowup",
-  "arrowdown",
-  "arrowdown",
-  "arrowleft",
-  "arrowright",
-  "arrowleft",
-  "arrowright",
-  "b",
-  "a",
-];
+/** Typing the site owner's name, in order (any case), turns on arcade mode. */
+const SECRET_WORD = ["g", "o", "m", "a", "a"];
 const ARCADE_MS = 20000;
 /** fnv("balloon-ac"): the console key, decoded from the hex in `--x-key`. */
 const KEY_HASH = "a48cea5f";
@@ -31,7 +21,7 @@ const PROBLEM_KEY = "ahmed.dev:problem";
 /**
  * The mystery layer: nothing until the first one is found, then a small
  * `n/N` counter, a toast per discovery, and a certificate when all are done.
- * It also hosts the global listeners some mysteries need (the Konami code)
+ * It also hosts the global listeners some mysteries need (the GOMAA code)
  * and plants the two developer puzzles (a console API and a problem in
  * localStorage).
  */
@@ -57,7 +47,7 @@ export function MysteryHud() {
     return () => window.removeEventListener(MYSTERY_EVENT, on);
   }, []);
 
-  // ↑↑↓↓←→←→BA: arcade mode for a while.
+  // G-O-M-A-A typed anywhere outside a text field: arcade mode for a while.
   useEffect(() => {
     let i = 0;
     let timer = 0;
@@ -65,8 +55,8 @@ export function MysteryHud() {
       const t = e.target as HTMLElement | null;
       if (t?.closest("input, textarea")) return;
       const k = e.key.toLowerCase();
-      i = k === KONAMI[i] ? i + 1 : k === KONAMI[0] ? 1 : 0;
-      if (i < KONAMI.length) return;
+      i = k === SECRET_WORD[i] ? i + 1 : k === SECRET_WORD[0] ? 1 : 0;
+      if (i < SECRET_WORD.length) return;
       i = 0;
       document.documentElement.classList.add("arcade");
       window.clearTimeout(timer);

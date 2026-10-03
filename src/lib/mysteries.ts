@@ -23,7 +23,7 @@ export type MysteryId =
 export type Mystery = { id: MysteryId; title: string; riddle: string; dev?: boolean };
 
 export const MYSTERIES: Mystery[] = [
-  { id: "konami", title: "Old school", riddle: "Some cheat codes are older than the web." },
+  { id: "konami", title: "Old school", riddle: "Type the name hiding in my email address." },
   { id: "sudo", title: "Root access", riddle: "Ask the terminal for the job — with root." },
   { id: "badge", title: "Persistence", riddle: "Flip your perspective. Then again. And again." },
   {
