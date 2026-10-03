@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-D-f1kFP0.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BIFztk3U.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -3575,39 +3575,43 @@ function ParticleHeading({ lines, className }) {
       window.removeEventListener("touchend", onTouchEnd);
     };
   }, [lines]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "h2",
-      {
-        ref: headingRef,
-        className,
-        style: live ? { color: "transparent", WebkitTextFillColor: "transparent" } : void 0,
-        children: lines.map((line, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-          i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "span",
-            {
-              ref: (el) => {
-                lineRefs.current[i] = el;
-              },
-              className: line.gradient ? "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : void 0,
-              style: live && line.gradient ? { backgroundImage: "none" } : void 0,
-              children: line.text
-            }
-          )
-        ] }, i))
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "canvas",
-      {
-        ref: canvasRef,
-        "aria-hidden": true,
-        className: "pointer-events-none absolute",
-        style: { left: -BLEED, top: -BLEED }
-      }
-    )
-  ] });
+  return (
+    // Not selectable: the visible words are particles, and a selection box over
+    // the hidden text underneath only looks broken. Screen readers still read it.
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative select-none", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "h2",
+        {
+          ref: headingRef,
+          className,
+          style: live ? { color: "transparent", WebkitTextFillColor: "transparent" } : void 0,
+          children: lines.map((line, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+            i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                ref: (el) => {
+                  lineRefs.current[i] = el;
+                },
+                className: line.gradient ? "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent" : void 0,
+                style: live && line.gradient ? { backgroundImage: "none" } : void 0,
+                children: line.text
+              }
+            )
+          ] }, i))
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "canvas",
+        {
+          ref: canvasRef,
+          "aria-hidden": true,
+          className: "pointer-events-none absolute",
+          style: { left: -BLEED, top: -BLEED }
+        }
+      )
+    ] })
+  );
 }
 function ScrollLit({ text, className }) {
   const ref = reactExports.useRef(null);
