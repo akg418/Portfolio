@@ -13,7 +13,6 @@ import {
 
 /** Typing the site owner's name, in order (any case), turns on arcade mode. */
 const SECRET_WORD = ["g", "o", "m", "a", "a"];
-const ARCADE_MS = 20000;
 /** fnv("balloon-ac"): the console key, decoded from the hex in `--x-key`. */
 const KEY_HASH = "a48cea5f";
 const PROBLEM_KEY = "ahmed.dev:problem";
@@ -47,10 +46,13 @@ export function MysteryHud() {
     return () => window.removeEventListener(MYSTERY_EVENT, on);
   }, []);
 
-  // G-O-M-A-A typed anywhere outside a text field: arcade mode for a while.
+  // G-O-M-A-A typed anywhere outside a text field toggles arcade mode.
+  const [arcade, setArcade] = useState(false);
+  useEffect(() => {
+    document.documentElement.classList.toggle("arcade", arcade);
+  }, [arcade]);
   useEffect(() => {
     let i = 0;
-    let timer = 0;
     const on = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (t?.closest("input, textarea")) return;
@@ -58,19 +60,11 @@ export function MysteryHud() {
       i = k === SECRET_WORD[i] ? i + 1 : k === SECRET_WORD[0] ? 1 : 0;
       if (i < SECRET_WORD.length) return;
       i = 0;
-      document.documentElement.classList.add("arcade");
-      window.clearTimeout(timer);
-      timer = window.setTimeout(
-        () => document.documentElement.classList.remove("arcade"),
-        ARCADE_MS,
-      );
+      setArcade((a) => !a);
       solveMystery("konami");
     };
     window.addEventListener("keydown", on);
-    return () => {
-      window.removeEventListener("keydown", on);
-      window.clearTimeout(timer);
-    };
+    return () => window.removeEventListener("keydown", on);
   }, []);
 
   // Developer puzzles: a console API, and a problem left in localStorage.
@@ -114,19 +108,31 @@ export function MysteryHud() {
   return (
     <>
       {count > 0 && (
-        <button
-          type="button"
-          onClick={() => count === total && setCertificate(true)}
-          title={
-            count === total
-              ? "All found — open your certificate"
-              : "Mysteries found · type `mysteries` in the terminal"
-          }
-          className="fixed left-4 top-20 z-30 hidden items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md sm:flex"
-        >
-          <Search className="h-3.5 w-3.5" />
-          {count}/{total}
-        </button>
+        <div className="group fixed left-4 top-20 z-30 hidden sm:block">
+          <button
+            type="button"
+            onClick={() => count === total && setCertificate(true)}
+            aria-describedby="mystery-info"
+            className="flex items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md"
+          >
+            <Search className="h-3.5 w-3.5" />
+            {count}/{total}
+          </button>
+          <MysteryInfo solved={solved} />
+        </div>
+      )}
+
+      {arcade && (
+        <div className="fixed bottom-16 left-1/2 z-[71] flex -translate-x-1/2 items-center gap-2 rounded-full border border-amber-400/60 bg-background/90 px-3 py-1.5 font-mono text-[11px] text-amber-300 shadow-lg">
+          🕹 arcade mode · type GOMAA again to exit
+          <button
+            type="button"
+            onClick={() => setArcade(false)}
+            className="rounded-full border border-amber-400/50 px-2 py-0.5 hover:bg-amber-400/10"
+          >
+            exit
+          </button>
+        </div>
       )}
 
       {toast && (
@@ -233,6 +239,67 @@ function Certificate({ username, onClose }: { username: string; onClose: () => v
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * What the counter means, on hover or focus: what mysteries are, the two
+ * kinds, that the terminal keeps secret commands, and the riddles for the
+ * ones still locked. Hints only, never answers.
+ */
+function MysteryInfo({ solved }: { solved: string[] }) {
+  const forAll = MYSTERIES.filter((m) => !m.dev);
+  const forDevs = MYSTERIES.filter((m) => m.dev);
+  const row = (m: (typeof MYSTERIES)[number]) => {
+    const done = solved.includes(m.id);
+    return (
+      <li key={m.id} className="flex gap-2">
+        <span className={done ? "text-emerald-400" : "text-muted-foreground"}>
+          {done ? "✔" : "?"}
+        </span>
+        <span className={done ? "text-foreground" : "text-muted-foreground"}>
+          {done ? m.title : m.riddle}
+        </span>
+      </li>
+    );
+  };
+  return (
+    <div
+      id="mystery-info"
+      role="tooltip"
+      className="invisible absolute left-0 top-full mt-2 max-h-[calc(100vh-8rem)] w-[340px] overflow-y-auto translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+    >
+      <div className="text-xs font-bold text-amber-300">
+        Mysteries · {solved.length}/{MYSTERIES.length} found
+      </div>
+      <p className="mt-1.5 text-muted-foreground">
+        Hidden challenges scattered around this site. Nothing announces them — you just found
+        {solved.length > 1 ? " some" : " one"}. Each riddle below hints at one still locked.
+      </p>
+
+      <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground">
+        For everyone · {forAll.length}
+      </div>
+      <p className="text-muted-foreground">Things to click, drive, type, poke or wait for.</p>
+      <ul className="mt-1.5 space-y-1">{forAll.map(row)}</ul>
+
+      <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground">
+        For developers · {forDevs.length}
+      </div>
+      <p className="text-muted-foreground">
+        Need the browser DevTools: the console, styles, storage.
+      </p>
+      <ul className="mt-1.5 space-y-1">{forDevs.map(row)}</ul>
+
+      <div className="mt-3 border-t border-border pt-2.5 text-muted-foreground">
+        <span className="text-foreground">Secret commands:</span> the terminal knows commands that{" "}
+        <span className="text-primary">help</span> doesn't list. One of them is{" "}
+        <span className="text-primary">mysteries</span>, which shows this list too.
+      </div>
+      <div className="mt-2 text-muted-foreground">
+        Progress is saved in this browser. Find all {MYSTERIES.length} for a certificate.
       </div>
     </div>
   );
