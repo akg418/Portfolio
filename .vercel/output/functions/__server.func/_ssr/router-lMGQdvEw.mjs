@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-DLm1OSrh.css";
+const appCss = "/assets/styles-BiKwCpRz.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -325,6 +325,7 @@ const STORAGE_KEYS = {
   visits: "visits",
   gamingMode: "gamingMode",
   robots: "robots",
+  vehicle: "vehicle",
   termMode: "termMode_v2",
   termColors: "term-colors",
   termAliases: "term-aliases",
@@ -485,7 +486,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-B1uQk0B4.mjs");
+const $$splitComponentImporter = () => import("./index-C9O3qyOC.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -511,8 +512,8 @@ export {
   STORAGE_KEYS as S,
   THEME_EVENT as T,
   applyTheme as a,
-  readJson as b,
-  writeJson as c,
+  readFlag as b,
+  writeFlag as c,
   domainParts as d,
   competitions as e,
   problemSetting as f,
@@ -527,11 +528,11 @@ export {
   readString as o,
   profile as p,
   writeString as q,
-  readFlag as r,
+  readJson as r,
   skills as s,
   toggleTheme as t,
   readNumber as u,
   removeKey as v,
-  writeFlag as w,
+  writeJson as w,
   router as x
 };

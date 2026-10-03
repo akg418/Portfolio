@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, r as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, b as readJson, c as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, w as writeFlag, v as removeKey } from "./router-IG6rJmWH.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-lMGQdvEw.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -452,67 +452,231 @@ function BackToTop() {
     }
   );
 }
-const ACCEL = 900;
-const BRAKE = 1500;
-const MAX_FWD = 560;
+function Beams({ y1, y2, reach }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: "0.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: `M${reach} ${y1} L${reach + 50} ${y1 - 13} L${reach + 50} ${y1 + 5} Z`,
+        fill: "#fde68a",
+        opacity: "0.35"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "path",
+      {
+        d: `M${reach} ${y2} L${reach + 50} ${y2 - 5} L${reach + 50} ${y2 + 13} Z`,
+        fill: "#fde68a",
+        opacity: "0.35"
+      }
+    )
+  ] });
+}
+function Car({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "52", height: "34", viewBox: "0 0 52 34", className: "overflow-visible", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "v-car", x1: "0", y1: "0", x2: "1", y2: "1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0", stopColor: "#22d3ee" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "#a855f7" })
+    ] }) }),
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 9, y2: 25, reach: 46 }),
+    [
+      [9, 1],
+      [33, 1],
+      [9, 27],
+      [33, 27]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "10", height: "6", rx: "2", fill: "#0f172a" }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "3", y: "4", width: "44", height: "26", rx: "11", fill: "url(#v-car)" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "6", y: "7", width: "38", height: "5", rx: "2.5", fill: "#fff", opacity: "0.25" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "15", y: "8", width: "20", height: "18", rx: "6", fill: "#0b1224", opacity: "0.85" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "29", y: "10", width: "5", height: "14", rx: "2.5", fill: "#7dd3fc", opacity: "0.75" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "16", y: "10", width: "4", height: "14", rx: "2", fill: "#7dd3fc", opacity: "0.4" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "10", r: "2.4", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "24", r: "2.4", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "8", width: "2", height: "5", rx: "1", fill: "#f43f5e" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "21", width: "2", height: "5", rx: "1", fill: "#f43f5e" })
+  ] });
+}
+function Racer({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "60", height: "30", viewBox: "0 0 60 30", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 9, y2: 21, reach: 56 }),
+    [
+      [8, 0],
+      [40, 0],
+      [8, 24],
+      [40, 24]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "12", height: "6", rx: "2", fill: "#0f172a" }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M4 7 Q4 4 8 4 L44 5 Q58 9 58 15 Q58 21 44 25 L8 26 Q4 26 4 23 Z", fill: "#f43f5e" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "10", y: "13.5", width: "44", height: "3", fill: "#fff", opacity: "0.85" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M22 8 L36 9 Q40 15 36 21 L22 22 Q19 15 22 8 Z", fill: "#0b1224", opacity: "0.9" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M33 10 Q36 15 33 20", stroke: "#7dd3fc", strokeWidth: "2", fill: "none", opacity: "0.8" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "1", y: "3", width: "4", height: "24", rx: "1.5", fill: "#111827" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "56", cy: "10", r: "1.8", fill: "#fef08a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "56", cy: "20", r: "1.8", fill: "#fef08a" })
+  ] });
+}
+function Truck({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "68", height: "48", viewBox: "0 0 68 48", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx(Beams, { y1: 14, y2: 34, reach: 64 }),
+    [
+      [8, 0],
+      [44, 0],
+      [8, 38],
+      [44, 38]
+    ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "16", height: "10", rx: "3", fill: "#0f172a" }),
+      [2, 6, 10].map((o) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: x + o, y, width: "2", height: "10", fill: "#334155" }, o))
+    ] }, `${x}-${y}`)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2", y: "7", width: "64", height: "34", rx: "7", fill: "#fbbf24" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "4", y: "10", width: "34", height: "28", rx: "3", fill: "#b45309", opacity: "0.55" }),
+    [14, 22, 30].map((x) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y: "12", width: "2", height: "24", fill: "#78350f", opacity: "0.5" }, x)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "42", y: "11", width: "20", height: "26", rx: "4", fill: "#0b1224", opacity: "0.9" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "56", y: "13", width: "4", height: "22", rx: "2", fill: "#7dd3fc", opacity: "0.75" }),
+    [16, 22, 28, 34].map((y) => /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "48", cy: y, r: "1.5", fill: "#fef08a" }, y)),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "64", y: "12", width: "3", height: "24", rx: "1.5", fill: "#111827" })
+  ] });
+}
+function Moto({ lights }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { width: "46", height: "20", viewBox: "0 0 46 20", className: "overflow-visible", children: [
+    lights && /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M42 10 L92 -4 L92 24 Z", fill: "#fde68a", opacity: "0.18" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "1", y: "7", width: "12", height: "6", rx: "3", fill: "#0f172a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "33", y: "7", width: "12", height: "6", rx: "3", fill: "#0f172a" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "9", y: "6", width: "27", height: "8", rx: "4", fill: "#a855f7" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "22", y: "1", width: "3", height: "18", rx: "1.5", fill: "#cbd5e1" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("ellipse", { cx: "17", cy: "10", rx: "7", ry: "6", fill: "#0b1224" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "20", cy: "10", r: "4.2", fill: "#22d3ee" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "21.5", y: "8", width: "2", height: "4", rx: "1", fill: "#0b1224", opacity: "0.7" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "43", cy: "10", r: "1.8", fill: "#fef08a" })
+  ] });
+}
+const SPRITES = {
+  car: Car,
+  racer: Racer,
+  truck: Truck,
+  moto: Moto
+};
+function VehicleSprite({ kind, lights }) {
+  const S = SPRITES[kind];
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "block drop-shadow-[0_6px_6px_rgba(0,0,0,0.45)]", children: /* @__PURE__ */ jsxRuntimeExports.jsx(S, { lights }) });
+}
+const VEHICLE_EVENT = "vehicle";
+const VEHICLE_KINDS = ["car", "racer", "truck", "moto"];
+const VEHICLE_LABELS = {
+  car: "Hatchback",
+  racer: "Racer",
+  truck: "Monster truck",
+  moto: "Motorcycle"
+};
+const DEFAULT = { on: true, kind: "car" };
+function parse$1(value) {
+  if (typeof value !== "object" || value === null) return void 0;
+  const raw = value;
+  const kind = VEHICLE_KINDS.find((k) => k === raw.kind) ?? DEFAULT.kind;
+  return { on: raw.on !== false, kind };
+}
+function readVehicle() {
+  return readJson(STORAGE_KEYS.vehicle, parse$1) ?? { ...DEFAULT };
+}
+function setVehicle(patch) {
+  const next = { ...readVehicle(), ...patch };
+  writeJson(STORAGE_KEYS.vehicle, next);
+  window.dispatchEvent(new CustomEvent(VEHICLE_EVENT, { detail: next }));
+  return next;
+}
+function useVehicle() {
+  const [state, setState] = reactExports.useState(DEFAULT);
+  reactExports.useEffect(() => {
+    setState(readVehicle());
+    const onChange = (e) => setState(e.detail);
+    window.addEventListener(VEHICLE_EVENT, onChange);
+    return () => window.removeEventListener(VEHICLE_EVENT, onChange);
+  }, []);
+  return state;
+}
+const SPECS = {
+  car: { accel: 950, max: 580, steer: 3.4, radius: 17, power: 1, rebound: 0.35 },
+  racer: { accel: 1450, max: 860, steer: 3, radius: 17, power: 1.35, rebound: 0.3 },
+  truck: { accel: 650, max: 420, steer: 2.3, radius: 25, power: 3.2, rebound: 0.05 },
+  moto: { accel: 1300, max: 760, steer: 4.8, radius: 12, power: 0.85, rebound: 0.45 }
+};
+const BRAKE = 1600;
 const DRAG = 1.6;
-const STEER = 3.4;
-const RADIUS$1 = 17;
-const IDLE_SPEED = 70;
-const PUSH = 1.25;
-const SLIDE_FRICTION = 0.9;
+const TURBO = 1.55;
+const IDLE_SPEED = 38;
+const IDLE_SCALE = 0.62;
+const BAR_MID = 22;
+const IDLE_SPAN = 200;
+const PUSH = 0.14;
+const SPIN = 0.09;
+const SLIDE_FRICTION = 0.93;
+const ASK_EVERY = [7e3, 12e3];
 const CANDIDATES = "main h1, main h2, main h3, main h4, main p, main a, main button, main img, main li, main [class*='rounded-md'], main [class*='rounded-full']";
 function PlayCar() {
+  const vehicle = useVehicle();
   const carRef = reactExports.useRef(null);
-  const puffRef = reactExports.useRef(null);
+  const bubbleRef = reactExports.useRef(null);
+  const fxRef = reactExports.useRef(null);
   const [driving, setDriving] = reactExports.useState(false);
   const [canDrive, setCanDrive] = reactExports.useState(false);
-  const [enabled, setEnabled] = reactExports.useState(false);
+  const [allowed, setAllowed] = reactExports.useState(false);
   const [moved, setMoved] = reactExports.useState(0);
   const drivingRef = reactExports.useRef(false);
+  const specRef = reactExports.useRef(SPECS.car);
   const resetRef = reactExports.useRef(() => {
   });
   const toPageRef = reactExports.useRef(() => {
   });
   const toViewportRef = reactExports.useRef(() => {
   });
+  specRef.current = SPECS[vehicle.kind];
+  const enabled = allowed && vehicle.on;
   reactExports.useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setEnabled(true);
+    setAllowed(true);
     setCanDrive(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
   }, []);
   reactExports.useEffect(() => {
+    if (!vehicle.on && drivingRef.current) {
+      drivingRef.current = false;
+      setDriving(false);
+    }
+  }, [vehicle.on]);
+  reactExports.useEffect(() => {
     if (!enabled) return;
     const car = carRef.current;
-    const puffLayer = puffRef.current;
+    const bubble = bubbleRef.current;
+    const fxLayer = fxRef.current;
+    const main = document.querySelector("main");
+    const zone = () => {
+      const w = window.innerWidth;
+      const x0 = Math.max(130, w * 0.44);
+      return { x0, x1: Math.min(w - 40, x0 + IDLE_SPAN), y: window.innerHeight - BAR_MID };
+    };
+    const z0 = zone();
     const s = {
-      x: 60,
-      y: window.innerHeight - 140,
+      x: z0.x0 + 20,
+      y: z0.y,
       a: 0,
       v: 0,
       steer: 0,
       bounce: 0,
-      target: { x: 200, y: window.innerHeight - 150 }
+      scale: IDLE_SCALE,
+      dir: 1
     };
+    let phase = "drive";
+    let phaseUntil = 0;
+    let nextAsk = performance.now() + 4e3;
     const keys = /* @__PURE__ */ new Set();
     let pushed = [];
     let lastScan = 0;
     let puffs = [];
+    let rings = [];
+    let shake = 0;
     let raf = 0;
     let last = performance.now();
     let movedCount = 0;
-    const idleBox = () => ({
-      x0: 30,
-      x1: Math.min(window.innerWidth - 60, 340),
-      y0: window.innerHeight - 220,
-      y1: window.innerHeight - 110
-    });
-    const pickTarget = () => {
-      const b = idleBox();
-      s.target = {
-        x: b.x0 + Math.random() * (b.x1 - b.x0),
-        y: b.y0 + Math.random() * (b.y1 - b.y0)
-      };
+    const say = (text) => {
+      bubble.textContent = text ?? "";
+      bubble.style.opacity = text ? "1" : "0";
     };
     const scan = () => {
       const keep = new Map(pushed.map((p) => [p.el, p]));
@@ -542,7 +706,7 @@ function PlayCar() {
             y: r.top + window.scrollY,
             w,
             h,
-            m: Math.min(6, Math.max(0.6, w * h / 5e3)),
+            m: Math.min(5, Math.max(0.5, w * h / 6e3)),
             dx: 0,
             dy: 0,
             vx: 0,
@@ -554,41 +718,73 @@ function PlayCar() {
       }
       pushed = out;
     };
-    const puff = (x, y) => {
-      puffs.push({ x, y, t: 0, s: 4 + Math.random() * 5 });
-      if (puffs.length > 60) puffs.shift();
+    const puff = (x, y, c) => {
+      puffs.push({ x, y, t: 0, s: 4 + Math.random() * 5, c });
+      if (puffs.length > 90) puffs.shift();
+    };
+    const markMoved = (p) => {
+      if (p.el.dataset.carMoved) return false;
+      p.el.dataset.carMoved = "1";
+      movedCount++;
+      return true;
     };
     const collide = () => {
+      const spec = specRef.current;
+      const R = spec.radius;
       let any = false;
       for (const p of pushed) {
         const left = p.x + p.dx;
         const top = p.y + p.dy;
-        if (Math.abs(top + p.h / 2 - s.y) > p.h / 2 + RADIUS$1 + 40) continue;
+        if (Math.abs(top + p.h / 2 - s.y) > p.h / 2 + R + 40) continue;
         const cx = Math.max(left, Math.min(s.x, left + p.w));
         const cy = Math.max(top, Math.min(s.y, top + p.h));
         const ddx = s.x - cx;
         const ddy = s.y - cy;
         const d2 = ddx * ddx + ddy * ddy;
-        if (d2 > RADIUS$1 * RADIUS$1) continue;
+        if (d2 > R * R) continue;
         const d = Math.sqrt(d2) || 1;
         const nx = d2 > 0.01 ? ddx / d : -Math.cos(s.a);
         const ny = d2 > 0.01 ? ddy / d : -Math.sin(s.a);
         const speed = Math.abs(s.v);
         if (speed < 15) continue;
-        const k = speed * PUSH / p.m;
-        p.vx -= nx * k * 0.05;
-        p.vy -= ny * k * 0.05;
-        p.vr += (Math.random() - 0.5) * speed * 0.04 / p.m;
-        s.x += nx * (RADIUS$1 - d + 1);
-        s.y += ny * (RADIUS$1 - d + 1);
-        s.v *= -0.35;
+        const k = speed * PUSH * spec.power / p.m;
+        p.vx -= nx * k;
+        p.vy -= ny * k;
+        p.vr += (Math.random() - 0.5) * speed * SPIN * spec.power / p.m;
+        s.x += nx * (R - d + 1);
+        s.y += ny * (R - d + 1);
+        s.v *= spec.rebound ? -spec.rebound : 0.85;
         s.bounce = 1;
-        if (!p.el.dataset.carMoved) {
-          p.el.dataset.carMoved = "1";
-          movedCount++;
-          any = true;
+        any = markMoved(p) || any;
+        for (let i = 0; i < 5; i++) puff(cx, cy);
+        const force = speed * spec.power;
+        if (force > 380) {
+          rings.push({ x: cx, y: cy, t: 0, r: Math.min(140, force / 4) });
+          shake = Math.min(1, shake + force / 900);
         }
-        for (let i = 0; i < 4; i++) puff(cx, cy);
+      }
+      if (any) setMoved(movedCount);
+    };
+    const cascade = () => {
+      let any = false;
+      for (const a of pushed) {
+        const va = Math.hypot(a.vx, a.vy);
+        if (va < 1.2) continue;
+        const ax = a.x + a.dx;
+        const ay = a.y + a.dy;
+        for (const b of pushed) {
+          if (b === a) continue;
+          const bx = b.x + b.dx;
+          const by = b.y + b.dy;
+          if (ax > bx + b.w || ax + a.w < bx || ay > by + b.h || ay + a.h < by) continue;
+          const share = a.m / (a.m + b.m) * 0.8;
+          b.vx += a.vx * share;
+          b.vy += a.vy * share;
+          b.vr += (Math.random() - 0.5) * va * 0.3;
+          a.vx *= 0.55;
+          a.vy *= 0.55;
+          any = markMoved(b) || any;
+        }
       }
       if (any) setMoved(movedCount);
     };
@@ -618,27 +814,26 @@ function PlayCar() {
       movedCount = 0;
       setMoved(0);
     };
-    const toPage = () => {
+    toPageRef.current = () => {
+      say(null);
+      phase = "drive";
       s.x += window.scrollX;
-      s.y += window.scrollY;
+      s.y += window.scrollY - 60;
+      s.a = -Math.PI / 2;
       scan();
     };
-    const toViewport = () => {
-      s.x -= window.scrollX;
-      s.y -= window.scrollY;
-      const b = idleBox();
-      s.x = Math.max(b.x0, Math.min(b.x1, s.x));
-      s.y = Math.max(b.y0, Math.min(b.y1, s.y));
+    toViewportRef.current = () => {
+      const z = zone();
+      s.x = Math.max(z.x0, Math.min(z.x1, s.x - window.scrollX));
+      s.y = z.y;
       s.v = 0;
-      pickTarget();
+      s.dir = 1;
+      nextAsk = performance.now() + 5e3;
     };
-    toPageRef.current = toPage;
-    toViewportRef.current = toViewport;
     const onKey = (e) => {
       if (!drivingRef.current) return;
       const t = e.target;
       if (t?.closest("input, textarea, [contenteditable=true]")) return;
-      const k = e.key.toLowerCase();
       const map = {
         arrowup: "up",
         w: "up",
@@ -648,9 +843,10 @@ function PlayCar() {
         a: "left",
         arrowright: "right",
         d: "right",
-        " ": "brake"
+        " ": "brake",
+        shift: "turbo"
       };
-      const m = map[k];
+      const m = map[e.key.toLowerCase()];
       if (!m) return;
       e.preventDefault();
       if (e.type === "keydown") keys.add(m);
@@ -664,33 +860,38 @@ function PlayCar() {
       raf = requestAnimationFrame(frame);
       const dt = Math.min(0.033, (now2 - last) / 1e3);
       last = now2;
-      const driving2 = drivingRef.current;
-      if (driving2) {
+      const isDriving = drivingRef.current;
+      const spec = specRef.current;
+      if (isDriving) {
         if (now2 - lastScan > 1500) {
           lastScan = now2;
           scan();
         }
+        const turbo = keys.has("turbo");
+        const max = spec.max * (turbo ? TURBO : 1);
         const throttle = (keys.has("up") ? 1 : 0) - (keys.has("down") ? 1 : 0);
-        if (throttle > 0) s.v += (s.v < 0 ? BRAKE : ACCEL) * dt;
-        else if (throttle < 0) s.v -= (s.v > 0 ? BRAKE : ACCEL * 0.6) * dt;
+        if (throttle > 0) s.v += (s.v < 0 ? BRAKE : spec.accel * (turbo ? 1.5 : 1)) * dt;
+        else if (throttle < 0) s.v -= (s.v > 0 ? BRAKE : spec.accel * 0.6) * dt;
         s.v -= s.v * DRAG * dt;
         if (keys.has("brake")) s.v -= s.v * 6 * dt;
-        s.v = Math.max(-220, Math.min(MAX_FWD, s.v));
+        s.v = Math.max(-240, Math.min(max, s.v));
         const turn = (keys.has("right") ? 1 : 0) - (keys.has("left") ? 1 : 0);
         s.steer += (turn - s.steer) * Math.min(1, dt * 10);
         const grip = Math.min(1, Math.abs(s.v) / 140);
-        s.a += s.steer * STEER * grip * Math.sign(s.v || 1) * dt;
+        s.a += s.steer * spec.steer * grip * Math.sign(s.v || 1) * dt;
         s.x += Math.cos(s.a) * s.v * dt;
         s.y += Math.sin(s.a) * s.v * dt;
-        const maxX = document.documentElement.scrollWidth - RADIUS$1;
-        const maxY = document.documentElement.scrollHeight - RADIUS$1;
-        if (s.x < RADIUS$1 || s.x > maxX || s.y < RADIUS$1 || s.y > maxY) {
-          s.x = Math.max(RADIUS$1, Math.min(maxX, s.x));
-          s.y = Math.max(RADIUS$1, Math.min(maxY, s.y));
+        const R = spec.radius;
+        const maxX = document.documentElement.scrollWidth - R;
+        const maxY = document.documentElement.scrollHeight - R;
+        if (s.x < R || s.x > maxX || s.y < R || s.y > maxY) {
+          s.x = Math.max(R, Math.min(maxX, s.x));
+          s.y = Math.max(R, Math.min(maxY, s.y));
           s.v *= -0.3;
           s.bounce = 1;
         }
         collide();
+        cascade();
         slide();
         const sy = s.y - window.scrollY;
         const vh = window.innerHeight;
@@ -702,37 +903,64 @@ function PlayCar() {
             behavior: "instant"
           });
         }
-        if (throttle !== 0 && Math.abs(s.v) < 260 || Math.abs(s.steer) > 0.6 && Math.abs(s.v) > 220) {
-          if (Math.random() < 0.5) puff(s.x - Math.cos(s.a) * 18, s.y - Math.sin(s.a) * 18);
+        const back = { x: s.x - Math.cos(s.a) * R * 1.1, y: s.y - Math.sin(s.a) * R * 1.1 };
+        if (turbo && throttle > 0) {
+          for (let i = 0; i < 2; i++) puff(back.x, back.y, i ? "#f59e0b" : "#22d3ee");
+        } else if (throttle !== 0 && Math.abs(s.v) < 260 || Math.abs(s.steer) > 0.6 && Math.abs(s.v) > 220) {
+          if (Math.random() < 0.5) puff(back.x, back.y);
         }
+        s.scale += (1 - s.scale) * Math.min(1, dt * 8);
       } else {
-        const dx = s.target.x - s.x;
-        const dy = s.target.y - s.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 14) {
-          pickTarget();
-        } else {
-          let diff = Math.atan2(dy, dx) - s.a;
-          diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-          s.a += Math.max(-1, Math.min(1, diff)) * 2.2 * dt;
-          s.v += (IDLE_SPEED * Math.min(1, dist / 60) - s.v) * 2 * dt;
-          s.x += Math.cos(s.a) * s.v * dt;
-          s.y += Math.sin(s.a) * s.v * dt;
+        const z = zone();
+        s.y = z.y;
+        s.scale += (IDLE_SCALE - s.scale) * Math.min(1, dt * 8);
+        if (canDrive && phase === "drive" && now2 > nextAsk) {
+          phase = "ask1";
+          phaseUntil = now2 + 1700;
+          say("want play!");
+        } else if (phase === "ask1" && now2 > phaseUntil) {
+          phase = "ask2";
+          phaseUntil = now2 + 2400;
+          say("click on me");
+        } else if (phase === "ask2" && now2 > phaseUntil) {
+          phase = "drive";
+          say(null);
+          nextAsk = now2 + ASK_EVERY[0] + Math.random() * (ASK_EVERY[1] - ASK_EVERY[0]);
         }
-        if (Math.random() < 0.03) puff(s.x - Math.cos(s.a) * 18, s.y - Math.sin(s.a) * 18);
+        const want = phase === "drive" ? IDLE_SPEED : 0;
+        s.v += (want - s.v) * Math.min(1, dt * 3);
+        if (s.x > z.x1) s.dir = -1;
+        if (s.x < z.x0) s.dir = 1;
+        const heading = s.dir === 1 ? 0 : Math.PI;
+        let diff = heading - s.a;
+        diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+        s.a += diff * Math.min(1, dt * 5);
+        s.x += Math.cos(s.a) * s.v * dt;
+        if (phase === "drive" && Math.random() < 0.02) puff(s.x - Math.cos(s.a) * 12, s.y + 2);
+        if (phase !== "drive") s.bounce = Math.max(s.bounce, Math.abs(Math.sin(now2 / 160)) * 0.4);
       }
       s.bounce *= Math.exp(-dt * 6);
-      const ox = driving2 ? window.scrollX : 0;
-      const oy = driving2 ? window.scrollY : 0;
+      const ox = isDriving ? window.scrollX : 0;
+      const oy = isDriving ? window.scrollY : 0;
       const wobble = Math.sin(now2 / 90) * (0.6 + Math.min(1, Math.abs(s.v) / 300)) + s.bounce * Math.sin(now2 / 30) * 4;
       car.style.transform = `translate(${s.x - ox}px, ${s.y - oy}px) rotate(${s.a}rad)`;
       const body = car.firstElementChild;
       if (body)
-        body.style.transform = `translate(-50%, -50%) scale(${1 + s.bounce * 0.12}, ${1 - s.bounce * 0.08}) rotate(${wobble * 0.6}deg)`;
+        body.style.transform = `translate(-50%, -50%) scale(${s.scale * (1 + s.bounce * 0.12)}, ${s.scale * (1 - s.bounce * 0.08)}) rotate(${wobble * 0.6}deg)`;
+      bubble.style.transform = `translate(${s.x - ox}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      shake *= Math.exp(-dt * 7);
+      if (main) {
+        main.style.translate = shake > 0.02 ? `${((Math.random() - 0.5) * shake * 14).toFixed(1)}px ${((Math.random() - 0.5) * shake * 10).toFixed(1)}px` : "";
+      }
       puffs = puffs.filter((p) => (p.t += dt) < 0.7);
-      puffLayer.innerHTML = puffs.map((p) => {
+      rings = rings.filter((r) => (r.t += dt) < 0.5);
+      fxLayer.innerHTML = puffs.map((p) => {
         const k = p.t / 0.7;
-        return `<span style="position:absolute;left:0;top:0;width:${p.s}px;height:${p.s}px;border-radius:999px;background:currentColor;opacity:${(1 - k) * 0.35};transform:translate(${p.x - ox - p.s / 2}px,${p.y - oy - p.s / 2 - k * 10}px) scale(${1 + k * 1.5})"></span>`;
+        return `<span style="position:absolute;left:0;top:0;width:${p.s}px;height:${p.s}px;border-radius:999px;background:${p.c ?? "currentColor"};opacity:${(1 - k) * (p.c ? 0.7 : 0.35)};transform:translate(${p.x - ox - p.s / 2}px,${p.y - oy - p.s / 2 - k * 10}px) scale(${1 + k * 1.5})"></span>`;
+      }).join("") + rings.map((r) => {
+        const k = r.t / 0.5;
+        const size = r.r * 2 * (0.2 + k);
+        return `<span style="position:absolute;left:0;top:0;width:${size}px;height:${size}px;border-radius:999px;border:2px solid #22d3ee;opacity:${1 - k};transform:translate(${r.x - ox - size / 2}px,${r.y - oy - size / 2}px)"></span>`;
       }).join("");
     };
     raf = requestAnimationFrame(frame);
@@ -741,8 +969,9 @@ function PlayCar() {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
       window.removeEventListener("blur", clearKeys);
+      if (main) main.style.translate = "";
     };
-  }, [enabled]);
+  }, [enabled, canDrive]);
   const start = () => {
     if (!canDrive || drivingRef.current) return;
     toPageRef.current();
@@ -759,9 +988,18 @@ function PlayCar() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
-        ref: puffRef,
+        ref: fxRef,
         "aria-hidden": true,
         className: "pointer-events-none fixed inset-0 z-40 text-muted-foreground"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        ref: bubbleRef,
+        "aria-hidden": true,
+        className: "pointer-events-none fixed left-0 top-0 z-50 whitespace-nowrap rounded-full border border-primary/50 bg-background/90 px-2.5 py-1 font-mono text-[11px] font-semibold text-primary shadow-lg transition-opacity duration-300",
+        style: { opacity: 0, transform: "translate(-200px, -200px)" }
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -776,18 +1014,28 @@ function PlayCar() {
             type: "button",
             onClick: start,
             "data-cursor": driving ? void 0 : canDrive ? "Drive" : void 0,
-            "aria-label": canDrive ? "Drive the car" : "A little car",
-            className: `block ${driving ? "cursor-default" : canDrive ? "cursor-pointer" : "cursor-default"}`,
+            "aria-label": canDrive ? `Drive the ${VEHICLE_LABELS[vehicle.kind].toLowerCase()}` : "A little car",
+            className: `block transition-opacity duration-300 ${driving ? "cursor-default opacity-100" : canDrive ? "cursor-pointer opacity-50 hover:opacity-100" : "pointer-events-none opacity-40"}`,
             style: { transform: "translate(-50%, -50%)" },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(CarSprite, { lights: driving })
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(VehicleSprite, { kind: vehicle.kind, lights: driving })
           }
         )
       }
     ),
-    driving && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "hidden text-muted-foreground sm:inline", children: [
-        "↑ ↓ ← → or WASD · space to brake",
-        moved > 0 ? ` · ${moved} things knocked over` : ""
+    driving && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex overflow-hidden rounded-full border border-border", children: VEHICLE_KINDS.map((k) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setVehicle({ kind: k }),
+          className: `px-2.5 py-1 ${vehicle.kind === k ? "bg-primary text-primary-foreground" : "hover:text-primary"}`,
+          children: VEHICLE_LABELS[k]
+        },
+        k
+      )) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-muted-foreground", children: [
+        "↑↓←→ / WASD · shift turbo · space brake",
+        moved > 0 ? ` · ${moved} knocked over` : ""
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
@@ -815,42 +1063,6 @@ function PlayCar() {
       )
     ] })
   ] });
-}
-function CarSprite({ lights }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "svg",
-    {
-      width: "52",
-      height: "34",
-      viewBox: "0 0 52 34",
-      className: "overflow-visible drop-shadow-[0_6px_6px_rgba(0,0,0,0.45)]",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("defs", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("linearGradient", { id: "car-body", x1: "0", y1: "0", x2: "1", y2: "1", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "0", stopColor: "#22d3ee" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("stop", { offset: "1", stopColor: "#a855f7" })
-        ] }) }),
-        lights && /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: "0.5", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M46 9 L96 -4 L96 14 Z", fill: "#fde68a", opacity: "0.35" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("path", { d: "M46 25 L96 20 L96 38 Z", fill: "#fde68a", opacity: "0.35" })
-        ] }),
-        [
-          [9, 1],
-          [33, 1],
-          [9, 27],
-          [33, 27]
-        ].map(([x, y]) => /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x, y, width: "10", height: "6", rx: "2", fill: "#0f172a" }, `${x}-${y}`)),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "3", y: "4", width: "44", height: "26", rx: "11", fill: "url(#car-body)" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "6", y: "7", width: "38", height: "5", rx: "2.5", fill: "#fff", opacity: "0.25" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "15", y: "8", width: "20", height: "18", rx: "6", fill: "#0b1224", opacity: "0.85" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "29", y: "10", width: "5", height: "14", rx: "2.5", fill: "#7dd3fc", opacity: "0.75" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "16", y: "10", width: "4", height: "14", rx: "2", fill: "#7dd3fc", opacity: "0.4" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "10", r: "2.4", fill: lights ? "#fef08a" : "#fde68a" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "45", cy: "24", r: "2.4", fill: lights ? "#fef08a" : "#fde68a" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "8", width: "2", height: "5", rx: "1", fill: "#f43f5e" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { x: "2.5", y: "21", width: "2", height: "5", rx: "1", fill: "#f43f5e" })
-      ]
-    }
-  );
 }
 const SEEN_KEY = "preloader-seen";
 const COUNT_MS = 1400;
@@ -7287,6 +7499,38 @@ const commands = [
         print(`${survivor} has been waiting for this. Watch the bottom of the page…`);
       else if (name) print(`${name} ${on ? "is back on their feet." : "powered down."}`);
       else print(on ? "Alice and Bob are back." : "Both robots powered down.");
+    }
+  },
+  {
+    name: "car",
+    aliases: ["cars", "vehicle", "garage"],
+    usage: "car [on|off|car|racer|truck|moto]",
+    description: "the little vehicle on the terminal bar: switch it on, off, or swap it",
+    run: ({ args, print }) => {
+      const arg = args[0]?.toLowerCase();
+      const kind = VEHICLE_KINDS.find((k) => k === arg);
+      if (!arg) {
+        const v = readVehicle();
+        print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
+        print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
+        print("Use `car off`, `car on`, `car truck`. Click it on the bar to drive (desktop).");
+        return;
+      }
+      if (arg === "on" || arg === "off") {
+        setVehicle({ on: arg === "on" });
+        print(
+          arg === "on" ? "Engine on. It's back on the bar." : "Parked. `car on` brings it back."
+        );
+        return;
+      }
+      if (kind) {
+        setVehicle({ on: true, kind });
+        print(
+          `Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it on the bar to drive.`
+        );
+        return;
+      }
+      print("Usage: car [on|off|car|racer|truck|moto]");
     }
   },
   {
