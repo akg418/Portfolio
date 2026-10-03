@@ -23,6 +23,8 @@ const MOMENTS = [
 ];
 
 const IDLE_SLIDE_MS = 6000;
+/** The track auto-starts the first time the section is seen, once per session. */
+const AUTOPLAYED_KEY = "acpc-autoplayed";
 const PLAY_SLIDE_MS = 5000;
 const BARS = 14;
 
@@ -144,6 +146,72 @@ export function AcpcMoments() {
     }
   };
 
+  const toggleRef = useRef(toggle);
+  toggleRef.current = toggle;
+  const anchorRef = useRef<HTMLSpanElement>(null);
+
+  /**
+   * The first time the section comes into view (once per session), the track
+   * starts on its own. Browsers only allow sound after the visitor has
+   * interacted with the page, so if they have not yet, it starts on their
+   * first click or key press while the section is still on screen.
+   */
+  useEffect(() => {
+    const anchor = anchorRef.current;
+    const audio = audioRef.current;
+    if (!anchor || !audio) return;
+    try {
+      if (sessionStorage.getItem(AUTOPLAYED_KEY) === "1") return;
+    } catch {
+      /* no session storage: just try */
+    }
+    let inView = false;
+    let pending = false;
+    let done = false;
+    const finish = () => {
+      done = true;
+      pending = false;
+      try {
+        sessionStorage.setItem(AUTOPLAYED_KEY, "1");
+      } catch {
+        /* fine */
+      }
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+      io.disconnect();
+    };
+    const tryPlay = () => {
+      if (done) return;
+      // Someone already pressed play or pause themselves: leave it alone.
+      if (!audio.paused || audio.currentTime > 0) return finish();
+      const activated = navigator.userActivation?.hasBeenActive ?? true;
+      if (!activated) {
+        pending = true;
+        return;
+      }
+      finish();
+      void toggleRef.current();
+    };
+    const onGesture = () => {
+      if (pending && inView) setTimeout(tryPlay, 0);
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        inView = e.isIntersecting;
+        if (inView) tryPlay();
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(anchor);
+    window.addEventListener("pointerdown", onGesture, true);
+    window.addEventListener("keydown", onGesture, true);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+    };
+  }, []);
+
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {
     const audio = audioRef.current;
     if (!audio || !duration) return;
@@ -255,5 +323,15 @@ export function AcpcMoments() {
     </div>
   );
 
-  return <ContestBalloons backdrop={backdrop} controls={controls} />;
+  return (
+    <div className="relative">
+      {/* What "in view" is measured against: the balloon box. */}
+      <span
+        ref={anchorRef}
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[280px]"
+      />
+      <ContestBalloons backdrop={backdrop} controls={controls} />
+    </div>
+  );
 }

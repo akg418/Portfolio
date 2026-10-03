@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Scissors } from "lucide-react";
 
 /**
  * ICPC hands out a balloon for every problem a team solves. Here is a bunch
@@ -55,6 +56,8 @@ type Balloon = {
   popped: boolean;
   poppedAt: number;
   scale: number;
+  /** Cut loose: string and all are gone until it re-inflates. */
+  cut: boolean;
 };
 type Shred = {
   x: number;
@@ -105,7 +108,16 @@ export function ContestBalloons({
         const y = HEIGHT - (k / LINKS) * len;
         pts.push({ x, y, px: x, py: y });
       }
-      return { anchor, len, pts, sway: Math.random() * 10, popped: false, poppedAt: 0, scale: 1 };
+      return {
+        anchor,
+        len,
+        pts,
+        sway: Math.random() * 10,
+        popped: false,
+        poppedAt: 0,
+        scale: 1,
+        cut: false,
+      };
     });
 
     // SVG nodes, made once and moved every frame.
@@ -165,6 +177,7 @@ export function ContestBalloons({
         }
         d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
         strings[i].setAttribute("d", d);
+        strings[i].style.display = b.cut ? "none" : "";
         const k = b.pts[LINKS];
         const c = centre(b);
         const angle = (Math.atan2(c.uy, c.ux) * 180) / Math.PI + 90;
@@ -192,6 +205,7 @@ export function ContestBalloons({
         // Re-inflate after a pop.
         if (b.popped && now - b.poppedAt > REINFLATE_MS) {
           b.popped = false;
+          b.cut = false;
           b.poppedAt = now;
           b.scale = 0;
         }
@@ -372,6 +386,26 @@ export function ContestBalloons({
     setPops((n) => n + 1);
   };
 
+  /**
+   * Cuts a balloon's string: it floats off out of the box and all the way up
+   * the page, swaying, until it is lost over the first section. A new one
+   * inflates in its place.
+   */
+  const cut = (i: number) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const box = boxRef.current;
+    if (!b || b.popped || !box) return;
+    const k = b.pts[LINKS];
+    const r = box.getBoundingClientRect();
+    b.popped = true;
+    b.cut = true;
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    launch(r.left + window.scrollX + k.x, r.top + window.scrollY + k.y, i);
+  };
+
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const target = (e.target as Element).closest("[data-balloon]");
     if (!target || e.button !== 0) return;
@@ -418,12 +452,80 @@ export function ContestBalloons({
       >
         {backdrop}
         <svg ref={svgRef} aria-hidden className="absolute inset-0 h-full w-full overflow-visible" />
+        {/* A tie at the foot of each string: touch it and the balloon is cut loose. */}
+        {LETTERS.map((letter, i) => (
+          <button
+            key={letter}
+            type="button"
+            aria-label={`Cut balloon ${letter} loose`}
+            data-cursor="Cut"
+            onPointerEnter={(e) => e.pointerType === "mouse" && cut(i)}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              cut(i);
+            }}
+            onClick={() => cut(i)}
+            className="absolute bottom-0 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+            style={{ left: `${((i + 0.5) / LETTERS.length) * 100}%` }}
+          >
+            <Scissors className="h-3 w-3" />
+          </button>
+        ))}
       </div>
       {controls}
       <p className="mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-        <span>At ICPC every solved problem earns a balloon · grab one, or click to pop</span>
+        <span>
+          At ICPC every solved problem earns a balloon · grab one, click to pop, or cut its string
+        </span>
         <span aria-live="polite">{pops > 0 ? `popped: ${pops}` : ""}</span>
       </p>
     </div>
   );
+}
+
+/** Rise speed (px/s) at release and at most, and its acceleration. */
+const FLY = { v0: 90, max: 560, accel: 170 };
+
+/**
+ * One cut-loose balloon floating up the page, in page coordinates so it keeps
+ * climbing past whatever is scrolled into view. It sways as it rises and fades
+ * out once it reaches the first section.
+ */
+function launch(x: number, y: number, i: number) {
+  const color = COLORS[i % COLORS.length];
+  const el = document.createElement("div");
+  el.setAttribute("aria-hidden", "true");
+  el.style.cssText =
+    "position:absolute;left:0;top:0;z-index:30;pointer-events:none;will-change:transform,opacity";
+  el.innerHTML = `
+    <svg width="60" height="120" viewBox="-30 -60 60 120" style="overflow:visible">
+      <path d="M0,4 C6,24 -6,40 2,58" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>
+      <path d="M0,-1 l-3.5,6 h7 z" fill="${color}"/>
+      <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${color}"/>
+      <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity=".45"/>
+      <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, monospace" fill="#fff" fill-opacity=".92">${LETTERS[i]}</text>
+    </svg>`;
+  el.style.color = getComputedStyle(document.body).color;
+  document.body.appendChild(el);
+
+  const first = document.querySelector("main > section");
+  const lost = first ? first.getBoundingClientRect().bottom + window.scrollY - 120 : 400;
+  let v = FLY.v0;
+  let t = 0;
+  let fade = 1;
+  let last = performance.now();
+  const frame = (now: number) => {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    t += dt;
+    v = Math.min(FLY.max, v + FLY.accel * dt);
+    y -= v * dt;
+    const sway = Math.sin(t * 1.6 + i) * 26;
+    if (y < lost) fade -= dt * 0.9;
+    el.style.opacity = String(Math.max(0, fade));
+    el.style.transform = `translate(${x + sway - 30}px, ${y - 60}px) rotate(${Math.sin(t * 1.6 + i + 0.8) * 9}deg) scale(${0.6 + 0.4 * Math.max(0, fade)})`;
+    if (fade > 0 && y > -200) requestAnimationFrame(frame);
+    else el.remove();
+  };
+  requestAnimationFrame(frame);
 }
