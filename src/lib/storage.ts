@@ -13,6 +13,7 @@ export const STORAGE_KEYS = {
   gamingMode: "gamingMode",
   robots: "robots",
   vehicle: "vehicle",
+  mysteries: "mysteries",
   termMode: "termMode_v2",
   termColors: "term-colors",
   termAliases: "term-aliases",

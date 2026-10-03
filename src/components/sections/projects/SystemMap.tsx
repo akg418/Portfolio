@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Activity, Pause, Play, Radar, Skull, Zap } from "lucide-react";
 import { Simulation, type Flow, type Trace } from "@/lib/sysmap/sim";
+import { solveMystery } from "@/lib/mysteries";
 import {
   EDGES,
   NODES,
@@ -80,6 +81,8 @@ export function SystemMap() {
   const edgeRefs = useRef<Record<string, SVGPathElement | null>>({});
   const boxRef = useRef<HTMLDivElement>(null);
   const [snap, setSnap] = useState<Snapshot | null>(null);
+  const [incident, setIncident] = useState(false);
+  const incidentSeen = useRef(false);
   const [selected, setSelected] = useState<string>("api");
   const [ui, setUi] = useState({
     paused: false,
@@ -163,6 +166,13 @@ export function SystemMap() {
         lastSnap = t;
         const nodes: Snapshot["nodes"] = {};
         for (const n of NODES) nodes[n.id] = sim.nodeState(n.id);
+        // Every core API instance down at once: a full outage (a hidden mystery).
+        const api = nodes.api;
+        if (!incidentSeen.current && api && api.pods.length && !api.pods.includes("ready")) {
+          incidentSeen.current = true;
+          setIncident(true);
+          solveMystery("outage");
+        }
         setSnap({
           nodes,
           stats: sim.stats(),
@@ -273,7 +283,28 @@ export function SystemMap() {
         ← swipe the map · tap a node →
       </div>
       {/* The map */}
-      <div className="-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+      <div className="relative -mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0">
+        {incident && (
+          <div className="absolute left-1/2 top-4 z-10 w-[min(92%,420px)] -translate-x-1/2 rounded-xl border border-rose-500/60 bg-background/95 p-4 font-mono text-xs shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-rose-400">INC-404 · SEV-1</span>
+              <button
+                type="button"
+                onClick={() => setIncident(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                dismiss
+              </button>
+            </div>
+            <p className="mt-2 text-foreground">
+              Core API has no ready instances. Every request is a 504.
+            </p>
+            <p className="mt-1 text-muted-foreground">
+              Root cause: someone broke prod. It was you. Recovery: automatic, give it a few
+              seconds.
+            </p>
+          </div>
+        )}
         <svg
           viewBox="0 0 1100 620"
           className="min-w-[760px] w-full select-none"

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Scissors } from "lucide-react";
+import { solveMystery } from "@/lib/mysteries";
 
 /**
  * ICPC hands out a balloon for every problem a team solves. Here is a bunch
@@ -46,6 +47,8 @@ const DRAG_PX = 5;
 const REINFLATE_MS = 3500;
 const INFLATE_MS = 650;
 const HEIGHT = 280;
+/** Fired when a vehicle drives into the box. */
+export const PARTY_EVENT = "acpc-party";
 
 type P = { x: number; y: number; px: number; py: number };
 type Balloon = {
@@ -81,6 +84,7 @@ export function ContestBalloons({
   const boxRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [pops, setPops] = useState(0);
+  const cutSet = useRef(new Set<number>());
   const state = useRef<{
     balloons: Balloon[];
     shreds: Shred[];
@@ -355,6 +359,24 @@ export function ContestBalloons({
     };
   }, []);
 
+  // A vehicle drove into the box: the balloons go wild for a moment.
+  useEffect(() => {
+    const on = () => {
+      const start = performance.now();
+      const kick = () => {
+        for (const b of state.current.balloons) {
+          const k = b.pts[LINKS];
+          k.px = k.x - (Math.random() - 0.5) * 30;
+          k.py = k.y - (Math.random() - 0.5) * 24;
+        }
+        if (performance.now() - start < 4000) window.setTimeout(kick, 160);
+      };
+      kick();
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => window.removeEventListener(PARTY_EVENT, on);
+  }, []);
+
   const local = (e: { clientX: number; clientY: number }) => {
     const r = boxRef.current!.getBoundingClientRect();
     return { x: e.clientX - r.left, y: e.clientY - r.top };
@@ -400,6 +422,11 @@ export function ContestBalloons({
     const r = box.getBoundingClientRect();
     b.popped = true;
     b.cut = true;
+    // Every balloon set free in one visit: all problems accepted.
+    cutSet.current.add(i);
+    if (cutSet.current.size === LETTERS.length) {
+      solveMystery("balloons");
+    }
     b.poppedAt = performance.now();
     b.scale = 0;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -447,6 +474,7 @@ export function ContestBalloons({
           state.current.pointer = null;
         }}
         data-cursor="Pop"
+        data-party-zone
         className="relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground"
         style={{ height: HEIGHT }}
       >

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { links, profile } from "@/data/profile";
+import { solveMystery } from "@/lib/mysteries";
 
 /**
  * A conference badge on a lanyard, hanging into the hero. Grab it, pull it,
@@ -67,6 +68,15 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
   const strapRef = useRef<SVGPathElement>(null);
   const [size, setSize] = useState<Size>(DESKTOP);
   const [flipped, setFlipped] = useState(false);
+  /** Seven flips in a visit reveal the VIP pass (a hidden mystery). */
+  const [flips, setFlips] = useState(0);
+  const flip = () => {
+    setFlipped((f) => !f);
+    setFlips((n) => {
+      if (n + 1 === 7) solveMystery("badge");
+      return n + 1;
+    });
+  };
   const [held, setHeld] = useState(false);
   const strapId = useId();
 
@@ -249,7 +259,7 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
     s.grab = null;
     s.asleep = false;
     setHeld(false);
-    if (clicked) setFlipped((f) => !f);
+    if (clicked) flip();
   };
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -354,7 +364,7 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setFlipped((f) => !f);
+            flip();
           }
         }}
       >
@@ -441,6 +451,11 @@ export function LanyardBadge({ photo, photoAlt }: { photo?: string; photoAlt: st
                   </a>
                 ))}
               </div>
+              {flips >= 7 && (
+                <div className="mt-3 rounded border border-amber-300/60 px-2 py-1 text-center font-mono text-[9px] font-bold uppercase tracking-widest text-amber-300">
+                  ★ VIP pass · persistence noted
+                </div>
+              )}
               <div className="mt-auto font-mono text-[8px] uppercase tracking-widest text-white/35">
                 Click to flip back
               </div>

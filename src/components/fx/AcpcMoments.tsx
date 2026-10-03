@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Download, Pause, Play } from "lucide-react";
-import { ContestBalloons } from "@/components/fx/ContestBalloons";
+import { ContestBalloons, PARTY_EVENT } from "@/components/fx/ContestBalloons";
 import music from "@/assets/acpc/acpc-music.mp3";
 import group from "@/assets/acpc/group.jpg";
 import firstToSolve from "@/assets/acpc/ecpc-first-to-solve.jpg";
@@ -145,6 +145,25 @@ export function AcpcMoments() {
       setPlaying(false);
     }
   };
+
+  // A vehicle crashed the party: the track runs fast for a few seconds.
+  useEffect(() => {
+    let timer = 0;
+    const on = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.playbackRate = 1.6;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        audio.playbackRate = 1;
+      }, 4000);
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => {
+      window.removeEventListener(PARTY_EVENT, on);
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   const toggleRef = useRef(toggle);
   toggleRef.current = toggle;

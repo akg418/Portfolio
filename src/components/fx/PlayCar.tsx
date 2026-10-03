@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw, Square } from "lucide-react";
+import { PARTY_EVENT } from "@/components/fx/ContestBalloons";
 import { VehicleSprite } from "@/components/fx/VehicleSprites";
+import { solveMystery } from "@/lib/mysteries";
 import {
   VEHICLE_DRIVE_EVENT,
   VEHICLE_KINDS,
@@ -178,6 +180,7 @@ export function PlayCar() {
     let raf = 0;
     let last = performance.now();
     let movedCount = 0;
+    let partyUntil = 0;
 
     const say = (text: string | null) => {
       bubble.textContent = text ?? "";
@@ -422,6 +425,19 @@ export function PlayCar() {
         collide();
         cascade();
         slide();
+
+        // Driving into the ACPC box crashes the party (a hidden mystery).
+        if (now > partyUntil && Math.abs(s.v) > 150) {
+          const zone = document.querySelector<HTMLElement>("[data-party-zone]");
+          const r = zone?.getBoundingClientRect();
+          const vx = s.x - window.scrollX;
+          const vy = s.y - window.scrollY;
+          if (r && vx > r.left && vx < r.right && vy > r.top && vy < r.bottom) {
+            partyUntil = now + 6000;
+            window.dispatchEvent(new Event(PARTY_EVENT));
+            solveMystery("carParty");
+          }
+        }
 
         // Keep the vehicle in the middle band of the window.
         const sy = s.y - window.scrollY;

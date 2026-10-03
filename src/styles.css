@@ -662,3 +662,30 @@ main > section {
 .badge-back {
   transform: rotateY(180deg);
 }
+
+/* The developer puzzle's key, as hex. Nothing reads it but a curious human. */
+:root {
+  --x-key: "62 61 6c 6c 6f 6f 6e 2d 61 63";
+}
+
+/* Konami code: arcade mode. */
+html.arcade body {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+html.arcade main {
+  filter: saturate(1.8) contrast(1.15) hue-rotate(-25deg);
+}
+html.arcade body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+  animation: arcade-flicker 0.12s steps(2) infinite;
+}
+@keyframes arcade-flicker {
+  50% {
+    opacity: 0.85;
+  }
+}

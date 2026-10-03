@@ -4,6 +4,7 @@ import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
 import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
+import { MYSTERIES, confetti, fnv, solveMystery, solvedMysteries } from "@/lib/mysteries";
 import {
   VEHICLE_KINDS,
   VEHICLE_LABELS,
@@ -122,6 +123,7 @@ export const commands: Command[] = [
     run: ({ print, printHelp }) => {
       print(HELP_HEADER);
       for (const command of commands) {
+        if (command.hidden) continue;
         printHelp(command.usage ?? command.name, command.description);
       }
     },
@@ -339,6 +341,64 @@ export const commands: Command[] = [
     },
   },
   {
+    name: "mysteries",
+    aliases: ["mystery", "secrets"],
+    hidden: true,
+    description: "the hidden mysteries you have found",
+    run: ({ print }) => {
+      const solved = solvedMysteries();
+      if (!solved.length) {
+        print("command not found: mysteries. Try `help`.");
+        return;
+      }
+      print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      for (const m of MYSTERIES) {
+        const done = solved.includes(m.id);
+        const tag = m.dev ? " [dev]" : "";
+        print(done ? `  ✔ ${m.title}${tag}` : `  ? ???${tag} — ${m.riddle}`);
+      }
+      if (solved.length === MYSTERIES.length)
+        print("All of them. Click the counter for your certificate.");
+    },
+  },
+  {
+    name: "sudo",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const what = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (what === "hire ahmed" || what === "hire ahmed khaled") {
+        print("[sudo] password for recruiter: ••••••••");
+        print(
+          "Permission granted. 🎉 Offer letter queued — the fastest way to send it is `email`.",
+        );
+        confetti();
+        solveMystery("sudo");
+        return;
+      }
+      print(`${what || "you"} is not in the sudoers file. This incident will be reported.`);
+    },
+  },
+  {
+    name: "submit",
+    hidden: true,
+    description: "",
+    run: ({ args, print }) => {
+      const answer = (args[0] ?? "").replace(/[^0-9]/g, "");
+      if (!answer) {
+        print("Usage: submit <answer>");
+        return;
+      }
+      print(`Judging… test 1 … test 7 …`);
+      if (fnv(answer) === "3f141389") {
+        print("✅ ACCEPTED · 0.01s · 1 MB. Clean work.");
+        solveMystery("problem");
+      } else {
+        print("❌ WRONG ANSWER on test 1. Read the statement again.");
+      }
+    },
+  },
+  {
     name: "color",
     description: "list | set <key> <#hex> | reset",
     run: runColor,
@@ -421,4 +481,6 @@ export function findCommand(name: string): Command | undefined {
 }
 
 /** Every name and alias, used for tab-completion. */
-export const COMMAND_NAMES: readonly string[] = [...byName.keys()];
+export const COMMAND_NAMES: readonly string[] = [...byName.entries()]
+  .filter(([, c]) => !c.hidden)
+  .map(([n]) => n);

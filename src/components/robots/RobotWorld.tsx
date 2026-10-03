@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useRef } from "react";
+import { solveMystery } from "@/lib/mysteries";
 import { Akm, ROBOT_H, ROBOT_W, RobotSprite, type Pose } from "@/components/robots/RobotSprite";
 import { ROBOT_NAMES, useRobots, type RobotName, type RobotSwitches } from "@/hooks/useRobots";
 
@@ -432,6 +433,42 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
     };
   }, [walkway, robots]);
 
+  const pokes = useRef({ alice: 0, bob: 0, argued: false });
+  /** Poke a robot; poke both three times and they start an old argument. */
+  const poke = (name: RobotName) => {
+    const p = pokes.current;
+    p[name]++;
+    const say = (who: RobotName, text: string | null) => {
+      world.current[who] = { ...world.current[who], say: text };
+      paint();
+    };
+    if (!p.argued && p.alice >= 3 && p.bob >= 3) {
+      p.argued = true;
+      const lines: [RobotName, string][] = [
+        ["alice", "tabs."],
+        ["bob", "spaces."],
+        ["alice", "TABS."],
+        ["bob", "4 spaces!"],
+        ["alice", "…we're done."],
+      ];
+      lines.forEach(([who, text], i) => {
+        window.setTimeout(() => {
+          say(other(who), null);
+          say(who, text);
+        }, i * 1300);
+      });
+      window.setTimeout(() => {
+        say("alice", null);
+        say("bob", null);
+        solveMystery("robots");
+      }, lines.length * 1300);
+      return;
+    }
+    const replies = ["hi!", "hey", "stop poking me", "beep?", ":|"];
+    say(name, replies[Math.min(p[name] - 1, replies.length - 1)]);
+    window.setTimeout(() => say(name, null), 1300);
+  };
+
   if (!ready.current) return null;
   const { ball } = world.current;
 
@@ -463,7 +500,8 @@ export function RobotWorld({ walkway }: { walkway: boolean }) {
         return (
           <div
             key={name}
-            className="absolute left-0 will-change-transform"
+            onClick={() => poke(name)}
+            className="pointer-events-auto absolute left-0 cursor-pointer will-change-transform"
             style={{
               bottom: r.grounded ? FLOOR_PX : LINE_PX,
               transform: `translateX(${r.x}px)`,

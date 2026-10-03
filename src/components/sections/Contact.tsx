@@ -6,11 +6,13 @@ import { Magnetic } from "@/components/fx/Magnetic";
 import { ParticleHeading } from "@/components/fx/ParticleHeading";
 import { ScrollLit } from "@/components/fx/ScrollLit";
 import { linkOf, profile } from "@/data/profile";
+import { MYSTERIES, useMysteries } from "@/lib/mysteries";
 
 /** Stable across renders, so the particles are not rebuilt on every one. */
 const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 
 export function Contact() {
+  const found = useMysteries();
   return (
     <>
       <section
@@ -25,6 +27,11 @@ export function Contact() {
           <div className="mt-6">
             <LocalTime />
           </div>
+          {found.length === MYSTERIES.length && (
+            <p className="mt-3 font-mono text-xs text-amber-300">
+              ★ You found all {MYSTERIES.length} mysteries. You clearly pay attention — let's talk.
+            </p>
+          )}
           <ScrollLit
             className="mt-6 max-w-3xl text-xl font-medium leading-snug tracking-tight sm:text-2xl"
             text="Open to full-time roles — onsite, hybrid, or remote — and to freelance projects. Comfortable across stacks; currently building FastAPI microservices on Kubernetes and backend services with NestJS/TypeScript. The fastest way to reach me is email."
