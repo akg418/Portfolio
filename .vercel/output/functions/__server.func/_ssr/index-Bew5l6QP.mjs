@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-lMGQdvEw.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BubHzfKa.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -603,7 +603,8 @@ const DRAG = 1.6;
 const TURBO = 1.55;
 const IDLE_SPEED = 38;
 const IDLE_SCALE = 0.62;
-const BAR_MID = 22;
+const IDLE_LIFT = 118;
+const IDLE_LEFT = 28;
 const IDLE_SPAN = 200;
 const PUSH = 0.14;
 const SPIN = 0.09;
@@ -647,9 +648,12 @@ function PlayCar() {
     const fxLayer = fxRef.current;
     const main = document.querySelector("main");
     const zone = () => {
-      const w = window.innerWidth;
-      const x0 = Math.max(130, w * 0.44);
-      return { x0, x1: Math.min(w - 40, x0 + IDLE_SPAN), y: window.innerHeight - BAR_MID };
+      const x0 = IDLE_LEFT;
+      return {
+        x0,
+        x1: Math.min(window.innerWidth - 40, x0 + IDLE_SPAN),
+        y: window.innerHeight - IDLE_LIFT
+      };
     };
     const z0 = zone();
     const s = {
@@ -7505,7 +7509,7 @@ const commands = [
     name: "car",
     aliases: ["cars", "vehicle", "garage"],
     usage: "car [on|off|car|racer|truck|moto]",
-    description: "the little vehicle on the terminal bar: switch it on, off, or swap it",
+    description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
     run: ({ args, print }) => {
       const arg = args[0]?.toLowerCase();
       const kind = VEHICLE_KINDS.find((k) => k === arg);
@@ -7513,21 +7517,19 @@ const commands = [
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("Use `car off`, `car on`, `car truck`. Click it on the bar to drive (desktop).");
+        print("Use `car off`, `car on`, `car truck`. Click it (bottom-left) to drive, on desktop.");
         return;
       }
       if (arg === "on" || arg === "off") {
         setVehicle({ on: arg === "on" });
         print(
-          arg === "on" ? "Engine on. It's back on the bar." : "Parked. `car on` brings it back."
+          arg === "on" ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back."
         );
         return;
       }
       if (kind) {
         setVehicle({ on: true, kind });
-        print(
-          `Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it on the bar to drive.`
-        );
+        print(`Swapped to the ${VEHICLE_LABELS[kind].toLowerCase()}. Click it to drive.`);
         return;
       }
       print("Usage: car [on|off|car|racer|truck|moto]");
