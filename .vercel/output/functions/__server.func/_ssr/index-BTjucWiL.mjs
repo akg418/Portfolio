@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BvVdWRal.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-CW147PXg.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -472,7 +472,7 @@ function useUsername() {
   return username;
 }
 const MYSTERIES = [
-  { id: "konami", title: "Old school", riddle: "Some cheat codes are older than the web." },
+  { id: "konami", title: "Old school", riddle: "Type the name hiding in my email address." },
   { id: "sudo", title: "Root access", riddle: "Ask the terminal for the job — with root." },
   { id: "badge", title: "Persistence", riddle: "Flip your perspective. Then again. And again." },
   {
@@ -573,18 +573,7 @@ function confetti(x = window.innerWidth / 2, y = window.innerHeight / 3) {
   };
   requestAnimationFrame(frame);
 }
-const KONAMI = [
-  "arrowup",
-  "arrowup",
-  "arrowdown",
-  "arrowdown",
-  "arrowleft",
-  "arrowright",
-  "arrowleft",
-  "arrowright",
-  "b",
-  "a"
-];
+const SECRET_WORD = ["g", "o", "m", "a", "a"];
 const ARCADE_MS = 2e4;
 const KEY_HASH = "a48cea5f";
 const PROBLEM_KEY = "ahmed.dev:problem";
@@ -614,8 +603,8 @@ function MysteryHud() {
       const t = e.target;
       if (t?.closest("input, textarea")) return;
       const k = e.key.toLowerCase();
-      i = k === KONAMI[i] ? i + 1 : k === KONAMI[0] ? 1 : 0;
-      if (i < KONAMI.length) return;
+      i = k === SECRET_WORD[i] ? i + 1 : k === SECRET_WORD[0] ? 1 : 0;
+      if (i < SECRET_WORD.length) return;
       i = 0;
       document.documentElement.classList.add("arcade");
       window.clearTimeout(timer);
