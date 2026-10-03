@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-BiKwCpRz.css";
+const appCss = "/assets/styles-RH2P-Ywg.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -486,7 +486,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-CEnmND-U.mjs");
+const $$splitComponentImporter = () => import("./index-Cqoweo81.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });

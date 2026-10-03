@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-CHJK-8gx.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-DWZ_tXwv.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -592,6 +592,27 @@ function useVehicle() {
   }, []);
   return state;
 }
+const VEHICLE_DRIVING_EVENT = "vehicle-driving";
+const VEHICLE_DRIVE_EVENT = "vehicle-drive";
+const VEHICLE_REFUSE_EVENT = "vehicle-refuse";
+let driving = false;
+function isVehicleDriving() {
+  return driving;
+}
+function setVehicleDriving(next) {
+  if (driving === next) return;
+  driving = next;
+  window.dispatchEvent(new CustomEvent(VEHICLE_DRIVING_EVENT, { detail: next }));
+}
+function requestDrive() {
+  window.dispatchEvent(new Event(VEHICLE_DRIVE_EVENT));
+}
+function refuseTerminal() {
+  window.dispatchEvent(new Event(VEHICLE_REFUSE_EVENT));
+}
+function canDriveHere() {
+  return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+}
 const SPECS = {
   car: { accel: 950, max: 580, steer: 3.4, radius: 17, power: 1, rebound: 0.35 },
   racer: { accel: 1450, max: 860, steer: 3, radius: 17, power: 1.35, rebound: 0.3 },
@@ -623,7 +644,7 @@ function PlayCar() {
   const carRef = reactExports.useRef(null);
   const bubbleRef = reactExports.useRef(null);
   const fxRef = reactExports.useRef(null);
-  const [driving, setDriving] = reactExports.useState(false);
+  const [driving2, setDriving] = reactExports.useState(false);
   const [canDrive, setCanDrive] = reactExports.useState(false);
   const [allowed, setAllowed] = reactExports.useState(false);
   const [moved, setMoved] = reactExports.useState(0);
@@ -635,17 +656,20 @@ function PlayCar() {
   });
   const toViewportRef = reactExports.useRef(() => {
   });
+  const nudgeRef = reactExports.useRef({ text: "", until: 0 });
+  const [nudge, setNudge] = reactExports.useState(false);
   specRef.current = SPECS[vehicle.kind];
   const enabled = allowed && vehicle.on;
   reactExports.useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     setAllowed(true);
-    setCanDrive(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+    setCanDrive(canDriveHere());
   }, []);
   reactExports.useEffect(() => {
     if (!vehicle.on && drivingRef.current) {
       drivingRef.current = false;
       setDriving(false);
+      setVehicleDriving(false);
     }
   }, [vehicle.on]);
   reactExports.useEffect(() => {
@@ -961,7 +985,10 @@ function PlayCar() {
       const body = car.firstElementChild;
       if (body)
         body.style.transform = `translate(-50%, -50%) scale(${s.scale * (1 + s.bounce * 0.12)}, ${s.scale * (1 - s.bounce * 0.08)}) rotate(${wobble * 0.6}deg)`;
-      bubble.style.transform = `translate(${s.x - ox}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      const half = bubble.offsetWidth / 2 + 8;
+      const bx = Math.max(half, Math.min(window.innerWidth - half, s.x - ox));
+      bubble.style.transform = `translate(${bx}px, ${s.y - oy - 18}px) translate(-50%, -100%)`;
+      if (isDriving) say(now2 < nudgeRef.current.until ? nudgeRef.current.text : null);
       shake *= Math.exp(-dt * 7);
       if (main) {
         main.style.translate = shake > 0.02 ? `${((Math.random() - 0.5) * shake * 14).toFixed(1)}px ${((Math.random() - 0.5) * shake * 10).toFixed(1)}px` : "";
@@ -991,12 +1018,34 @@ function PlayCar() {
     toPageRef.current();
     drivingRef.current = true;
     setDriving(true);
+    setVehicleDriving(true);
   };
   const stop = () => {
     drivingRef.current = false;
     toViewportRef.current();
     setDriving(false);
+    setVehicleDriving(false);
   };
+  const startRef = reactExports.useRef(start);
+  startRef.current = start;
+  reactExports.useEffect(() => {
+    if (!enabled) return;
+    const onDrive = () => startRef.current();
+    let timer = 0;
+    const onRefuse = () => {
+      nudgeRef.current = { text: "stop driving first!", until: performance.now() + 2200 };
+      setNudge(true);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setNudge(false), 2200);
+    };
+    window.addEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+    window.addEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+    return () => {
+      window.removeEventListener(VEHICLE_DRIVE_EVENT, onDrive);
+      window.removeEventListener(VEHICLE_REFUSE_EVENT, onRefuse);
+      window.clearTimeout(timer);
+    };
+  }, [enabled]);
   if (!enabled) return null;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -1027,16 +1076,16 @@ function PlayCar() {
           {
             type: "button",
             onClick: start,
-            "data-cursor": driving ? void 0 : canDrive ? "Drive" : void 0,
+            "data-cursor": driving2 ? void 0 : canDrive ? "Drive" : void 0,
             "aria-label": canDrive ? `Drive the ${VEHICLE_LABELS[vehicle.kind].toLowerCase()}` : "A little car",
-            className: `block transition-opacity duration-300 ${driving ? "cursor-default opacity-100" : canDrive ? "cursor-pointer opacity-50 hover:opacity-100" : "pointer-events-none opacity-40"}`,
+            className: `block transition-opacity duration-300 ${driving2 ? "cursor-default opacity-100" : canDrive ? "cursor-pointer opacity-50 hover:opacity-100" : "pointer-events-none opacity-40"}`,
             style: { transform: "translate(-50%, -50%)" },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(VehicleSprite, { kind: vehicle.kind, lights: driving })
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(VehicleSprite, { kind: vehicle.kind, lights: driving2 })
           }
         )
       }
     ),
-    driving && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md", children: [
+    driving2 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-background/85 px-3 py-2 font-mono text-[11px] shadow-lg backdrop-blur-md", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex overflow-hidden rounded-full border border-border", children: VEHICLE_KINDS.map((k) => /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
         {
@@ -1056,7 +1105,7 @@ function PlayCar() {
         {
           type: "button",
           onClick: stop,
-          className: "inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 hover:border-primary/60 hover:text-primary",
+          className: `inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 hover:border-primary/60 hover:text-primary ${nudge ? "animate-pulse border-amber-400 text-amber-300" : "border-border"}`,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Square, { className: "h-3 w-3" }),
             " Stop driving"
@@ -7518,28 +7567,45 @@ const commands = [
   {
     name: "car",
     aliases: ["cars", "vehicle", "garage"],
-    usage: "car [on|off|car|racer|truck|moto]",
+    usage: "car [drive|on|off|car|racer|truck|moto]",
     description: "the little vehicle above the terminal bar: switch it on, off, or swap it",
-    run: ({ args, print }) => {
+    run: ({ args, print, actions }) => {
       const arg = args[0]?.toLowerCase();
       const kind = VEHICLE_KINDS.find((k) => k === arg);
       if (!arg) {
         const v = readVehicle();
         print(`vehicle  ${v.on ? "on" : "off"} · ${VEHICLE_LABELS[v.kind]}`);
         print(`garage   ${VEHICLE_KINDS.map((k) => `${k} (${VEHICLE_LABELS[k]})`).join(", ")}`);
-        print("drive    click the car bottom-left (desktop) to take the wheel");
+        print("drive    `car drive`, or click the car bottom-left (desktop)");
         print("keys     ↑ ↓ ← → or WASD · shift turbo · space brake");
         print("crash    knock headings, buttons and images across the page;");
         print("         hits chain into whatever they slide into");
         print("panel    swap vehicle · Stop driving · Reset website (puts it all back)");
-        print("Use `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
+        print("note     the terminal closes while you drive, and won't reopen until you stop");
+        print("Use `car drive`, `car racer`, `car truck`, `car moto`, `car off`, `car on`.");
         return;
       }
       if (arg === "on" || arg === "off") {
-        setVehicle({ on: arg === "on" });
-        print(
-          arg === "on" ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back."
-        );
+        const on = arg === "on";
+        if (readVehicle().on === on) {
+          print(
+            on ? "It's already on — bottom-left. `car drive` to take the wheel." : "It's already parked. `car on` brings it back."
+          );
+          return;
+        }
+        setVehicle({ on });
+        print(on ? "Engine on. It's back, bottom-left." : "Parked. `car on` brings it back.");
+        return;
+      }
+      if (arg === "drive" || arg === "play" || arg === "go") {
+        if (!canDriveHere()) {
+          print("Driving needs a keyboard — try it on a desktop.");
+          return;
+        }
+        if (!readVehicle().on) setVehicle({ on: true });
+        print("Closing the terminal… you're driving! Press Stop driving to come back.");
+        actions.close();
+        window.setTimeout(requestDrive, 450);
         return;
       }
       if (kind) {
@@ -8020,9 +8086,22 @@ function Index() {
   useSpotlight();
   reactExports.useEffect(() => setMounted(true), []);
   const changeMode = (mode) => {
+    if (mode !== "closed" && isVehicleDriving()) {
+      refuseTerminal();
+      return;
+    }
     writeString(STORAGE_KEYS.termMode, mode);
     setTermMode(mode);
   };
+  reactExports.useEffect(() => {
+    const onDriving = (e) => {
+      if (!e.detail) return;
+      writeString(STORAGE_KEYS.termMode, "closed");
+      setTermMode("closed");
+    };
+    window.addEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+    return () => window.removeEventListener(VEHICLE_DRIVING_EVENT, onDriving);
+  }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative min-h-screen overflow-x-clip bg-background text-foreground", children: [
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Preloader, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "aria-hidden": true, className: "grain" }),
