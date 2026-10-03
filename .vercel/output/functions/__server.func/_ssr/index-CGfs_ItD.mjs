@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BIFztk3U.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BZyfhp1s.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, d as RotateCw, e as GraduationCap, f as MapPin, g as Globe, P as Phone, h as SquareTerminal, i as Sun, j as Moon, k as Play, l as Pause, m as Activity, Z as Zap, n as Radar, o as Skull, D as Download, X } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, d as RotateCw, e as GraduationCap, f as MapPin, g as Globe, P as Phone, h as SquareTerminal, i as Sun, j as Moon, k as Play, l as Pause, m as Activity, Z as Zap, n as Radar, o as Skull, D as Download, X, p as Scissors } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -2322,7 +2322,16 @@ function ContestBalloons({
         const y = HEIGHT - k / LINKS * len;
         pts.push({ x, y, px: x, py: y });
       }
-      return { anchor, len, pts, sway: Math.random() * 10, popped: false, poppedAt: 0, scale: 1 };
+      return {
+        anchor,
+        len,
+        pts,
+        sway: Math.random() * 10,
+        popped: false,
+        poppedAt: 0,
+        scale: 1,
+        cut: false
+      };
     });
     const NS = "http://www.w3.org/2000/svg";
     const strings = [];
@@ -2377,6 +2386,7 @@ function ContestBalloons({
         }
         d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
         strings[i].setAttribute("d", d);
+        strings[i].style.display = b.cut ? "none" : "";
         const k = b.pts[LINKS];
         const c = centre(b);
         const angle = Math.atan2(c.uy, c.ux) * 180 / Math.PI + 90;
@@ -2397,6 +2407,7 @@ function ContestBalloons({
       for (const b of s.balloons) {
         if (b.popped && now2 - b.poppedAt > REINFLATE_MS) {
           b.popped = false;
+          b.cut = false;
           b.poppedAt = now2;
           b.scale = 0;
         }
@@ -2563,6 +2574,20 @@ function ContestBalloons({
     b.scale = 0;
     setPops((n) => n + 1);
   };
+  const cut = (i) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const box = boxRef.current;
+    if (!b || b.popped || !box) return;
+    const k = b.pts[LINKS];
+    const r = box.getBoundingClientRect();
+    b.popped = true;
+    b.cut = true;
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    launch(r.left + window.scrollX + k.x, r.top + window.scrollY + k.y, i);
+  };
   const onDown = (e) => {
     const target = e.target.closest("[data-balloon]");
     if (!target || e.button !== 0) return;
@@ -2608,16 +2633,71 @@ function ContestBalloons({
         style: { height: HEIGHT },
         children: [
           backdrop,
-          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" }),
+          LETTERS.map((letter, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": `Cut balloon ${letter} loose`,
+              "data-cursor": "Cut",
+              onPointerEnter: (e) => e.pointerType === "mouse" && cut(i),
+              onPointerDown: (e) => {
+                e.stopPropagation();
+                cut(i);
+              },
+              onClick: () => cut(i),
+              className: "absolute bottom-0 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary",
+              style: { left: `${(i + 0.5) / LETTERS.length * 100}%` },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scissors, { className: "h-3 w-3" })
+            },
+            letter
+          ))
         ]
       }
     ),
     controls,
     /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, or click to pop" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, click to pop, or cut its string" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
     ] })
   ] });
+}
+const FLY = { v0: 90, max: 560, accel: 170 };
+function launch(x, y, i) {
+  const color = COLORS$1[i % COLORS$1.length];
+  const el = document.createElement("div");
+  el.setAttribute("aria-hidden", "true");
+  el.style.cssText = "position:absolute;left:0;top:0;z-index:30;pointer-events:none;will-change:transform,opacity";
+  el.innerHTML = `
+    <svg width="60" height="120" viewBox="-30 -60 60 120" style="overflow:visible">
+      <path d="M0,4 C6,24 -6,40 2,58" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>
+      <path d="M0,-1 l-3.5,6 h7 z" fill="${color}"/>
+      <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${color}"/>
+      <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity=".45"/>
+      <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, monospace" fill="#fff" fill-opacity=".92">${LETTERS[i]}</text>
+    </svg>`;
+  el.style.color = getComputedStyle(document.body).color;
+  document.body.appendChild(el);
+  const first = document.querySelector("main > section");
+  const lost = first ? first.getBoundingClientRect().bottom + window.scrollY - 120 : 400;
+  let v = FLY.v0;
+  let t = 0;
+  let fade = 1;
+  let last = performance.now();
+  const frame = (now2) => {
+    const dt = Math.min(0.05, (now2 - last) / 1e3);
+    last = now2;
+    t += dt;
+    v = Math.min(FLY.max, v + FLY.accel * dt);
+    y -= v * dt;
+    const sway = Math.sin(t * 1.6 + i) * 26;
+    if (y < lost) fade -= dt * 0.9;
+    el.style.opacity = String(Math.max(0, fade));
+    el.style.transform = `translate(${x + sway - 30}px, ${y - 60}px) rotate(${Math.sin(t * 1.6 + i + 0.8) * 9}deg) scale(${0.6 + 0.4 * Math.max(0, fade)})`;
+    if (fade > 0 && y > -200) requestAnimationFrame(frame);
+    else el.remove();
+  };
+  requestAnimationFrame(frame);
 }
 const music = "/assets/acpc-music-Sbaw3JnV.mp3";
 const group = "/assets/group-DVKU7Npx.jpg";
@@ -2639,6 +2719,7 @@ const MOMENTS = [
   { src: selfieNight, alt: "The night after, with the whole crew" }
 ];
 const IDLE_SLIDE_MS = 6e3;
+const AUTOPLAYED_KEY = "acpc-autoplayed";
 const PLAY_SLIDE_MS = 5e3;
 const BARS = 14;
 function time(s) {
@@ -2733,6 +2814,61 @@ function AcpcMoments() {
       setPlaying(false);
     }
   };
+  const toggleRef = reactExports.useRef(toggle);
+  toggleRef.current = toggle;
+  const anchorRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const anchor = anchorRef.current;
+    const audio = audioRef.current;
+    if (!anchor || !audio) return;
+    try {
+      if (sessionStorage.getItem(AUTOPLAYED_KEY) === "1") return;
+    } catch {
+    }
+    let inView = false;
+    let pending = false;
+    let done = false;
+    const finish = () => {
+      done = true;
+      pending = false;
+      try {
+        sessionStorage.setItem(AUTOPLAYED_KEY, "1");
+      } catch {
+      }
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+      io.disconnect();
+    };
+    const tryPlay = () => {
+      if (done) return;
+      if (!audio.paused || audio.currentTime > 0) return finish();
+      const activated = navigator.userActivation?.hasBeenActive ?? true;
+      if (!activated) {
+        pending = true;
+        return;
+      }
+      finish();
+      void toggleRef.current();
+    };
+    const onGesture = () => {
+      if (pending && inView) setTimeout(tryPlay, 0);
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        inView = e.isIntersecting;
+        if (inView) tryPlay();
+      },
+      { threshold: 0.6 }
+    );
+    io.observe(anchor);
+    window.addEventListener("pointerdown", onGesture, true);
+    window.addEventListener("keydown", onGesture, true);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("pointerdown", onGesture, true);
+      window.removeEventListener("keydown", onGesture, true);
+    };
+  }, []);
   const seek = (e) => {
     const audio = audioRef.current;
     if (!audio || !duration) return;
@@ -2860,7 +2996,17 @@ function AcpcMoments() {
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "span",
+      {
+        ref: anchorRef,
+        "aria-hidden": true,
+        className: "pointer-events-none absolute inset-x-0 top-0 h-[280px]"
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls })
+  ] });
 }
 function Achievements() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-24 border-t border-border", children: [
