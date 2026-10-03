@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-BZyfhp1s.mjs";
+import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BvVdWRal.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as ArrowUpRight, G as Github, L as Linkedin, b as CodeXml, T as Trophy, F as FileText, B as Briefcase, c as Gamepad2, d as RotateCw, e as GraduationCap, f as MapPin, g as Globe, P as Phone, h as SquareTerminal, i as Sun, j as Moon, k as Play, l as Pause, m as Activity, Z as Zap, n as Radar, o as Skull, D as Download, X, p as Scissors } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as Search, b as ArrowUpRight, G as Github, L as Linkedin, c as CodeXml, T as Trophy, F as FileText, B as Briefcase, d as Gamepad2, e as RotateCw, f as GraduationCap, g as MapPin, h as Globe, P as Phone, i as SquareTerminal, j as Sun, k as Moon, D as Download, X, l as Play, m as Pause, n as Activity, Z as Zap, o as Radar, p as Skull, q as Scissors } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -452,6 +452,793 @@ function BackToTop() {
     }
   );
 }
+const USERNAME_EVENT = "usernamechange";
+const DEFAULT_USERNAME = "guest";
+function getUsername() {
+  return readString(STORAGE_KEYS.username) || DEFAULT_USERNAME;
+}
+function setStoredUsername(name) {
+  writeString(STORAGE_KEYS.username, name);
+  window.dispatchEvent(new CustomEvent(USERNAME_EVENT, { detail: name }));
+}
+function useUsername() {
+  const [username, setUsername] = reactExports.useState(DEFAULT_USERNAME);
+  reactExports.useEffect(() => {
+    setUsername(getUsername());
+    const onChange = (e) => setUsername(e.detail || DEFAULT_USERNAME);
+    window.addEventListener(USERNAME_EVENT, onChange);
+    return () => window.removeEventListener(USERNAME_EVENT, onChange);
+  }, []);
+  return username;
+}
+const MYSTERIES = [
+  { id: "konami", title: "Old school", riddle: "Some cheat codes are older than the web." },
+  { id: "sudo", title: "Root access", riddle: "Ask the terminal for the job — with root." },
+  { id: "badge", title: "Persistence", riddle: "Flip your perspective. Then again. And again." },
+  {
+    id: "balloons",
+    title: "All accepted",
+    riddle: "AC on every problem: set every balloon free in one visit."
+  },
+  {
+    id: "robots",
+    title: "Holy war",
+    riddle: "Alice and Bob have strong opinions. Poke them both."
+  },
+  { id: "carParty", title: "Drive-in", riddle: "Drive to where the music lives." },
+  { id: "outage", title: "INC-404", riddle: "Take every core instance down at the same time." },
+  { id: "midnight", title: "Night owl", riddle: "Come back when Cairo should be asleep." },
+  { id: "console", title: "Inspector", riddle: "Developers: the console is listening.", dev: true },
+  { id: "problem", title: "Accepted", riddle: "Some things are stored, not shown.", dev: true }
+];
+const MYSTERY_EVENT = "mystery-solved";
+function parse$2(v) {
+  if (!Array.isArray(v)) return void 0;
+  const ids = new Set(MYSTERIES.map((m) => m.id));
+  return v.filter((x) => typeof x === "string" && ids.has(x));
+}
+function solvedMysteries() {
+  return readJson(STORAGE_KEYS.mysteries, parse$2) ?? [];
+}
+function solveMystery(id) {
+  const solved = solvedMysteries();
+  if (solved.includes(id)) return false;
+  const next = [...solved, id];
+  writeJson(STORAGE_KEYS.mysteries, next);
+  window.dispatchEvent(
+    new CustomEvent(MYSTERY_EVENT, { detail: { id, solved: next, fresh: true } })
+  );
+  return true;
+}
+function useMysteries() {
+  const [solved, setSolved] = reactExports.useState([]);
+  reactExports.useEffect(() => {
+    setSolved(solvedMysteries());
+    const on = (e) => setSolved(e.detail.solved);
+    window.addEventListener(MYSTERY_EVENT, on);
+    return () => window.removeEventListener(MYSTERY_EVENT, on);
+  }, []);
+  return solved;
+}
+function fnv(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
+  return (h >>> 0).toString(16);
+}
+function confetti(x = window.innerWidth / 2, y = window.innerHeight / 3) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = document.createElement("canvas");
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  c.width = window.innerWidth * dpr;
+  c.height = window.innerHeight * dpr;
+  c.style.cssText = "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:120";
+  document.body.appendChild(c);
+  const g = c.getContext("2d");
+  g.scale(dpr, dpr);
+  const colors = ["#22d3ee", "#a855f7", "#fbbf24", "#34d399", "#f472b6", "#f43f5e"];
+  const bits = Array.from({ length: 140 }, () => {
+    const a = Math.random() * Math.PI * 2;
+    const v = 4 + Math.random() * 9;
+    return {
+      x,
+      y,
+      vx: Math.cos(a) * v,
+      vy: Math.sin(a) * v - 6,
+      r: Math.random() * 6,
+      vr: (Math.random() - 0.5) * 0.4,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      w: 5 + Math.random() * 5
+    };
+  });
+  let t = 0;
+  const frame = () => {
+    t++;
+    g.clearRect(0, 0, c.width, c.height);
+    for (const b of bits) {
+      b.vy += 0.25;
+      b.vx *= 0.99;
+      b.x += b.vx;
+      b.y += b.vy;
+      b.r += b.vr;
+      g.save();
+      g.translate(b.x, b.y);
+      g.rotate(b.r);
+      g.globalAlpha = Math.max(0, 1 - t / 160);
+      g.fillStyle = b.c;
+      g.fillRect(-b.w / 2, -b.w / 4, b.w, b.w / 2);
+      g.restore();
+    }
+    if (t < 160) requestAnimationFrame(frame);
+    else c.remove();
+  };
+  requestAnimationFrame(frame);
+}
+const KONAMI = [
+  "arrowup",
+  "arrowup",
+  "arrowdown",
+  "arrowdown",
+  "arrowleft",
+  "arrowright",
+  "arrowleft",
+  "arrowright",
+  "b",
+  "a"
+];
+const ARCADE_MS = 2e4;
+const KEY_HASH = "a48cea5f";
+const PROBLEM_KEY = "ahmed.dev:problem";
+function MysteryHud() {
+  const solved = useMysteries();
+  const username = useUsername();
+  const [toast, setToast] = reactExports.useState(null);
+  const [certificate, setCertificate] = reactExports.useState(false);
+  const toastTimer = reactExports.useRef(0);
+  reactExports.useEffect(() => {
+    const on = (e) => {
+      const { id, solved: all } = e.detail;
+      const m = MYSTERIES.find((x) => x.id === id);
+      confetti();
+      setToast(`Mystery solved — ${m?.title ?? id} · ${all.length}/${MYSTERIES.length}`);
+      window.clearTimeout(toastTimer.current);
+      toastTimer.current = window.setTimeout(() => setToast(null), 3600);
+      if (all.length === MYSTERIES.length) window.setTimeout(() => setCertificate(true), 1500);
+    };
+    window.addEventListener(MYSTERY_EVENT, on);
+    return () => window.removeEventListener(MYSTERY_EVENT, on);
+  }, []);
+  reactExports.useEffect(() => {
+    let i = 0;
+    let timer = 0;
+    const on = (e) => {
+      const t = e.target;
+      if (t?.closest("input, textarea")) return;
+      const k = e.key.toLowerCase();
+      i = k === KONAMI[i] ? i + 1 : k === KONAMI[0] ? 1 : 0;
+      if (i < KONAMI.length) return;
+      i = 0;
+      document.documentElement.classList.add("arcade");
+      window.clearTimeout(timer);
+      timer = window.setTimeout(
+        () => document.documentElement.classList.remove("arcade"),
+        ARCADE_MS
+      );
+      solveMystery("konami");
+    };
+    window.addEventListener("keydown", on);
+    return () => {
+      window.removeEventListener("keydown", on);
+      window.clearTimeout(timer);
+    };
+  }, []);
+  reactExports.useEffect(() => {
+    console.log(
+      "%c👀 ahmed.dev%c\nHey, developer. Something is hiding on `window`. Start with %c__ahmed.hint()",
+      "font:700 16px ui-monospace,monospace;color:#22d3ee",
+      "font:12px ui-monospace,monospace;color:#94a3b8",
+      "font:700 12px ui-monospace,monospace;color:#a855f7"
+    );
+    window.__ahmed = {
+      hint() {
+        return "The key lives in the cascade. Inspect the :root element's custom properties — it's hex. Then call __ahmed.unlock(key).";
+      },
+      unlock(key) {
+        if (typeof key !== "string" || fnv(key.trim().toLowerCase()) !== KEY_HASH)
+          return "Nope. Decode it, don't guess it.";
+        solveMystery("console");
+        return "🔓 Unlocked. Nice digging. (There's one more for you — some things are stored, not shown.)";
+      }
+    };
+    try {
+      localStorage.setItem(
+        PROBLEM_KEY,
+        JSON.stringify({
+          problem: "Popcount Sum",
+          statement: "Let f(i) be the number of 1-bits in the binary form of i. Compute S = f(1) + f(2) + … + f(2^20).",
+          limits: "1 second, and no brute force needed",
+          submit: "Open the terminal and type: submit <S>"
+        })
+      );
+    } catch {
+    }
+  }, []);
+  const count = solved.length;
+  const total = MYSTERIES.length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    count > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        type: "button",
+        onClick: () => count === total && setCertificate(true),
+        title: count === total ? "All found — open your certificate" : "Mysteries found · type `mysteries` in the terminal",
+        className: "fixed left-4 top-20 z-30 hidden items-center gap-1.5 rounded-md border border-amber-400/50 bg-background/80 px-2.5 py-1 font-mono text-xs text-amber-300 backdrop-blur-md sm:flex",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "h-3.5 w-3.5" }),
+          count,
+          "/",
+          total
+        ]
+      }
+    ),
+    toast && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fixed left-1/2 top-20 z-[110] -translate-x-1/2 rounded-full border border-amber-400/60 bg-background/90 px-4 py-2 font-mono text-xs text-amber-300 shadow-lg backdrop-blur-md", children: [
+      "🔍 ",
+      toast,
+      count === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-muted-foreground", children: "· type `mysteries` in the terminal" })
+    ] }),
+    certificate && /* @__PURE__ */ jsxRuntimeExports.jsx(Certificate, { username, onClose: () => setCertificate(false) })
+  ] });
+}
+function Certificate({ username, onClose }) {
+  const canvasRef = reactExports.useRef(null);
+  const date = (/* @__PURE__ */ new Date()).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+  reactExports.useEffect(() => {
+    const c = canvasRef.current;
+    const g = c?.getContext("2d");
+    if (!c || !g) return;
+    const W = 1200;
+    const H = 800;
+    c.width = W;
+    c.height = H;
+    const bg = g.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, "#0b1224");
+    bg.addColorStop(1, "#1e1440");
+    g.fillStyle = bg;
+    g.fillRect(0, 0, W, H);
+    const edge = g.createLinearGradient(0, 0, W, 0);
+    edge.addColorStop(0, "#22d3ee");
+    edge.addColorStop(1, "#a855f7");
+    g.strokeStyle = edge;
+    g.lineWidth = 6;
+    g.strokeRect(36, 36, W - 72, H - 72);
+    g.textAlign = "center";
+    g.fillStyle = "#94a3b8";
+    g.font = "600 22px ui-monospace, monospace";
+    g.fillText("AHMED.DEV · CERTIFICATE OF CURIOSITY", W / 2, 140);
+    g.fillStyle = "#fff";
+    g.font = "800 64px system-ui, sans-serif";
+    g.fillText("You found everything.", W / 2, 260);
+    g.fillStyle = edge;
+    g.font = "800 72px system-ui, sans-serif";
+    g.fillText(username, W / 2, 380);
+    g.fillStyle = "#cbd5e1";
+    g.font = "400 26px system-ui, sans-serif";
+    g.fillText(`solved all ${MYSTERIES.length} hidden mysteries on ahmed.dev`, W / 2, 450);
+    g.font = "600 22px ui-monospace, monospace";
+    g.fillStyle = "#fbbf24";
+    const titles = MYSTERIES.map((m) => m.title);
+    const half = Math.ceil(titles.length / 2);
+    g.fillText(titles.slice(0, half).join(" · "), W / 2, 520);
+    g.fillText(titles.slice(half).join(" · "), W / 2, 556);
+    g.fillStyle = "#94a3b8";
+    g.font = "400 22px ui-monospace, monospace";
+    g.fillText(date, W / 2, 640);
+    g.fillText("Verdict: ACCEPTED", W / 2, 680);
+  }, [username, date]);
+  const download = () => {
+    const a = document.createElement("a");
+    a.href = canvasRef.current.toDataURL("image/png");
+    a.download = "ahmed-dev-certificate.png";
+    a.click();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "fixed inset-0 z-[115] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm",
+      onClick: onClose,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "w-full max-w-2xl rounded-2xl border border-border bg-background p-4",
+          onClick: (e) => e.stopPropagation(),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("canvas", { ref: canvasRef, className: "w-full rounded-lg" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-xs", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "You clearly pay attention — let's talk: there's a line for you in Contact." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: download,
+                    className: "inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 font-semibold text-primary-foreground",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "h-3.5 w-3.5" }),
+                      " Download"
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: onClose,
+                    className: "inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-3.5 w-3.5" }),
+                      " Close"
+                    ]
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      )
+    }
+  );
+}
+const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+const COLORS$1 = [
+  "#ef4444",
+  "#f59e0b",
+  "#22c55e",
+  "#3b82f6",
+  "#a855f7",
+  "#ec4899",
+  "#06b6d4",
+  "#f97316"
+];
+const LINKS = 9;
+const GRAVITY$2 = 900;
+const LIFT = 2200;
+const DAMPING$2 = 0.985;
+const ITERATIONS$2 = 6;
+const RADIUS = 26;
+const BLOW_RADIUS = 90;
+const BLOW_FORCE = 1400;
+const DRAG_PX$1 = 5;
+const REINFLATE_MS = 3500;
+const INFLATE_MS = 650;
+const HEIGHT = 280;
+const PARTY_EVENT = "acpc-party";
+function ContestBalloons({
+  backdrop,
+  controls
+}) {
+  const boxRef = reactExports.useRef(null);
+  const svgRef = reactExports.useRef(null);
+  const [pops, setPops] = reactExports.useState(0);
+  const cutSet = reactExports.useRef(/* @__PURE__ */ new Set());
+  const state = reactExports.useRef({ balloons: [], shreds: [], pointer: null, grab: null, booms: [] });
+  reactExports.useEffect(() => {
+    const box = boxRef.current;
+    const svg = svgRef.current;
+    if (!box || !svg) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const s = state.current;
+    const W = () => box.clientWidth;
+    const anchorX = (b) => b.anchor * W();
+    s.balloons = LETTERS.map((_, i) => {
+      const anchor = (i + 0.5) / LETTERS.length;
+      const len = 120 + i * 37 % 5 * 18;
+      const pts = [];
+      for (let k = 0; k <= LINKS; k++) {
+        const x = anchor * W();
+        const y = HEIGHT - k / LINKS * len;
+        pts.push({ x, y, px: x, py: y });
+      }
+      return {
+        anchor,
+        len,
+        pts,
+        sway: Math.random() * 10,
+        popped: false,
+        poppedAt: 0,
+        scale: 1,
+        cut: false
+      };
+    });
+    const NS = "http://www.w3.org/2000/svg";
+    const strings = [];
+    const bodies = [];
+    const shredLayer = document.createElementNS(NS, "g");
+    const boomLayer = document.createElementNS(NS, "g");
+    svg.replaceChildren();
+    s.balloons.forEach((_, i) => {
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke", "currentColor");
+      path.setAttribute("stroke-opacity", "0.45");
+      path.setAttribute("stroke-width", "1.2");
+      svg.appendChild(path);
+      strings.push(path);
+    });
+    s.balloons.forEach((_, i) => {
+      const g = document.createElementNS(NS, "g");
+      g.setAttribute("data-balloon", String(i));
+      g.style.cursor = "grab";
+      const c = COLORS$1[i % COLORS$1.length];
+      g.innerHTML = `
+        <path d="M0,-1 l-3.5,6 h7 z" fill="${c}"/>
+        <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${c}"/>
+        <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity="0.45" transform="rotate(-20 -${RADIUS * 0.3} -${RADIUS * 1.35})"/>
+        <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#fff" fill-opacity="0.92">${LETTERS[i]}</text>`;
+      svg.appendChild(g);
+      bodies.push(g);
+    });
+    svg.appendChild(shredLayer);
+    svg.appendChild(boomLayer);
+    const centre = (b) => {
+      const k = b.pts[LINKS];
+      const j = b.pts[LINKS - 1];
+      const dx = k.x - j.x;
+      const dy = k.y - j.y;
+      const d = Math.hypot(dx, dy) || 1;
+      return {
+        x: k.x + dx / d * RADIUS * b.scale,
+        y: k.y + dy / d * RADIUS * b.scale,
+        ux: dx / d,
+        uy: dy / d
+      };
+    };
+    const paint = (now2) => {
+      s.balloons.forEach((b, i) => {
+        let d = `M${b.pts[0].x},${b.pts[0].y}`;
+        for (let k2 = 1; k2 < LINKS; k2++) {
+          const p = b.pts[k2];
+          const q = b.pts[k2 + 1];
+          d += ` Q${p.x},${p.y} ${(p.x + q.x) / 2},${(p.y + q.y) / 2}`;
+        }
+        d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
+        strings[i].setAttribute("d", d);
+        strings[i].style.display = b.cut ? "none" : "";
+        const k = b.pts[LINKS];
+        const c = centre(b);
+        const angle = Math.atan2(c.uy, c.ux) * 180 / Math.PI + 90;
+        const g = bodies[i];
+        g.style.display = b.scale < 0.02 ? "none" : "";
+        g.setAttribute("transform", `translate(${k.x},${k.y}) rotate(${angle}) scale(${b.scale})`);
+      });
+      shredLayer.innerHTML = s.shreds.map(
+        (p) => `<rect x="-3" y="-2" width="6" height="4" rx="1" fill="${p.c}" opacity="${Math.min(1, p.life * 2)}" transform="translate(${p.x},${p.y}) rotate(${p.a})"/>`
+      ).join("");
+      boomLayer.innerHTML = s.booms.map((bm) => {
+        const t = (now2 - bm.t) / 600;
+        return `<text x="${bm.x}" y="${bm.y - t * 24}" text-anchor="middle" font-size="16" font-weight="900" font-family="ui-monospace, monospace" fill="currentColor" opacity="${1 - t}">POP!</text>`;
+      }).join("");
+    };
+    const step2 = (dt, now2) => {
+      const w = W();
+      for (const b of s.balloons) {
+        if (b.popped && now2 - b.poppedAt > REINFLATE_MS) {
+          b.popped = false;
+          b.cut = false;
+          b.poppedAt = now2;
+          b.scale = 0;
+        }
+        if (!b.popped && b.scale < 1) b.scale = Math.min(1, (now2 - b.poppedAt) / INFLATE_MS);
+        const lift = b.popped ? 0 : LIFT * b.scale;
+        b.sway += dt;
+        const breeze = Math.sin(b.sway * 0.9) * 60 + Math.sin(b.sway * 2.3 + b.anchor * 9) * 25;
+        b.pts.forEach((p, k) => {
+          if (k === 0) return;
+          const vx = (p.x - p.px) * DAMPING$2;
+          const vy = (p.y - p.py) * DAMPING$2;
+          p.px = p.x;
+          p.py = p.y;
+          let ax = 0;
+          let ay = GRAVITY$2 * 0.15;
+          if (k === LINKS) {
+            ay = GRAVITY$2 - lift;
+            ax = breeze;
+            if (s.pointer && !b.popped) {
+              const c = centre(b);
+              const dx = c.x - s.pointer.x;
+              const dy = c.y - s.pointer.y;
+              const d = Math.hypot(dx, dy);
+              if (d < BLOW_RADIUS && d > 1) {
+                const f = (1 - d / BLOW_RADIUS) * BLOW_FORCE;
+                ax += dx / d * f * 4;
+                ay += dy / d * f * 4;
+              }
+            }
+          }
+          p.x += vx + ax * dt * dt;
+          p.y += vy + ay * dt * dt;
+        });
+        const base = b.pts[0];
+        base.x = base.px = b.anchor * w;
+        base.y = base.py = HEIGHT;
+      }
+      for (let it = 0; it < ITERATIONS$2; it++) {
+        for (const b of s.balloons) {
+          const seg = b.len / LINKS;
+          for (let k = 0; k < LINKS; k++) {
+            const a = b.pts[k];
+            const c = b.pts[k + 1];
+            const dx = c.x - a.x;
+            const dy = c.y - a.y;
+            const d = Math.hypot(dx, dy) || 1e-6;
+            const diff = (d - seg) / d;
+            if (k === 0) {
+              c.x -= dx * diff;
+              c.y -= dy * diff;
+            } else {
+              a.x += dx * diff * 0.5;
+              a.y += dy * diff * 0.5;
+              c.x -= dx * diff * 0.5;
+              c.y -= dy * diff * 0.5;
+            }
+          }
+        }
+        for (let i = 0; i < s.balloons.length; i++) {
+          const A = s.balloons[i];
+          if (A.popped) continue;
+          for (let j = i + 1; j < s.balloons.length; j++) {
+            const B = s.balloons[j];
+            if (B.popped) continue;
+            const ca = centre(A);
+            const cb = centre(B);
+            const dx = cb.x - ca.x;
+            const dy = cb.y - ca.y;
+            const d = Math.hypot(dx, dy) || 1e-6;
+            const min = RADIUS * 1.75 * ((A.scale + B.scale) / 2);
+            if (d < min) {
+              const push = (min - d) / d * 0.5;
+              A.pts[LINKS].x -= dx * push;
+              A.pts[LINKS].y -= dy * push;
+              B.pts[LINKS].x += dx * push;
+              B.pts[LINKS].y += dy * push;
+            }
+          }
+        }
+        if (s.grab) {
+          const b = s.balloons[s.grab.i];
+          const k = b.pts[LINKS];
+          const ax = anchorX(b);
+          let tx = s.grab.x;
+          let ty = s.grab.y + RADIUS;
+          const dx = tx - ax;
+          const dy = ty - HEIGHT;
+          const d = Math.hypot(dx, dy);
+          const max = b.len * 1.05;
+          if (d > max) {
+            tx = ax + dx / d * max;
+            ty = HEIGHT + dy / d * max;
+          }
+          k.x = tx;
+          k.y = ty;
+        }
+        for (const b of s.balloons) {
+          const k = b.pts[LINKS];
+          k.x = Math.max(RADIUS, Math.min(w - RADIUS, k.x));
+          k.y = Math.max(RADIUS * 2.1, Math.min(HEIGHT, k.y));
+        }
+      }
+      for (const p of s.shreds) {
+        p.vy += GRAVITY$2 * dt;
+        p.vx *= 0.98;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.a += p.va * dt;
+        p.life -= dt;
+      }
+      s.shreds = s.shreds.filter((p) => p.life > 0 && p.y < HEIGHT + 40);
+      s.booms = s.booms.filter((bm) => now2 - bm.t < 600);
+    };
+    let raf = 0;
+    let last = performance.now();
+    let visible = false;
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+    });
+    io.observe(box);
+    for (let i = 0; i < 90; i++) step2(1 / 60, 0);
+    paint(0);
+    if (reduce) return () => io.disconnect();
+    const frame = (now2) => {
+      raf = requestAnimationFrame(frame);
+      const dt = Math.min(1 / 30, (now2 - last) / 1e3);
+      last = now2;
+      if (!visible || document.hidden) return;
+      step2(dt, now2);
+      paint(now2);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+    };
+  }, []);
+  reactExports.useEffect(() => {
+    const on = () => {
+      const start = performance.now();
+      const kick = () => {
+        for (const b of state.current.balloons) {
+          const k = b.pts[LINKS];
+          k.px = k.x - (Math.random() - 0.5) * 30;
+          k.py = k.y - (Math.random() - 0.5) * 24;
+        }
+        if (performance.now() - start < 4e3) window.setTimeout(kick, 160);
+      };
+      kick();
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => window.removeEventListener(PARTY_EVENT, on);
+  }, []);
+  const local = (e) => {
+    const r = boxRef.current.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+  const pop = (i) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const k = b.pts[LINKS];
+    const cy = k.y - RADIUS;
+    for (let n = 0; n < 16; n++) {
+      const a = Math.random() * Math.PI * 2;
+      const v = 150 + Math.random() * 260;
+      s.shreds.push({
+        x: k.x,
+        y: cy,
+        vx: Math.cos(a) * v,
+        vy: Math.sin(a) * v - 120,
+        a: Math.random() * 360,
+        va: (Math.random() - 0.5) * 900,
+        life: 0.9 + Math.random() * 0.5,
+        c: COLORS$1[i % COLORS$1.length]
+      });
+    }
+    s.booms.push({ x: k.x, y: cy - RADIUS, t: performance.now() });
+    b.popped = true;
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    setPops((n) => n + 1);
+  };
+  const cut = (i) => {
+    const s = state.current;
+    const b = s.balloons[i];
+    const box = boxRef.current;
+    if (!b || b.popped || !box) return;
+    const k = b.pts[LINKS];
+    const r = box.getBoundingClientRect();
+    b.popped = true;
+    b.cut = true;
+    cutSet.current.add(i);
+    if (cutSet.current.size === LETTERS.length) {
+      solveMystery("balloons");
+    }
+    b.poppedAt = performance.now();
+    b.scale = 0;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    launch(r.left + window.scrollX + k.x, r.top + window.scrollY + k.y, i);
+  };
+  const onDown = (e) => {
+    const target = e.target.closest("[data-balloon]");
+    if (!target || e.button !== 0) return;
+    const i = Number(target.getAttribute("data-balloon"));
+    if (state.current.balloons[i]?.popped) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const p = local(e);
+    state.current.grab = { i, x: p.x, y: p.y, sx: p.x, sy: p.y, moved: false };
+  };
+  const onMove = (e) => {
+    const s = state.current;
+    const p = local(e);
+    s.pointer = e.pointerType === "mouse" ? p : null;
+    const g = s.grab;
+    if (!g) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
+    g.x = p.x;
+    g.y = p.y;
+    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$1) g.moved = true;
+  };
+  const onUp = () => {
+    const s = state.current;
+    const g = s.grab;
+    if (!g) return;
+    s.grab = null;
+    if (!g.moved) pop(g.i);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        ref: boxRef,
+        onPointerDown: onDown,
+        onPointerMove: onMove,
+        onPointerUp: onUp,
+        onPointerCancel: onUp,
+        onLostPointerCapture: onUp,
+        onPointerLeave: () => {
+          state.current.pointer = null;
+        },
+        "data-cursor": "Pop",
+        "data-party-zone": true,
+        className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
+        style: { height: HEIGHT },
+        children: [
+          backdrop,
+          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" }),
+          LETTERS.map((letter, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": `Cut balloon ${letter} loose`,
+              "data-cursor": "Cut",
+              onPointerEnter: (e) => e.pointerType === "mouse" && cut(i),
+              onPointerDown: (e) => {
+                e.stopPropagation();
+                cut(i);
+              },
+              onClick: () => cut(i),
+              className: "absolute bottom-0 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary",
+              style: { left: `${(i + 0.5) / LETTERS.length * 100}%` },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scissors, { className: "h-3 w-3" })
+            },
+            letter
+          ))
+        ]
+      }
+    ),
+    controls,
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, click to pop, or cut its string" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
+    ] })
+  ] });
+}
+const FLY = { v0: 90, max: 560, accel: 170 };
+function launch(x, y, i) {
+  const color = COLORS$1[i % COLORS$1.length];
+  const el = document.createElement("div");
+  el.setAttribute("aria-hidden", "true");
+  el.style.cssText = "position:absolute;left:0;top:0;z-index:30;pointer-events:none;will-change:transform,opacity";
+  el.innerHTML = `
+    <svg width="60" height="120" viewBox="-30 -60 60 120" style="overflow:visible">
+      <path d="M0,4 C6,24 -6,40 2,58" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>
+      <path d="M0,-1 l-3.5,6 h7 z" fill="${color}"/>
+      <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${color}"/>
+      <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity=".45"/>
+      <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, monospace" fill="#fff" fill-opacity=".92">${LETTERS[i]}</text>
+    </svg>`;
+  el.style.color = getComputedStyle(document.body).color;
+  document.body.appendChild(el);
+  const first = document.querySelector("main > section");
+  const lost = first ? first.getBoundingClientRect().bottom + window.scrollY - 120 : 400;
+  let v = FLY.v0;
+  let t = 0;
+  let fade = 1;
+  let last = performance.now();
+  const frame = (now2) => {
+    const dt = Math.min(0.05, (now2 - last) / 1e3);
+    last = now2;
+    t += dt;
+    v = Math.min(FLY.max, v + FLY.accel * dt);
+    y -= v * dt;
+    const sway = Math.sin(t * 1.6 + i) * 26;
+    if (y < lost) fade -= dt * 0.9;
+    el.style.opacity = String(Math.max(0, fade));
+    el.style.transform = `translate(${x + sway - 30}px, ${y - 60}px) rotate(${Math.sin(t * 1.6 + i + 0.8) * 9}deg) scale(${0.6 + 0.4 * Math.max(0, fade)})`;
+    if (fade > 0 && y > -200) requestAnimationFrame(frame);
+    else el.remove();
+  };
+  requestAnimationFrame(frame);
+}
 function Beams({ y1, y2, reach }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: "0.5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -709,6 +1496,7 @@ function PlayCar() {
     let raf = 0;
     let last = performance.now();
     let movedCount = 0;
+    let partyUntil = 0;
     const say = (text) => {
       bubble.textContent = text ?? "";
       bubble.style.opacity = text ? "1" : "0";
@@ -930,6 +1718,17 @@ function PlayCar() {
         collide();
         cascade();
         slide();
+        if (now2 > partyUntil && Math.abs(s.v) > 150) {
+          const zone2 = document.querySelector("[data-party-zone]");
+          const r = zone2?.getBoundingClientRect();
+          const vx = s.x - window.scrollX;
+          const vy = s.y - window.scrollY;
+          if (r && vx > r.left && vx < r.right && vy > r.top && vy < r.bottom) {
+            partyUntil = now2 + 6e3;
+            window.dispatchEvent(new Event(PARTY_EVENT));
+            solveMystery("carParty");
+          }
+        }
         const sy = s.y - window.scrollY;
         const vh = window.innerHeight;
         const lo = vh * 0.3;
@@ -1909,6 +2708,40 @@ function RobotWorld({ walkway }) {
       for (const t of timers) window.clearTimeout(t);
     };
   }, [walkway, robots]);
+  const pokes = reactExports.useRef({ alice: 0, bob: 0, argued: false });
+  const poke = (name) => {
+    const p = pokes.current;
+    p[name]++;
+    const say = (who, text) => {
+      world.current[who] = { ...world.current[who], say: text };
+      paint();
+    };
+    if (!p.argued && p.alice >= 3 && p.bob >= 3) {
+      p.argued = true;
+      const lines = [
+        ["alice", "tabs."],
+        ["bob", "spaces."],
+        ["alice", "TABS."],
+        ["bob", "4 spaces!"],
+        ["alice", "…we're done."]
+      ];
+      lines.forEach(([who, text], i) => {
+        window.setTimeout(() => {
+          say(other(who), null);
+          say(who, text);
+        }, i * 1300);
+      });
+      window.setTimeout(() => {
+        say("alice", null);
+        say("bob", null);
+        solveMystery("robots");
+      }, lines.length * 1300);
+      return;
+    }
+    const replies = ["hi!", "hey", "stop poking me", "beep?", ":|"];
+    say(name, replies[Math.min(p[name] - 1, replies.length - 1)]);
+    window.setTimeout(() => say(name, null), 1300);
+  };
   if (!ready.current) return null;
   const { ball } = world.current;
   return (
@@ -1941,7 +2774,8 @@ function RobotWorld({ walkway }) {
             return /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "div",
               {
-                className: "absolute left-0 will-change-transform",
+                onClick: () => poke(name),
+                className: "pointer-events-auto absolute left-0 cursor-pointer will-change-transform",
                 style: {
                   bottom: r.grounded ? FLOOR_PX : LINE_PX,
                   transform: `translateX(${r.x}px)`,
@@ -2274,431 +3108,6 @@ function Scramble({ text }) {
   }, [inView, text]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { ref, "aria-label": text, children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-hidden": true, children: shown }) });
 }
-const LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
-const COLORS$1 = [
-  "#ef4444",
-  "#f59e0b",
-  "#22c55e",
-  "#3b82f6",
-  "#a855f7",
-  "#ec4899",
-  "#06b6d4",
-  "#f97316"
-];
-const LINKS = 9;
-const GRAVITY$2 = 900;
-const LIFT = 2200;
-const DAMPING$2 = 0.985;
-const ITERATIONS$2 = 6;
-const RADIUS = 26;
-const BLOW_RADIUS = 90;
-const BLOW_FORCE = 1400;
-const DRAG_PX$1 = 5;
-const REINFLATE_MS = 3500;
-const INFLATE_MS = 650;
-const HEIGHT = 280;
-function ContestBalloons({
-  backdrop,
-  controls
-}) {
-  const boxRef = reactExports.useRef(null);
-  const svgRef = reactExports.useRef(null);
-  const [pops, setPops] = reactExports.useState(0);
-  const state = reactExports.useRef({ balloons: [], shreds: [], pointer: null, grab: null, booms: [] });
-  reactExports.useEffect(() => {
-    const box = boxRef.current;
-    const svg = svgRef.current;
-    if (!box || !svg) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const s = state.current;
-    const W = () => box.clientWidth;
-    const anchorX = (b) => b.anchor * W();
-    s.balloons = LETTERS.map((_, i) => {
-      const anchor = (i + 0.5) / LETTERS.length;
-      const len = 120 + i * 37 % 5 * 18;
-      const pts = [];
-      for (let k = 0; k <= LINKS; k++) {
-        const x = anchor * W();
-        const y = HEIGHT - k / LINKS * len;
-        pts.push({ x, y, px: x, py: y });
-      }
-      return {
-        anchor,
-        len,
-        pts,
-        sway: Math.random() * 10,
-        popped: false,
-        poppedAt: 0,
-        scale: 1,
-        cut: false
-      };
-    });
-    const NS = "http://www.w3.org/2000/svg";
-    const strings = [];
-    const bodies = [];
-    const shredLayer = document.createElementNS(NS, "g");
-    const boomLayer = document.createElementNS(NS, "g");
-    svg.replaceChildren();
-    s.balloons.forEach((_, i) => {
-      const path = document.createElementNS(NS, "path");
-      path.setAttribute("fill", "none");
-      path.setAttribute("stroke", "currentColor");
-      path.setAttribute("stroke-opacity", "0.45");
-      path.setAttribute("stroke-width", "1.2");
-      svg.appendChild(path);
-      strings.push(path);
-    });
-    s.balloons.forEach((_, i) => {
-      const g = document.createElementNS(NS, "g");
-      g.setAttribute("data-balloon", String(i));
-      g.style.cursor = "grab";
-      const c = COLORS$1[i % COLORS$1.length];
-      g.innerHTML = `
-        <path d="M0,-1 l-3.5,6 h7 z" fill="${c}"/>
-        <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${c}"/>
-        <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity="0.45" transform="rotate(-20 -${RADIUS * 0.3} -${RADIUS * 1.35})"/>
-        <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#fff" fill-opacity="0.92">${LETTERS[i]}</text>`;
-      svg.appendChild(g);
-      bodies.push(g);
-    });
-    svg.appendChild(shredLayer);
-    svg.appendChild(boomLayer);
-    const centre = (b) => {
-      const k = b.pts[LINKS];
-      const j = b.pts[LINKS - 1];
-      const dx = k.x - j.x;
-      const dy = k.y - j.y;
-      const d = Math.hypot(dx, dy) || 1;
-      return {
-        x: k.x + dx / d * RADIUS * b.scale,
-        y: k.y + dy / d * RADIUS * b.scale,
-        ux: dx / d,
-        uy: dy / d
-      };
-    };
-    const paint = (now2) => {
-      s.balloons.forEach((b, i) => {
-        let d = `M${b.pts[0].x},${b.pts[0].y}`;
-        for (let k2 = 1; k2 < LINKS; k2++) {
-          const p = b.pts[k2];
-          const q = b.pts[k2 + 1];
-          d += ` Q${p.x},${p.y} ${(p.x + q.x) / 2},${(p.y + q.y) / 2}`;
-        }
-        d += ` L${b.pts[LINKS].x},${b.pts[LINKS].y}`;
-        strings[i].setAttribute("d", d);
-        strings[i].style.display = b.cut ? "none" : "";
-        const k = b.pts[LINKS];
-        const c = centre(b);
-        const angle = Math.atan2(c.uy, c.ux) * 180 / Math.PI + 90;
-        const g = bodies[i];
-        g.style.display = b.scale < 0.02 ? "none" : "";
-        g.setAttribute("transform", `translate(${k.x},${k.y}) rotate(${angle}) scale(${b.scale})`);
-      });
-      shredLayer.innerHTML = s.shreds.map(
-        (p) => `<rect x="-3" y="-2" width="6" height="4" rx="1" fill="${p.c}" opacity="${Math.min(1, p.life * 2)}" transform="translate(${p.x},${p.y}) rotate(${p.a})"/>`
-      ).join("");
-      boomLayer.innerHTML = s.booms.map((bm) => {
-        const t = (now2 - bm.t) / 600;
-        return `<text x="${bm.x}" y="${bm.y - t * 24}" text-anchor="middle" font-size="16" font-weight="900" font-family="ui-monospace, monospace" fill="currentColor" opacity="${1 - t}">POP!</text>`;
-      }).join("");
-    };
-    const step2 = (dt, now2) => {
-      const w = W();
-      for (const b of s.balloons) {
-        if (b.popped && now2 - b.poppedAt > REINFLATE_MS) {
-          b.popped = false;
-          b.cut = false;
-          b.poppedAt = now2;
-          b.scale = 0;
-        }
-        if (!b.popped && b.scale < 1) b.scale = Math.min(1, (now2 - b.poppedAt) / INFLATE_MS);
-        const lift = b.popped ? 0 : LIFT * b.scale;
-        b.sway += dt;
-        const breeze = Math.sin(b.sway * 0.9) * 60 + Math.sin(b.sway * 2.3 + b.anchor * 9) * 25;
-        b.pts.forEach((p, k) => {
-          if (k === 0) return;
-          const vx = (p.x - p.px) * DAMPING$2;
-          const vy = (p.y - p.py) * DAMPING$2;
-          p.px = p.x;
-          p.py = p.y;
-          let ax = 0;
-          let ay = GRAVITY$2 * 0.15;
-          if (k === LINKS) {
-            ay = GRAVITY$2 - lift;
-            ax = breeze;
-            if (s.pointer && !b.popped) {
-              const c = centre(b);
-              const dx = c.x - s.pointer.x;
-              const dy = c.y - s.pointer.y;
-              const d = Math.hypot(dx, dy);
-              if (d < BLOW_RADIUS && d > 1) {
-                const f = (1 - d / BLOW_RADIUS) * BLOW_FORCE;
-                ax += dx / d * f * 4;
-                ay += dy / d * f * 4;
-              }
-            }
-          }
-          p.x += vx + ax * dt * dt;
-          p.y += vy + ay * dt * dt;
-        });
-        const base = b.pts[0];
-        base.x = base.px = b.anchor * w;
-        base.y = base.py = HEIGHT;
-      }
-      for (let it = 0; it < ITERATIONS$2; it++) {
-        for (const b of s.balloons) {
-          const seg = b.len / LINKS;
-          for (let k = 0; k < LINKS; k++) {
-            const a = b.pts[k];
-            const c = b.pts[k + 1];
-            const dx = c.x - a.x;
-            const dy = c.y - a.y;
-            const d = Math.hypot(dx, dy) || 1e-6;
-            const diff = (d - seg) / d;
-            if (k === 0) {
-              c.x -= dx * diff;
-              c.y -= dy * diff;
-            } else {
-              a.x += dx * diff * 0.5;
-              a.y += dy * diff * 0.5;
-              c.x -= dx * diff * 0.5;
-              c.y -= dy * diff * 0.5;
-            }
-          }
-        }
-        for (let i = 0; i < s.balloons.length; i++) {
-          const A = s.balloons[i];
-          if (A.popped) continue;
-          for (let j = i + 1; j < s.balloons.length; j++) {
-            const B = s.balloons[j];
-            if (B.popped) continue;
-            const ca = centre(A);
-            const cb = centre(B);
-            const dx = cb.x - ca.x;
-            const dy = cb.y - ca.y;
-            const d = Math.hypot(dx, dy) || 1e-6;
-            const min = RADIUS * 1.75 * ((A.scale + B.scale) / 2);
-            if (d < min) {
-              const push = (min - d) / d * 0.5;
-              A.pts[LINKS].x -= dx * push;
-              A.pts[LINKS].y -= dy * push;
-              B.pts[LINKS].x += dx * push;
-              B.pts[LINKS].y += dy * push;
-            }
-          }
-        }
-        if (s.grab) {
-          const b = s.balloons[s.grab.i];
-          const k = b.pts[LINKS];
-          const ax = anchorX(b);
-          let tx = s.grab.x;
-          let ty = s.grab.y + RADIUS;
-          const dx = tx - ax;
-          const dy = ty - HEIGHT;
-          const d = Math.hypot(dx, dy);
-          const max = b.len * 1.05;
-          if (d > max) {
-            tx = ax + dx / d * max;
-            ty = HEIGHT + dy / d * max;
-          }
-          k.x = tx;
-          k.y = ty;
-        }
-        for (const b of s.balloons) {
-          const k = b.pts[LINKS];
-          k.x = Math.max(RADIUS, Math.min(w - RADIUS, k.x));
-          k.y = Math.max(RADIUS * 2.1, Math.min(HEIGHT, k.y));
-        }
-      }
-      for (const p of s.shreds) {
-        p.vy += GRAVITY$2 * dt;
-        p.vx *= 0.98;
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.a += p.va * dt;
-        p.life -= dt;
-      }
-      s.shreds = s.shreds.filter((p) => p.life > 0 && p.y < HEIGHT + 40);
-      s.booms = s.booms.filter((bm) => now2 - bm.t < 600);
-    };
-    let raf = 0;
-    let last = performance.now();
-    let visible = false;
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-    });
-    io.observe(box);
-    for (let i = 0; i < 90; i++) step2(1 / 60, 0);
-    paint(0);
-    if (reduce) return () => io.disconnect();
-    const frame = (now2) => {
-      raf = requestAnimationFrame(frame);
-      const dt = Math.min(1 / 30, (now2 - last) / 1e3);
-      last = now2;
-      if (!visible || document.hidden) return;
-      step2(dt, now2);
-      paint(now2);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-    };
-  }, []);
-  const local = (e) => {
-    const r = boxRef.current.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
-  };
-  const pop = (i) => {
-    const s = state.current;
-    const b = s.balloons[i];
-    const k = b.pts[LINKS];
-    const cy = k.y - RADIUS;
-    for (let n = 0; n < 16; n++) {
-      const a = Math.random() * Math.PI * 2;
-      const v = 150 + Math.random() * 260;
-      s.shreds.push({
-        x: k.x,
-        y: cy,
-        vx: Math.cos(a) * v,
-        vy: Math.sin(a) * v - 120,
-        a: Math.random() * 360,
-        va: (Math.random() - 0.5) * 900,
-        life: 0.9 + Math.random() * 0.5,
-        c: COLORS$1[i % COLORS$1.length]
-      });
-    }
-    s.booms.push({ x: k.x, y: cy - RADIUS, t: performance.now() });
-    b.popped = true;
-    b.poppedAt = performance.now();
-    b.scale = 0;
-    setPops((n) => n + 1);
-  };
-  const cut = (i) => {
-    const s = state.current;
-    const b = s.balloons[i];
-    const box = boxRef.current;
-    if (!b || b.popped || !box) return;
-    const k = b.pts[LINKS];
-    const r = box.getBoundingClientRect();
-    b.popped = true;
-    b.cut = true;
-    b.poppedAt = performance.now();
-    b.scale = 0;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    launch(r.left + window.scrollX + k.x, r.top + window.scrollY + k.y, i);
-  };
-  const onDown = (e) => {
-    const target = e.target.closest("[data-balloon]");
-    if (!target || e.button !== 0) return;
-    const i = Number(target.getAttribute("data-balloon"));
-    if (state.current.balloons[i]?.popped) return;
-    e.currentTarget.setPointerCapture(e.pointerId);
-    const p = local(e);
-    state.current.grab = { i, x: p.x, y: p.y, sx: p.x, sy: p.y, moved: false };
-  };
-  const onMove = (e) => {
-    const s = state.current;
-    const p = local(e);
-    s.pointer = e.pointerType === "mouse" ? p : null;
-    const g = s.grab;
-    if (!g) return;
-    if (e.pointerType === "mouse" && e.buttons === 0) return onUp();
-    g.x = p.x;
-    g.y = p.y;
-    if (Math.hypot(p.x - g.sx, p.y - g.sy) > DRAG_PX$1) g.moved = true;
-  };
-  const onUp = () => {
-    const s = state.current;
-    const g = s.grab;
-    if (!g) return;
-    s.grab = null;
-    if (!g.moved) pop(g.i);
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-10", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "div",
-      {
-        ref: boxRef,
-        onPointerDown: onDown,
-        onPointerMove: onMove,
-        onPointerUp: onUp,
-        onPointerCancel: onUp,
-        onLostPointerCapture: onUp,
-        onPointerLeave: () => {
-          state.current.pointer = null;
-        },
-        "data-cursor": "Pop",
-        className: "relative w-full touch-pan-y select-none overflow-hidden rounded-xl border border-border bg-card/30 text-foreground",
-        style: { height: HEIGHT },
-        children: [
-          backdrop,
-          /* @__PURE__ */ jsxRuntimeExports.jsx("svg", { ref: svgRef, "aria-hidden": true, className: "absolute inset-0 h-full w-full overflow-visible" }),
-          LETTERS.map((letter, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "button",
-            {
-              type: "button",
-              "aria-label": `Cut balloon ${letter} loose`,
-              "data-cursor": "Cut",
-              onPointerEnter: (e) => e.pointerType === "mouse" && cut(i),
-              onPointerDown: (e) => {
-                e.stopPropagation();
-                cut(i);
-              },
-              onClick: () => cut(i),
-              className: "absolute bottom-0 flex h-6 w-6 -translate-x-1/2 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground transition-colors hover:border-primary hover:text-primary",
-              style: { left: `${(i + 0.5) / LETTERS.length * 100}%` },
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Scissors, { className: "h-3 w-3" })
-            },
-            letter
-          ))
-        ]
-      }
-    ),
-    controls,
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-2 flex flex-wrap justify-between gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "At ICPC every solved problem earns a balloon · grab one, click to pop, or cut its string" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "aria-live": "polite", children: pops > 0 ? `popped: ${pops}` : "" })
-    ] })
-  ] });
-}
-const FLY = { v0: 90, max: 560, accel: 170 };
-function launch(x, y, i) {
-  const color = COLORS$1[i % COLORS$1.length];
-  const el = document.createElement("div");
-  el.setAttribute("aria-hidden", "true");
-  el.style.cssText = "position:absolute;left:0;top:0;z-index:30;pointer-events:none;will-change:transform,opacity";
-  el.innerHTML = `
-    <svg width="60" height="120" viewBox="-30 -60 60 120" style="overflow:visible">
-      <path d="M0,4 C6,24 -6,40 2,58" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.2"/>
-      <path d="M0,-1 l-3.5,6 h7 z" fill="${color}"/>
-      <ellipse cx="0" cy="-${RADIUS}" rx="${RADIUS * 0.86}" ry="${RADIUS}" fill="${color}"/>
-      <ellipse cx="-${RADIUS * 0.3}" cy="-${RADIUS * 1.35}" rx="${RADIUS * 0.2}" ry="${RADIUS * 0.32}" fill="#fff" opacity=".45"/>
-      <text x="0" y="-${RADIUS * 0.72}" text-anchor="middle" font-size="18" font-weight="800" font-family="ui-monospace, monospace" fill="#fff" fill-opacity=".92">${LETTERS[i]}</text>
-    </svg>`;
-  el.style.color = getComputedStyle(document.body).color;
-  document.body.appendChild(el);
-  const first = document.querySelector("main > section");
-  const lost = first ? first.getBoundingClientRect().bottom + window.scrollY - 120 : 400;
-  let v = FLY.v0;
-  let t = 0;
-  let fade = 1;
-  let last = performance.now();
-  const frame = (now2) => {
-    const dt = Math.min(0.05, (now2 - last) / 1e3);
-    last = now2;
-    t += dt;
-    v = Math.min(FLY.max, v + FLY.accel * dt);
-    y -= v * dt;
-    const sway = Math.sin(t * 1.6 + i) * 26;
-    if (y < lost) fade -= dt * 0.9;
-    el.style.opacity = String(Math.max(0, fade));
-    el.style.transform = `translate(${x + sway - 30}px, ${y - 60}px) rotate(${Math.sin(t * 1.6 + i + 0.8) * 9}deg) scale(${0.6 + 0.4 * Math.max(0, fade)})`;
-    if (fade > 0 && y > -200) requestAnimationFrame(frame);
-    else el.remove();
-  };
-  requestAnimationFrame(frame);
-}
 const music = "/assets/acpc-music-Sbaw3JnV.mp3";
 const group = "/assets/group-DVKU7Npx.jpg";
 const firstToSolve = "/assets/ecpc-first-to-solve-BR9AQIT0.jpg";
@@ -2814,6 +3223,23 @@ function AcpcMoments() {
       setPlaying(false);
     }
   };
+  reactExports.useEffect(() => {
+    let timer = 0;
+    const on = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.playbackRate = 1.6;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        audio.playbackRate = 1;
+      }, 4e3);
+    };
+    window.addEventListener(PARTY_EVENT, on);
+    return () => {
+      window.removeEventListener(PARTY_EVENT, on);
+      window.clearTimeout(timer);
+    };
+  }, []);
   const toggleRef = reactExports.useRef(toggle);
   toggleRef.current = toggle;
   const anchorRef = reactExports.useRef(null);
@@ -3420,8 +3846,12 @@ function LocalTime() {
     const id = window.setInterval(() => setTime(now()), 1e3);
     return () => window.clearInterval(id);
   }, []);
+  const hour = time2 ? Number(time2.slice(0, 2)) : -1;
+  const owl = hour === 0;
+  reactExports.useEffect(() => {
+    if (owl) solveMystery("midnight");
+  }, [owl]);
   if (!time2) return null;
-  const hour = Number(time2.slice(0, 2));
   const awake = hour >= 9 && hour < 24;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-2 font-mono text-xs text-muted-foreground", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `h-1.5 w-1.5 rounded-full ${awake ? "bg-emerald-400" : "bg-amber-400"}` }),
@@ -3429,7 +3859,7 @@ function LocalTime() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "tabular-nums text-foreground", children: time2 }),
     " ·",
     " ",
-    awake ? "probably awake" : "probably asleep"
+    owl ? "probably asleep… definitely solving Codeforces 🦉" : awake ? "probably awake" : "probably asleep"
   ] });
 }
 function Magnetic({
@@ -3797,6 +4227,7 @@ function ScrollLit({ text, className }) {
 }
 const HEADING = [{ text: "Let's build" }, { text: "something.", gradient: true }];
 function Contact() {
+  const found = useMysteries();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "section",
     {
@@ -3812,6 +4243,11 @@ function Contact() {
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LocalTime, {}) }),
+          found.length === MYSTERIES.length && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-3 font-mono text-xs text-amber-300", children: [
+            "★ You found all ",
+            MYSTERIES.length,
+            " mysteries. You clearly pay attention — let's talk."
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             ScrollLit,
             {
@@ -4031,6 +4467,14 @@ function LanyardBadge({ photo, photoAlt }) {
   const strapRef = reactExports.useRef(null);
   const [size, setSize] = reactExports.useState(DESKTOP);
   const [flipped, setFlipped] = reactExports.useState(false);
+  const [flips, setFlips] = reactExports.useState(0);
+  const flip = () => {
+    setFlipped((f) => !f);
+    setFlips((n) => {
+      if (n + 1 === 7) solveMystery("badge");
+      return n + 1;
+    });
+  };
   const [held, setHeld] = reactExports.useState(false);
   const strapId = reactExports.useId();
   const sim = reactExports.useRef(null);
@@ -4178,7 +4622,7 @@ function LanyardBadge({ photo, photoAlt }) {
     s.grab = null;
     s.asleep = false;
     setHeld(false);
-    if (clicked) setFlipped((f) => !f);
+    if (clicked) flip();
   };
   const onDown = (e) => {
     const s = sim.current;
@@ -4286,7 +4730,7 @@ function LanyardBadge({ photo, photoAlt }) {
             onKeyDown: (e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                setFlipped((f) => !f);
+                flip();
               }
             },
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -4362,6 +4806,7 @@ function LanyardBadge({ photo, photoAlt }) {
                             l.label
                           ))
                         ] }),
+                        flips >= 7 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 rounded border border-amber-300/60 px-2 py-1 text-center font-mono text-[9px] font-bold uppercase tracking-widest text-amber-300", children: "★ VIP pass · persistence noted" }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-auto font-mono text-[8px] uppercase tracking-widest text-white/35", children: "Click to flip back" })
                       ] })
                     ]
@@ -6041,6 +6486,8 @@ function SystemMap() {
   const edgeRefs = reactExports.useRef({});
   const boxRef = reactExports.useRef(null);
   const [snap, setSnap] = reactExports.useState(null);
+  const [incident, setIncident] = reactExports.useState(false);
+  const incidentSeen = reactExports.useRef(false);
   const [selected, setSelected] = reactExports.useState("api");
   const [ui, setUi] = reactExports.useState({
     paused: false,
@@ -6117,6 +6564,12 @@ function SystemMap() {
         lastSnap = t;
         const nodes = {};
         for (const n of NODES) nodes[n.id] = sim2.nodeState(n.id);
+        const api = nodes.api;
+        if (!incidentSeen.current && api && api.pods.length && !api.pods.includes("ready")) {
+          incidentSeen.current = true;
+          setIncident(true);
+          solveMystery("outage");
+        }
         setSnap({
           nodes,
           stats: sim2.stats(),
@@ -6235,68 +6688,86 @@ function SystemMap() {
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-1 font-mono text-[10px] text-muted-foreground sm:hidden", children: "← swipe the map · tap a node →" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "-mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "svg",
-      {
-        viewBox: "0 0 1100 620",
-        className: "min-w-[760px] w-full select-none",
-        role: "img",
-        "aria-label": "Redacted architecture map with live simulated traffic",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2", result: "b" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow-strong", x: "-300%", y: "-300%", width: "700%", height: "700%", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "4", result: "b" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("filter", { id: "sysmap-redact", x: "-10%", y: "-60%", width: "120%", height: "220%", children: /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2.4" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "core", dashed: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "async pipeline", dashed: true }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
-          EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "path",
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative -mx-3 overflow-x-auto px-3 sm:mx-0 sm:px-0", children: [
+      incident && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute left-1/2 top-4 z-10 w-[min(92%,420px)] -translate-x-1/2 rounded-xl border border-rose-500/60 bg-background/95 p-4 font-mono text-xs shadow-2xl backdrop-blur", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-rose-400", children: "INC-404 · SEV-1" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
             {
-              ref: (el) => {
-                edgeRefs.current[edgeKey(e.a, e.b)] = el;
+              type: "button",
+              onClick: () => setIncident(false),
+              className: "text-muted-foreground hover:text-foreground",
+              children: "dismiss"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-foreground", children: "Core API has no ready instances. Every request is a 504." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-muted-foreground", children: "Root cause: someone broke prod. It was you. Recovery: automatic, give it a few seconds." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "svg",
+        {
+          viewBox: "0 0 1100 620",
+          className: "min-w-[760px] w-full select-none",
+          role: "img",
+          "aria-label": "Redacted architecture map with live simulated traffic",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("defs", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow", x: "-200%", y: "-200%", width: "500%", height: "500%", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2", result: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("filter", { id: "sysmap-glow-strong", x: "-300%", y: "-300%", width: "700%", height: "700%", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "4", result: "b" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("feMerge", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "b" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("feMergeNode", { in: "SourceGraphic" })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("filter", { id: "sysmap-redact", x: "-10%", y: "-60%", width: "120%", height: "220%", children: /* @__PURE__ */ jsxRuntimeExports.jsx("feGaussianBlur", { stdDeviation: "2.4" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("pattern", { id: "sysmap-grid", width: "22", height: "22", patternUnits: "userSpaceOnUse", children: /* @__PURE__ */ jsxRuntimeExports.jsx("circle", { cx: "1", cy: "1", r: "1", fill: "currentColor", opacity: "0.08" }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("rect", { width: "1100", height: "620", fill: "url(#sysmap-grid)", className: "text-foreground" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 12, y: 100, w: 156, h: 430, label: "clients" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 178, y: 200, w: 530, h: 400, label: "core", dashed: true }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 716, y: 24, w: 168, h: 576, label: "async pipeline", dashed: true }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zone, { x: 920, y: 185, w: 170, h: 360, label: "external" }),
+            EDGES.map((e) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "path",
+              {
+                ref: (el) => {
+                  edgeRefs.current[edgeKey(e.a, e.b)] = el;
+                },
+                d: pathD(e),
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: e.callback ? 1 : 1.4,
+                strokeDasharray: e.callback ? "4 5" : void 0,
+                className: "text-foreground transition-[stroke-opacity] duration-300"
               },
-              d: pathD(e),
-              fill: "none",
-              stroke: "currentColor",
-              strokeWidth: e.callback ? 1 : 1.4,
-              strokeDasharray: e.callback ? "4 5" : void 0,
-              className: "text-foreground transition-[stroke-opacity] duration-300"
-            },
-            edgeKey(e.a, e.b)
-          )),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("g", { ref: packetLayer }),
-          NODES.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-            NodeBox,
-            {
-              def: n,
-              state: snap?.nodes[n.id] ?? null,
-              selected: selected === n.id,
-              modelDown: n.id === "ai" && ui.modelDown,
-              onSelect: () => setSelected(n.id)
-            },
-            n.id
-          ))
-        ]
-      }
-    ) }),
+              edgeKey(e.a, e.b)
+            )),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("g", { ref: packetLayer }),
+            NODES.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              NodeBox,
+              {
+                def: n,
+                state: snap?.nodes[n.id] ?? null,
+                selected: selected === n.id,
+                modelDown: n.id === "ai" && ui.modelDown,
+                onSelect: () => setSelected(n.id)
+              },
+              n.id
+            ))
+          ]
+        }
+      )
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.read, label: "read request" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dot, { c: COLORS.job, label: "async job" }),
@@ -7370,25 +7841,6 @@ function useTerminalWindow(enabled) {
   };
   return { pos, size, onHeaderMouseDown, onResizeMouseDown };
 }
-const USERNAME_EVENT = "usernamechange";
-const DEFAULT_USERNAME = "guest";
-function getUsername() {
-  return readString(STORAGE_KEYS.username) || DEFAULT_USERNAME;
-}
-function setStoredUsername(name) {
-  writeString(STORAGE_KEYS.username, name);
-  window.dispatchEvent(new CustomEvent(USERNAME_EVENT, { detail: name }));
-}
-function useUsername() {
-  const [username, setUsername] = reactExports.useState(DEFAULT_USERNAME);
-  reactExports.useEffect(() => {
-    setUsername(getUsername());
-    const onChange = (e) => setUsername(e.detail || DEFAULT_USERNAME);
-    window.addEventListener(USERNAME_EVENT, onChange);
-    return () => window.removeEventListener(USERNAME_EVENT, onChange);
-  }, []);
-  return username;
-}
 let countedThisLoad = null;
 function useVisitCount() {
   const [visits, setVisits] = reactExports.useState(0);
@@ -7563,6 +8015,7 @@ const commands = [
     run: ({ print, printHelp }) => {
       print(HELP_HEADER);
       for (const command of commands) {
+        if (command.hidden) continue;
         printHelp(command.usage ?? command.name, command.description);
       }
     }
@@ -7770,6 +8223,64 @@ const commands = [
     }
   },
   {
+    name: "mysteries",
+    aliases: ["mystery", "secrets"],
+    hidden: true,
+    description: "the hidden mysteries you have found",
+    run: ({ print }) => {
+      const solved = solvedMysteries();
+      if (!solved.length) {
+        print("command not found: mysteries. Try `help`.");
+        return;
+      }
+      print(`Mysteries found: ${solved.length}/${MYSTERIES.length}`);
+      for (const m of MYSTERIES) {
+        const done = solved.includes(m.id);
+        const tag = m.dev ? " [dev]" : "";
+        print(done ? `  ✔ ${m.title}${tag}` : `  ? ???${tag} — ${m.riddle}`);
+      }
+      if (solved.length === MYSTERIES.length)
+        print("All of them. Click the counter for your certificate.");
+    }
+  },
+  {
+    name: "sudo",
+    hidden: true,
+    description: "",
+    run: ({ rawArgs, print }) => {
+      const what = rawArgs.trim().toLowerCase().replace(/\s+/g, " ");
+      if (what === "hire ahmed" || what === "hire ahmed khaled") {
+        print("[sudo] password for recruiter: ••••••••");
+        print(
+          "Permission granted. 🎉 Offer letter queued — the fastest way to send it is `email`."
+        );
+        confetti();
+        solveMystery("sudo");
+        return;
+      }
+      print(`${what || "you"} is not in the sudoers file. This incident will be reported.`);
+    }
+  },
+  {
+    name: "submit",
+    hidden: true,
+    description: "",
+    run: ({ args, print }) => {
+      const answer = (args[0] ?? "").replace(/[^0-9]/g, "");
+      if (!answer) {
+        print("Usage: submit <answer>");
+        return;
+      }
+      print(`Judging… test 1 … test 7 …`);
+      if (fnv(answer) === "3f141389") {
+        print("✅ ACCEPTED · 0.01s · 1 MB. Clean work.");
+        solveMystery("problem");
+      } else {
+        print("❌ WRONG ANSWER on test 1. Read the statement again.");
+      }
+    }
+  },
+  {
     name: "color",
     description: "list | set <key> <#hex> | reset",
     run: runColor
@@ -7848,7 +8359,7 @@ for (const command of commands) {
 function findCommand(name) {
   return byName.get(name);
 }
-const COMMAND_NAMES = [...byName.keys()];
+const COMMAND_NAMES = [...byName.entries()].filter(([, c]) => !c.hidden).map(([n]) => n);
 const SPLIT_PATTERN = new RegExp(`(${HEX_PATTERN.source})`);
 function renderHexInline(text, baseColor) {
   return text.split(SPLIT_PATTERN).map(
@@ -8267,6 +8778,7 @@ function Index() {
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimer, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(BackToTop, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(PlayCar, {}),
+    mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MysteryHud, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "relative z-10 max-w-5xl mx-auto px-6 pb-24", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Hero, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Stats, {}),
