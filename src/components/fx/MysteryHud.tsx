@@ -269,7 +269,7 @@ function MysteryInfo({ solved }: { solved: string[] }) {
     <div
       id="mystery-info"
       role="tooltip"
-      className="invisible absolute left-0 top-full mt-2 max-h-[calc(100vh-8rem)] w-[340px] overflow-y-auto translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+      className="invisible absolute left-0 top-full mt-2 max-h-[min(55vh,calc(100vh-13rem))] w-[340px] overflow-y-auto overscroll-contain [scrollbar-width:thin] translate-y-1 rounded-xl border border-amber-400/40 bg-background/95 p-4 font-mono text-[11px] leading-relaxed opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
     >
       <div className="text-xs font-bold text-amber-300">
         Mysteries · {solved.length}/{MYSTERIES.length} found
