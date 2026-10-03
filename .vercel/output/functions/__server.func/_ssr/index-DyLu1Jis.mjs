@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-DWZ_tXwv.mjs";
+import { o as readString, S as STORAGE_KEYS, u as readNumber, q as writeString, p as profile, b as readFlag, d as domainParts, k as roles, l as linkOf, n as stats, i as experiences, s as skills, e as competitions, f as problemSetting, h as education, j as links, r as readJson, w as writeJson, m as projects, g as getStoredTheme, a as applyTheme, T as THEME_EVENT, t as toggleTheme, c as writeFlag, v as removeKey } from "./router-D-f1kFP0.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
@@ -858,6 +858,8 @@ function PlayCar() {
       scan();
     };
     toViewportRef.current = () => {
+      nudgeRef.current = { text: "", until: 0 };
+      say(null);
       const z = zone();
       s.x = Math.max(z.x0, Math.min(z.x1, s.x - window.scrollX));
       s.y = z.y;
@@ -1022,6 +1024,7 @@ function PlayCar() {
   };
   const stop = () => {
     drivingRef.current = false;
+    resetRef.current();
     toViewportRef.current();
     setDriving(false);
     setVehicleDriving(false);
