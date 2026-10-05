@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { r as readString, S as STORAGE_KEYS, u as readNumber, w as writeString, p as profile, d as readFlag, f as domainParts, n as roles, l as linkOf, q as stats, k as experiences, s as skills, h as competitions, i as problemSetting, j as education, m as links, b as readJson, a as writeJson, o as projects, g as getStoredTheme, c as applyTheme, T as THEME_EVENT, t as toggleTheme, e as writeFlag, v as removeKey } from "./router-BwQKlker.mjs";
+import { p as profile, d as domainParts, r as roles, l as linkOf, h as stats, b as experiences, s as skills, c as competitions, a as problemSetting, e as education, f as links, g as projects } from "./router-CWnr3xW-.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as Search, b as ArrowUpRight, G as Github, L as Linkedin, c as CodeXml, T as Trophy, F as FileText, B as Briefcase, d as Gamepad2, e as RotateCw, f as GraduationCap, g as MapPin, h as Globe, P as Phone, i as SquareTerminal, j as Sun, k as Moon, D as Download, X, l as Play, m as Pause, n as Activity, Z as Zap, o as Radar, p as Skull, q as Scissors } from "../_libs/lucide-react.mjs";
+import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as Search, b as ArrowUpRight, G as Github, L as Linkedin, c as CodeXml, T as Trophy, F as FileText, B as Briefcase, d as Gamepad2, e as RotateCw, f as GraduationCap, g as MapPin, h as Globe, P as Phone, i as SquareTerminal, D as Download, X, j as Play, k as Pause, l as Activity, Z as Zap, m as Radar, n as Skull, o as Scissors } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -468,6 +468,71 @@ function BackToTop() {
       ]
     }
   );
+}
+const STORAGE_KEYS = {
+  username: "username",
+  visits: "visits",
+  gamingMode: "gamingMode",
+  robots: "robots",
+  vehicle: "vehicle",
+  mysteries: "mysteries",
+  termMode: "termMode_v2",
+  termColors: "term-colors",
+  termAliases: "term-aliases",
+  termSound: "term-sound",
+  termWindowPos: "term-winpos",
+  termWindowSize: "term-winsize"
+};
+function readString(key) {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writeString(key, value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+  }
+}
+function removeKey(key) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+  }
+}
+function readJson(key, parse2) {
+  const raw = readString(key);
+  if (raw === null) return void 0;
+  try {
+    return parse2(JSON.parse(raw));
+  } catch {
+    return void 0;
+  }
+}
+function writeJson(key, value) {
+  try {
+    writeString(key, JSON.stringify(value));
+  } catch {
+  }
+}
+function readNumber(key, fallback) {
+  const raw = readString(key);
+  if (raw === null) return fallback;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : fallback;
+}
+function readFlag(key, fallback) {
+  const raw = readString(key);
+  if (raw === null) return fallback;
+  return raw !== "0";
+}
+function writeFlag(key, value) {
+  writeString(key, value ? "1" : "0");
 }
 const USERNAME_EVENT = "usernamechange";
 const DEFAULT_USERNAME = "guest";
@@ -2175,33 +2240,6 @@ function MouseGlow() {
     }
   );
 }
-function useTheme() {
-  const [theme, setTheme] = reactExports.useState("dark");
-  const [mounted, setMounted] = reactExports.useState(false);
-  reactExports.useEffect(() => {
-    setMounted(true);
-    const stored = getStoredTheme();
-    setTheme(stored);
-    applyTheme(stored);
-    const onChange = (e) => setTheme(e.detail);
-    window.addEventListener(THEME_EVENT, onChange);
-    return () => window.removeEventListener(THEME_EVENT, onChange);
-  }, []);
-  return { theme, mounted, toggle: toggleTheme };
-}
-function ThemeToggle() {
-  const { theme, mounted, toggle } = useTheme();
-  if (!mounted) return null;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "button",
-    {
-      onClick: toggle,
-      "aria-label": "Toggle theme",
-      className: "h-9 w-9 inline-flex items-center justify-center rounded-md border border-border bg-card hover:bg-secondary transition-colors",
-      children: theme === "dark" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Sun, { className: "w-4 h-4" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Moon, { className: "w-4 h-4" })
-    }
-  );
-}
 const GAMING_MODE_EVENT = "gamingmode";
 function isGamingModeEnabled() {
   return readFlag(STORAGE_KEYS.gamingMode, true);
@@ -2321,13 +2359,10 @@ function NavBar() {
           ]
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(ThemeToggle, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { asChild: true, size: "sm", variant: "outline", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: `mailto:${profile.email}`, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, {}),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Get in touch" })
-        ] }) })
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { asChild: true, size: "sm", variant: "outline", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: `mailto:${profile.email}`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Get in touch" })
+      ] }) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-[2px] w-full bg-transparent", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
@@ -3130,7 +3165,6 @@ function Starfield() {
     };
     resize();
     window.addEventListener("resize", resize);
-    const isDark = () => document.documentElement.classList.contains("dark");
     const STAR_COUNT = Math.min(220, Math.floor(width * height / 7e3));
     const stars = Array.from({ length: STAR_COUNT }, () => ({
       x: Math.random() * width,
@@ -3154,7 +3188,6 @@ function Starfield() {
     let raf = 0;
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-      const dark = isDark();
       for (const p of planets) {
         if (!reduceMotion) {
           p.x += p.vx;
@@ -3165,9 +3198,7 @@ function Starfield() {
         if (p.y < -p.r) p.y = height + p.r;
         if (p.y > height + p.r) p.y = -p.r;
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        const alpha = dark ? 0.12 : 0.22;
-        const light = dark ? 65 : 55;
-        g.addColorStop(0, `hsla(${p.hue}, 90%, ${light}%, ${alpha})`);
+        g.addColorStop(0, `hsla(${p.hue}, 90%, 65%, 0.12)`);
         g.addColorStop(1, `hsla(${p.hue}, 90%, 50%, 0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -3185,7 +3216,7 @@ function Starfield() {
           s.tw += 0.04;
         }
         const a = (0.4 + Math.sin(s.tw) * 0.3) * s.z;
-        ctx.fillStyle = dark ? `rgba(180, 210, 255, ${a})` : `rgba(60, 80, 160, ${a * 0.9})`;
+        ctx.fillStyle = `rgba(180, 210, 255, ${a})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
         ctx.fill();
@@ -7381,12 +7412,12 @@ const CREEP_SPEED = 30;
 const CREEP_SPIN = 0.6;
 const CREEP_BRAKE = 0.8;
 const GROUP_TONES = [
-  "border-cyan-400/50 text-cyan-700 dark:text-cyan-200",
-  "border-violet-400/50 text-violet-700 dark:text-violet-200",
-  "border-emerald-400/50 text-emerald-700 dark:text-emerald-200",
-  "border-amber-400/50 text-amber-700 dark:text-amber-200",
-  "border-sky-400/50 text-sky-700 dark:text-sky-200",
-  "border-pink-400/50 text-pink-700 dark:text-pink-200"
+  "border-cyan-400/50 text-cyan-200",
+  "border-violet-400/50 text-violet-200",
+  "border-emerald-400/50 text-emerald-200",
+  "border-amber-400/50 text-amber-200",
+  "border-sky-400/50 text-sky-200",
+  "border-pink-400/50 text-pink-200"
 ];
 const clamp01 = (t) => t < 0 ? 0 : t > 1 ? 1 : t;
 function ends(b) {
@@ -8306,11 +8337,6 @@ const commands = [
     usage: "cv [-s|-c|-sc]",
     description: "Open CV. -s show link · -c copy link · -sc both",
     run: runCv
-  },
-  {
-    name: "theme",
-    description: "Toggle light / dark mode",
-    run: ({ print }) => print(`Theme switched to ${toggleTheme()} mode.`)
   },
   {
     name: "sound",

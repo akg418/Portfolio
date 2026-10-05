@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-CMvMroHG.css";
+const appCss = "/assets/styles-DvqBEZe-.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -319,88 +319,6 @@ const problemSetting = {
   friendUrl: "https://codeforces.com/profile/MUZAN",
   groupUrl: "https://codeforces.com/group/5EfwxVFSaS/contests"
 };
-const STORAGE_KEYS = {
-  theme: "theme",
-  username: "username",
-  visits: "visits",
-  gamingMode: "gamingMode",
-  robots: "robots",
-  vehicle: "vehicle",
-  mysteries: "mysteries",
-  termMode: "termMode_v2",
-  termColors: "term-colors",
-  termAliases: "term-aliases",
-  termSound: "term-sound",
-  termWindowPos: "term-winpos",
-  termWindowSize: "term-winsize"
-};
-function readString(key) {
-  if (typeof window === "undefined") return null;
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-function writeString(key, value) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-  }
-}
-function removeKey(key) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(key);
-  } catch {
-  }
-}
-function readJson(key, parse) {
-  const raw = readString(key);
-  if (raw === null) return void 0;
-  try {
-    return parse(JSON.parse(raw));
-  } catch {
-    return void 0;
-  }
-}
-function writeJson(key, value) {
-  try {
-    writeString(key, JSON.stringify(value));
-  } catch {
-  }
-}
-function readNumber(key, fallback) {
-  const raw = readString(key);
-  if (raw === null) return fallback;
-  const n = Number(raw);
-  return Number.isFinite(n) ? n : fallback;
-}
-function readFlag(key, fallback) {
-  const raw = readString(key);
-  if (raw === null) return fallback;
-  return raw !== "0";
-}
-function writeFlag(key, value) {
-  writeString(key, value ? "1" : "0");
-}
-const THEME_EVENT = "themechange";
-function getStoredTheme() {
-  const stored = readString(STORAGE_KEYS.theme);
-  return stored === "light" || stored === "dark" ? stored : "dark";
-}
-function applyTheme(theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
-  writeString(STORAGE_KEYS.theme, theme);
-  window.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: theme }));
-}
-function toggleTheme() {
-  const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
-  applyTheme(next);
-  return next;
-}
-const themeInitScript = `(function(){try{var t=localStorage.getItem('${STORAGE_KEYS.theme}');document.documentElement.classList.toggle('dark',t!=='light');}catch(e){}})();`;
 function NotFoundComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-md text-center", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-7xl font-bold text-foreground", children: "404" }),
@@ -474,10 +392,7 @@ const Route$1 = createRootRoute({
 });
 function RootShell({ children }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("html", { lang: "en", className: "dark", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("head", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(HeadContent, {}),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("script", { dangerouslySetInnerHTML: { __html: themeInitScript } })
-    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("head", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(HeadContent, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("body", { children: [
       children,
       /* @__PURE__ */ jsxRuntimeExports.jsx(Scripts, {})
@@ -487,7 +402,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-BNNMEt4B.mjs");
+const $$splitComponentImporter = () => import("./index-DfjfJcZA.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -510,30 +425,17 @@ const router = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   getRouter
 }, Symbol.toStringTag, { value: "Module" }));
 export {
-  STORAGE_KEYS as S,
-  THEME_EVENT as T,
-  writeJson as a,
-  readJson as b,
-  applyTheme as c,
-  readFlag as d,
-  writeFlag as e,
-  domainParts as f,
-  getStoredTheme as g,
-  competitions as h,
-  problemSetting as i,
-  education as j,
-  experiences as k,
+  problemSetting as a,
+  experiences as b,
+  competitions as c,
+  domainParts as d,
+  education as e,
+  links as f,
+  projects as g,
+  stats as h,
+  router as i,
   linkOf as l,
-  links as m,
-  roles as n,
-  projects as o,
   profile as p,
-  stats as q,
-  readString as r,
-  skills as s,
-  toggleTheme as t,
-  readNumber as u,
-  removeKey as v,
-  writeString as w,
-  router as x
+  roles as r,
+  skills as s
 };
