@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
  *   written straight into an ImageData buffer, which is far cheaper than a
  *   draw call per particle.
  * - Once every particle is home and still, the loop stops drawing until the
- *   pointer comes back. It re-samples on resize and on a theme change.
+ *   pointer comes back. It re-samples on resize and when the page font changes.
  *
  * With reduced motion, or without a 2D canvas, it is just the heading.
  */
@@ -289,7 +289,7 @@ export function ParticleHeading({ lines, className }: { lines: Line[]; className
       }, 120);
     };
     const ro = new ResizeObserver(resample);
-    // The palette lives on <html class="dark">, so a theme change re-samples.
+    // Arcade mode swaps the font via a class on <html>, so a class change re-samples.
     const mo = new MutationObserver(resample);
 
     // Sample only once the web font is in, or the ink would be the fallback's.

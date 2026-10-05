@@ -26,8 +26,6 @@ export function Starfield() {
     resize();
     window.addEventListener("resize", resize);
 
-    const isDark = () => document.documentElement.classList.contains("dark");
-
     const STAR_COUNT = Math.min(220, Math.floor((width * height) / 7000));
     const stars = Array.from({ length: STAR_COUNT }, () => ({
       x: Math.random() * width,
@@ -55,7 +53,6 @@ export function Starfield() {
     let raf = 0;
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-      const dark = isDark();
 
       // soft nebula planets
       for (const p of planets) {
@@ -68,9 +65,7 @@ export function Starfield() {
         if (p.y < -p.r) p.y = height + p.r;
         if (p.y > height + p.r) p.y = -p.r;
         const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        const alpha = dark ? 0.12 : 0.22;
-        const light = dark ? 65 : 55;
-        g.addColorStop(0, `hsla(${p.hue}, 90%, ${light}%, ${alpha})`);
+        g.addColorStop(0, `hsla(${p.hue}, 90%, 65%, 0.12)`);
         g.addColorStop(1, `hsla(${p.hue}, 90%, 50%, 0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -90,7 +85,7 @@ export function Starfield() {
           s.tw += 0.04;
         }
         const a = (0.4 + Math.sin(s.tw) * 0.3) * s.z;
-        ctx.fillStyle = dark ? `rgba(180, 210, 255, ${a})` : `rgba(60, 80, 160, ${a * 0.9})`;
+        ctx.fillStyle = `rgba(180, 210, 255, ${a})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r * s.z, 0, Math.PI * 2);
         ctx.fill();

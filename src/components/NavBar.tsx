@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { domainParts, profile } from "@/data/profile";
 import { useGamingMode } from "@/hooks/useGamingMode";
 
@@ -117,7 +116,6 @@ export function NavBar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Button asChild size="sm" variant="outline">
             <a href={`mailto:${profile.email}`}>
               <Mail />

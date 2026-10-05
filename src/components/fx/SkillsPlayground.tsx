@@ -87,12 +87,12 @@ const CREEP_BRAKE = 0.8;
 
 /** One colour per skill group, so the pile still reads as categories. */
 const GROUP_TONES = [
-  "border-cyan-400/50 text-cyan-700 dark:text-cyan-200",
-  "border-violet-400/50 text-violet-700 dark:text-violet-200",
-  "border-emerald-400/50 text-emerald-700 dark:text-emerald-200",
-  "border-amber-400/50 text-amber-700 dark:text-amber-200",
-  "border-sky-400/50 text-sky-700 dark:text-sky-200",
-  "border-pink-400/50 text-pink-700 dark:text-pink-200",
+  "border-cyan-400/50 text-cyan-200",
+  "border-violet-400/50 text-violet-200",
+  "border-emerald-400/50 text-emerald-200",
+  "border-amber-400/50 text-amber-200",
+  "border-sky-400/50 text-sky-200",
+  "border-pink-400/50 text-pink-200",
 ];
 
 const clamp01 = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : t);

@@ -1,6 +1,5 @@
 import { experiences, links, profile, projects, skills } from "@/data/profile";
 import { STORAGE_KEYS, writeFlag } from "@/lib/storage";
-import { toggleTheme } from "@/lib/theme";
 import { toggleGamingMode } from "@/hooks/useGamingMode";
 import { ROBOT_NAMES, readRobots, setRobots, type RobotName } from "@/hooks/useRobots";
 import { setStoredUsername } from "@/hooks/useUsername";
@@ -225,11 +224,6 @@ export const commands: Command[] = [
     usage: "cv [-s|-c|-sc]",
     description: "Open CV. -s show link · -c copy link · -sc both",
     run: runCv,
-  },
-  {
-    name: "theme",
-    description: "Toggle light / dark mode",
-    run: ({ print }) => print(`Theme switched to ${toggleTheme()} mode.`),
   },
   {
     name: "sound",

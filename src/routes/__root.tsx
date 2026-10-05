@@ -9,7 +9,6 @@ import {
 
 import appCss from "../styles.css?url";
 import { profile } from "@/data/profile";
-import { themeInitScript } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
@@ -97,11 +96,11 @@ export const Route = createRootRoute({
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  // The site is dark only.
   return (
     <html lang="en" className="dark">
       <head>
         <HeadContent />
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         {children}

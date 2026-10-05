@@ -7,7 +7,6 @@
  */
 
 export const STORAGE_KEYS = {
-  theme: "theme",
   username: "username",
   visits: "visits",
   gamingMode: "gamingMode",
