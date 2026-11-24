@@ -19,6 +19,7 @@ export const STORAGE_KEYS = {
   termSound: "term-sound",
   termWindowPos: "term-winpos",
   termWindowSize: "term-winsize",
+  recentTransitions: "recent-transitions",
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

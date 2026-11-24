@@ -6,11 +6,12 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { BackToTop } from "@/components/fx/BackToTop";
 import { MysteryHud } from "@/components/fx/MysteryHud";
 import { PlayCar } from "@/components/fx/PlayCar";
-import { Preloader } from "@/components/fx/Preloader";
+import { ModeTransition, type ModeSwitch, type View } from "@/components/ModeTransition";
 import { MouseGlow } from "@/components/MouseGlow";
 import { NavBar } from "@/components/NavBar";
 import { RobotWorld } from "@/components/robots/RobotWorld";
 import { SessionTimer } from "@/components/SessionTimer";
+import { SimpleView } from "@/components/SimpleView";
 import { Starfield } from "@/components/Starfield";
 import { Achievements } from "@/components/sections/Achievements";
 import { Contact } from "@/components/sections/Contact";
@@ -42,7 +43,47 @@ function isWindowMode(value: string | null): value is WindowMode {
   return value !== null && (WINDOW_MODES as readonly string[]).includes(value);
 }
 
+/**
+ * The page opens on the calm view: the CV, no effects. "Chaos mode" switches
+ * to the full experience behind a transition, and "Simple view" comes back.
+ */
 function Index() {
+  const [view, setView] = useState<View>("simple");
+  const [run, setRun] = useState<ModeSwitch | null>(null);
+
+  const switchTo = (to: View) => (e: React.MouseEvent) => {
+    if (run) return;
+    const swap = () => {
+      setView(to);
+      window.scrollTo(0, 0);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return swap();
+    const r = e.currentTarget.getBoundingClientRect();
+    setRun({ to, x: r.left + r.width / 2, y: r.top + r.height / 2 });
+  };
+
+  return (
+    <>
+      {view === "simple" ? (
+        <SimpleView onChaos={switchTo("chaos")} />
+      ) : (
+        <ChaosView onSimple={switchTo("simple")} />
+      )}
+      {run && (
+        <ModeTransition
+          run={run}
+          onSwap={() => {
+            setView(run.to);
+            window.scrollTo(0, 0);
+          }}
+          onDone={() => setRun(null)}
+        />
+      )}
+    </>
+  );
+}
+
+function ChaosView({ onSimple }: { onSimple: (e: React.MouseEvent) => void }) {
   const [termMode, setTermMode] = useState<WindowMode>(() => {
     const saved = readString(STORAGE_KEYS.termMode);
     // Anything unrecognised (including the removed "full" mode) falls back to closed.
@@ -82,7 +123,6 @@ function Index() {
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background text-foreground">
-      {mounted && <Preloader />}
       <div aria-hidden className="grain" />
       {mounted && <Starfield />}
       {mounted && <MouseGlow />}
@@ -99,13 +139,13 @@ function Index() {
         />
       )}
 
-      <NavBar />
+      <NavBar onSimple={onSimple} />
       {mounted && <SessionTimer />}
       {mounted && <BackToTop />}
       {mounted && <PlayCar />}
       {mounted && <MysteryHud />}
 
-      <main id="top" className="relative z-10 max-w-5xl mx-auto px-6 pb-24">
+      <main id="top" className="chaos-enter relative z-10 max-w-5xl mx-auto px-6 pb-24">
         <Hero />
         <Stats />
         <Experience />

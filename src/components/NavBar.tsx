@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Mail } from "lucide-react";
+import { Leaf, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { domainParts, profile } from "@/data/profile";
 import { useGamingMode } from "@/hooks/useGamingMode";
@@ -14,7 +14,7 @@ const BASE_ITEMS: Item[] = [
 ];
 const GAMING_ITEM: Item = { id: "game", label: "Gaming" };
 
-export function NavBar() {
+export function NavBar({ onSimple }: { onSimple: (e: React.MouseEvent) => void }) {
   const [active, setActive] = useState<string>("experience");
   const [hover, setHover] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -116,6 +116,10 @@ export function NavBar() {
           ))}
         </div>
         <div className="flex items-center gap-2">
+          <Button size="sm" variant="ghost" onClick={onSimple} title="Back to the simple view">
+            <Leaf />
+            <span className="hidden sm:inline">Simple view</span>
+          </Button>
           <Button asChild size="sm" variant="outline">
             <a href={`mailto:${profile.email}`}>
               <Mail />

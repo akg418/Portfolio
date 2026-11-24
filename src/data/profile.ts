@@ -254,6 +254,22 @@ export const projects: Project[] = [
     stack: ["TypeScript", "VS Code API", "Open Source"],
   },
   {
+    title: "Floci — Local AWS Emulator",
+    motif: "services",
+    shortName: "Floci",
+    short: "merged feature in a 32k★ AWS emulator: DynamoDB Streams",
+    tag: "Open Source Contribution · Merged",
+    description:
+      "Contributed a merged feature to Floci, a free local AWS emulator (32k★ on GitHub): a configurable record cap for DynamoDB Streams, and record pages read without copying the whole shard.",
+    stack: ["Java", "DynamoDB Streams", "Data Structures", "Open Source"],
+    highlights: [
+      "Added FLOCI_SERVICES_DYNAMODB_STREAM_MAX_RECORDS so the per-stream cap can be raised — a consumer starting at LATEST before a big seed no longer falls behind and hits TrimmedDataAccessException.",
+      "Replaced the shard's ArrayDeque with a ring buffer: constant-time append and drop-oldest, plus reads by position.",
+      "GetRecords and the AT/AFTER_SEQUENCE_NUMBER check now binary search instead of scanning, so a read costs about the same wherever the reader is; covered by unit and integration tests.",
+    ],
+    links: [{ label: "Merged PR #9121", url: "https://github.com/floci-io/floci/pull/9121" }],
+  },
+  {
     title: "3l sari3 — Real-time Ephemeral Chat",
     motif: "chat",
     shortName: "3l sari3",
