@@ -13,7 +13,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-DvqBEZe-.css";
+const appCss = "/assets/styles-DHwEqMUo.css";
 const profile = {
   name: "Ahmed Khaled",
   role: "Software Engineer",
@@ -189,6 +189,21 @@ const projects = [
     tag: "Open Source Contribution",
     description: "Contributed a pull request that was reviewed and merged into the Copy for Claude VS Code extension.",
     stack: ["TypeScript", "VS Code API", "Open Source"]
+  },
+  {
+    title: "Floci — Local AWS Emulator",
+    motif: "services",
+    shortName: "Floci",
+    short: "merged feature in a 32k★ AWS emulator: DynamoDB Streams",
+    tag: "Open Source Contribution · Merged",
+    description: "Contributed a merged feature to Floci, a free local AWS emulator (32k★ on GitHub): a configurable record cap for DynamoDB Streams, and record pages read without copying the whole shard.",
+    stack: ["Java", "DynamoDB Streams", "Data Structures", "Open Source"],
+    highlights: [
+      "Added FLOCI_SERVICES_DYNAMODB_STREAM_MAX_RECORDS so the per-stream cap can be raised — a consumer starting at LATEST before a big seed no longer falls behind and hits TrimmedDataAccessException.",
+      "Replaced the shard's ArrayDeque with a ring buffer: constant-time append and drop-oldest, plus reads by position.",
+      "GetRecords and the AT/AFTER_SEQUENCE_NUMBER check now binary search instead of scanning, so a read costs about the same wherever the reader is; covered by unit and integration tests."
+    ],
+    links: [{ label: "Merged PR #9121", url: "https://github.com/floci-io/floci/pull/9121" }]
   },
   {
     title: "3l sari3 — Real-time Ephemeral Chat",
@@ -402,7 +417,7 @@ function RootShell({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {});
 }
-const $$splitComponentImporter = () => import("./index-DfjfJcZA.mjs");
+const $$splitComponentImporter = () => import("./index-De0QhmmI.mjs");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component")
 });
@@ -425,16 +440,16 @@ const router = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   getRouter
 }, Symbol.toStringTag, { value: "Module" }));
 export {
-  problemSetting as a,
-  experiences as b,
+  projects as a,
+  education as b,
   competitions as c,
   domainParts as d,
-  education as e,
-  links as f,
-  projects as g,
+  experiences as e,
+  problemSetting as f,
+  linkOf as g,
   stats as h,
   router as i,
-  linkOf as l,
+  links as l,
   profile as p,
   roles as r,
   skills as s

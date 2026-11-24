@@ -1,11 +1,11 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { p as profile, d as domainParts, r as roles, l as linkOf, h as stats, b as experiences, s as skills, c as competitions, a as problemSetting, e as education, f as links, g as projects } from "./router-CWnr3xW-.mjs";
+import { d as domainParts, p as profile, r as roles, l as links, e as experiences, a as projects, s as skills, b as education, c as competitions, g as linkOf, h as stats, f as problemSetting } from "./router-BYnq_BB2.mjs";
 import { S as Slot } from "../_libs/radix-ui__react-slot.mjs";
 import { c as cva } from "../_libs/class-variance-authority.mjs";
 import { c as clsx } from "../_libs/clsx.mjs";
 import { t as twMerge } from "../_libs/tailwind-merge.mjs";
 import { R as Root, P as Portal, C as Content, a as Close, T as Title, D as Description, O as Overlay } from "../_libs/radix-ui__react-dialog.mjs";
-import { M as Mail, C as Clock, A as ArrowUp, S as Square, R as RotateCcw, a as Search, b as ArrowUpRight, G as Github, L as Linkedin, c as CodeXml, T as Trophy, F as FileText, B as Briefcase, d as Gamepad2, e as RotateCw, f as GraduationCap, g as MapPin, h as Globe, P as Phone, i as SquareTerminal, D as Download, X, j as Play, k as Pause, l as Activity, Z as Zap, m as Radar, n as Skull, o as Scissors } from "../_libs/lucide-react.mjs";
+import { Z as Zap, M as MapPin, a as Mail, F as FileText, A as ArrowUpRight, P as Phone, T as Trophy, L as Leaf, C as Clock, b as ArrowUp, S as Square, R as RotateCcw, c as Search, G as Github, d as Linkedin, e as CodeXml, B as Briefcase, f as Gamepad2, g as RotateCw, h as GraduationCap, i as Globe, j as SquareTerminal, D as Download, X, k as Play, l as Pause, m as Activity, n as Radar, o as Skull, p as Scissors } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -325,7 +325,7 @@ function CustomCursor() {
     let frame = 0;
     let x = -100;
     let y = -100;
-    const paint = () => {
+    const paint2 = () => {
       frame = 0;
       for (const el of [ringRef.current, dotRef.current]) {
         el?.style.setProperty("--cursor-x", `${x}px`);
@@ -335,7 +335,7 @@ function CustomCursor() {
     const onMove = (e) => {
       x = e.clientX;
       y = e.clientY;
-      if (!frame) frame = requestAnimationFrame(paint);
+      if (!frame) frame = requestAnimationFrame(paint2);
       const target = e.target;
       setHover(!!target?.closest(INTERACTIVE));
       setLabel(target?.closest("[data-cursor]")?.dataset.cursor ?? null);
@@ -481,7 +481,8 @@ const STORAGE_KEYS = {
   termAliases: "term-aliases",
   termSound: "term-sound",
   termWindowPos: "term-winpos",
-  termWindowSize: "term-winsize"
+  termWindowSize: "term-winsize",
+  recentTransitions: "recent-transitions"
 };
 function readString(key) {
   if (typeof window === "undefined") return null;
@@ -1074,7 +1075,7 @@ function ContestBalloons({
         uy: dy / d
       };
     };
-    const paint = (now2) => {
+    const paint2 = (now2) => {
       s.balloons.forEach((b, i) => {
         let d = `M${b.pts[0].x},${b.pts[0].y}`;
         for (let k2 = 1; k2 < LINKS; k2++) {
@@ -1227,7 +1228,7 @@ function ContestBalloons({
     });
     io.observe(box);
     for (let i = 0; i < 90; i++) step2(1 / 60, 0);
-    paint(0);
+    paint2(0);
     if (reduce) return () => io.disconnect();
     const frame = (now2) => {
       raf = requestAnimationFrame(frame);
@@ -1235,7 +1236,7 @@ function ContestBalloons({
       last = now2;
       if (!visible || document.hidden) return;
       step2(dt, now2);
-      paint(now2);
+      paint2(now2);
     };
     raf = requestAnimationFrame(frame);
     return () => {
@@ -1435,12 +1436,12 @@ function launch(x, y, i) {
   };
   requestAnimationFrame(frame);
 }
-function Beams({ y1, y2, reach }) {
+function Beams({ y1, y2, reach: reach2 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("g", { opacity: "0.5", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "path",
       {
-        d: `M${reach} ${y1} L${reach + 50} ${y1 - 13} L${reach + 50} ${y1 + 5} Z`,
+        d: `M${reach2} ${y1} L${reach2 + 50} ${y1 - 13} L${reach2 + 50} ${y1 + 5} Z`,
         fill: "#fde68a",
         opacity: "0.35"
       }
@@ -1448,7 +1449,7 @@ function Beams({ y1, y2, reach }) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "path",
       {
-        d: `M${reach} ${y2} L${reach + 50} ${y2 - 5} L${reach + 50} ${y2 + 13} Z`,
+        d: `M${reach2} ${y2} L${reach2 + 50} ${y2 - 5} L${reach2 + 50} ${y2 + 13} Z`,
         fill: "#fde68a",
         opacity: "0.35"
       }
@@ -2132,75 +2133,1019 @@ function PlayCar() {
     ] })
   ] });
 }
-const SEEN_KEY = "preloader-seen";
-const COUNT_MS = 1400;
-function alreadySeen() {
-  try {
-    return window.sessionStorage.getItem(SEEN_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-function Preloader() {
-  const [show] = reactExports.useState(
-    () => !alreadySeen() && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-  const [count, setCount] = reactExports.useState(0);
-  const [phase, setPhase] = reactExports.useState(show ? "count" : "done");
+const DARK = "#05010d";
+const NEON = ["#22d3ee", "#a855f7", "#db2777"];
+const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const easeIn = (t) => t * t * t;
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const easeInOut = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const reach = (w, h) => Math.hypot(w, h) * 0.55 + 40;
+function FxCanvas({
+  make,
+  className = ""
+}) {
+  const ref = reactExports.useRef(null);
+  const makeRef = reactExports.useRef(make);
   reactExports.useEffect(() => {
-    if (!show) return;
-    try {
-      window.sessionStorage.setItem(SEEN_KEY, "1");
-    } catch {
-    }
-    const start = performance.now();
+    const canvas = ref.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.scale(dpr, dpr);
+    const draw = makeRef.current(ctx, w, h);
+    const t0 = performance.now();
+    let raf = 0;
+    const frame = (now2) => {
+      draw(now2 - t0);
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("canvas", { ref, className: `absolute inset-0 size-full ${className}` });
+}
+const WORD = "CHAOS MODE";
+const GLYPHS$1 = "!<>-_\\/[]{}—=+*^?#01";
+function Word({ delay = 500, out }) {
+  const [text, setText] = reactExports.useState("");
+  reactExports.useEffect(() => {
+    const start = performance.now() + delay;
+    const ms = 600;
     let raf = 0;
     const tick = (now2) => {
-      const t = Math.min(1, (now2 - start) / COUNT_MS);
-      setCount(Math.round((1 - Math.pow(1 - t, 3)) * 100));
-      if (t < 1) raf = requestAnimationFrame(tick);
-      else {
-        setPhase("open");
-        window.setTimeout(() => setPhase("done"), 1e3);
+      const t = clamp((now2 - start) / ms);
+      const locked = Math.floor(t * WORD.length);
+      let s = "";
+      for (let i = 0; i < WORD.length; i++) {
+        s += i < locked || WORD[i] === " " ? WORD[i] : GLYPHS$1[Math.floor(Math.random() * GLYPHS$1.length)];
       }
+      setText(now2 < start ? "" : s);
+      if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [show]);
-  if (phase === "done") return null;
-  const open = phase === "open";
-  const half = "absolute inset-x-0 h-1/2 bg-background transition-transform duration-[900ms] ease-[cubic-bezier(.76,0,.24,1)]";
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "aria-hidden": true, className: "dark fixed inset-0 z-[100] text-foreground", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${half} top-0`, style: { transform: open ? "translateY(-100%)" : "none" } }),
+  }, [delay]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "pointer-events-none absolute inset-0 grid place-items-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "p",
+    {
+      className: `mode-word font-mono text-4xl font-black tracking-[0.25em] text-white sm:text-7xl ${out ? "is-out" : ""}`,
+      children: text
+    }
+  ) });
+}
+function starfield(w, h, count = 800) {
+  const focal = Math.min(w, h) * 0.8;
+  const depth = 1600;
+  const stars = Array.from({ length: count }, () => ({
+    x: (Math.random() - 0.5) * w * 2,
+    y: (Math.random() - 0.5) * h * 2,
+    z: Math.random() * depth,
+    hue: [190, 270, 320][Math.floor(Math.random() * 3)]
+  }));
+  return (ctx, dt, speed, cx, cy) => {
+    ctx.lineCap = "round";
+    for (const s of stars) {
+      s.z -= speed * dt;
+      if (s.z < 1) {
+        s.z = depth;
+        s.x = (Math.random() - 0.5) * w * 2;
+        s.y = (Math.random() - 0.5) * h * 2;
+        continue;
+      }
+      const tail = s.z + 20 + speed * dt * 4;
+      const near = 1 - s.z / depth;
+      ctx.strokeStyle = `hsla(${s.hue}, 95%, ${60 + near * 30}%, ${0.3 + near * 0.7})`;
+      ctx.lineWidth = 0.5 + near * 2.5;
+      ctx.beginPath();
+      ctx.moveTo(cx + s.x / tail * focal, cy + s.y / tail * focal);
+      ctx.lineTo(cx + s.x / s.z * focal, cy + s.y / s.z * focal);
+      ctx.stroke();
+    }
+  };
+}
+function clock() {
+  let last = -1;
+  return (t) => {
+    const dt = last < 0 ? 16 : Math.min(50, t - last);
+    last = t;
+    return dt;
+  };
+}
+const HS = { swap: 1500, end: 2300 };
+const hyperspace = {
+  id: "hyperspace",
+  ...HS,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "div",
+      FxCanvas,
       {
-        className: `${half} bottom-0`,
-        style: { transform: open ? "translateY(100%)" : "none" }
+        make: (ctx, w, h) => {
+          const stars = starfield(w, h, 900);
+          const dt = clock();
+          return (t) => {
+            const d = dt(t);
+            const k = clamp(t / HS.swap);
+            const cover = t < HS.swap ? easeOut(clamp(t / 550)) : 1 - clamp((t - HS.swap) / 650);
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = DARK;
+            ctx.globalAlpha = cover;
+            ctx.fillRect(0, 0, w, h);
+            const e = easeInOut(clamp(t / 700));
+            stars(ctx, d, 0.3 + k * k * 16, lerp(x, w / 2, e), lerp(y, h / 2, e));
+            ctx.globalAlpha = 1;
+            const f = t < HS.swap - 260 ? 0 : t < HS.swap ? (t - HS.swap + 260) / 260 : 1 - (t - HS.swap) / 450;
+            if (f > 0) {
+              const g = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, reach(w, h));
+              g.addColorStop(0, `rgba(255,255,255,${f})`);
+              g.addColorStop(0.5, `rgba(200,160,255,${f * 0.6})`);
+              g.addColorStop(1, "rgba(0,0,0,0)");
+              ctx.fillStyle = g;
+              ctx.fillRect(0, 0, w, h);
+            }
+          };
+        }
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 450, out })
+  ] })
+};
+const PX = { swap: 1300, end: 2400 };
+const pixels = {
+  id: "pixels",
+  ...PX,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const size = 28;
+          const cols = Math.ceil(w / size);
+          const rows = Math.ceil(h / size);
+          const far = Math.hypot(w, h);
+          const blocks = [];
+          for (let r = 0; r < rows; r++)
+            for (let c = 0; c < cols; c++) {
+              const cx = c * size + size / 2;
+              const cy = r * size + size / 2;
+              blocks.push({
+                c,
+                r,
+                on: Math.hypot(cx - x, cy - y) / far * (PX.swap - 500) + Math.random() * 250,
+                off: PX.swap + Math.hypot(cx - w / 2, cy - h / 2) / (far / 2) * 550 + Math.random() * 250,
+                neon: NEON[(c * 7 + r * 13) % 3],
+                shade: Math.random() < 0.15 ? "#120728" : DARK
+              });
+            }
+          const flash = 170;
+          return (t) => {
+            ctx.clearRect(0, 0, w, h);
+            for (const b of blocks) {
+              if (t < b.on || t > b.off) continue;
+              const lit = t - b.on < flash || b.off - t < flash;
+              ctx.fillStyle = lit ? b.neon : b.shade;
+              ctx.fillRect(b.c * size, b.r * size, size + 0.5, size + 0.5);
+            }
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 700, out })
+  ] })
+};
+const MX = { swap: 1500, end: 2600 };
+const codeRain = {
+  id: "code-rain",
+  ...MX,
+  Render: ({ out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const fs = 16;
+          const cols = Math.ceil(w / fs);
+          const rows = Math.ceil(h / fs) + 1;
+          const glyphs = "アイウエオカキクケコサシスセソ0123456789<>{}=+*#$";
+          const pick = () => glyphs[Math.floor(Math.random() * glyphs.length)];
+          const grid = Array.from({ length: cols * rows }, pick);
+          const col = Array.from({ length: cols }, () => {
+            const d1 = Math.random() * 450;
+            const d2 = MX.swap + Math.random() * 300;
+            return {
+              d1,
+              v1: (h + 300) / (MX.swap - 80 - d1),
+              d2,
+              v2: (h + 300) / (MX.end - 150 - d2)
+            };
+          });
+          ctx.font = `${fs}px monospace`;
+          ctx.textBaseline = "top";
+          return (t) => {
+            ctx.clearRect(0, 0, w, h);
+            for (let i = 0; i < 40; i++) grid[Math.floor(Math.random() * grid.length)] = pick();
+            for (let c = 0; c < cols; c++) {
+              const k = col[c];
+              const head = (t - k.d1) * k.v1;
+              const tailHead = t > k.d2 ? (t - k.d2) * k.v2 : -1;
+              if (head <= 0) continue;
+              const top = Math.max(0, tailHead);
+              const bottom = Math.min(h, head);
+              if (bottom > top) {
+                ctx.fillStyle = DARK;
+                ctx.fillRect(c * fs, top, fs + 0.5, bottom - top);
+              }
+              const draw = (hy, n, hue) => {
+                const hr = Math.floor(hy / fs);
+                for (let j = 0; j < n; j++) {
+                  const r = hr - j;
+                  if (r < 0 || r >= rows) continue;
+                  const py = r * fs;
+                  if (py < top - fs || py > bottom) continue;
+                  ctx.fillStyle = j === 0 ? "#fff" : `hsla(${hue}, 95%, 65%, ${1 - j / n})`;
+                  ctx.fillText(grid[r * cols + c], c * fs, py);
+                }
+              };
+              if (head < h + 300) draw(head, 22, 190);
+              if (bottom - top > fs * 2 && Math.random() < 0.5) {
+                const r = Math.floor((top + Math.random() * (bottom - top)) / fs);
+                ctx.fillStyle = "rgba(34, 211, 238, 0.35)";
+                ctx.fillText(grid[r * cols + c], c * fs, r * fs);
+              }
+              if (tailHead > 0 && tailHead < h) {
+                ctx.fillStyle = "#e9d5ff";
+                ctx.fillText(grid[Math.floor(tailHead / fs) % rows * cols + c], c * fs, tailHead);
+              }
+            }
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 800, out })
+  ] })
+};
+const BH = { swap: 1600, end: 2500 };
+const blackHole = {
+  id: "black-hole",
+  ...BH,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const R = reach(w, h) * 1.3;
+          const dt = clock();
+          const parts = Array.from({ length: 700 }, () => ({
+            a: Math.random() * Math.PI * 2,
+            r: 60 + Math.random() * Math.max(w, h) * 0.6
+          }));
+          let sparks = [];
+          return (t) => {
+            const d = dt(t);
+            ctx.clearRect(0, 0, w, h);
+            const m = easeInOut(clamp(t / 900));
+            const cx = lerp(x, w / 2, m);
+            const cy = lerp(y, h / 2, m);
+            if (t < BH.swap) {
+              const hr = 8 + R * easeIn(clamp(t / BH.swap));
+              ctx.fillStyle = `rgba(5,1,13,${0.55 * clamp(t / BH.swap)})`;
+              ctx.fillRect(0, 0, w, h);
+              ctx.globalCompositeOperation = "lighter";
+              for (const p of parts) {
+                p.r -= d * (0.05 + 30 / p.r);
+                p.a += d * (15e-4 + 1.8 / (p.r + 40));
+                if (p.r < hr) {
+                  p.r = hr + 40 + Math.random() * Math.max(w, h) * 0.5;
+                  p.a = Math.random() * Math.PI * 2;
+                }
+                const near = clamp(1 - (p.r - hr) / 500);
+                ctx.strokeStyle = `hsla(${lerp(280, 25, near)}, 100%, ${50 + near * 25}%, ${0.25 + near * 0.6})`;
+                ctx.lineWidth = 1 + near * 2;
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, p.r, p.r * 0.45, -0.3, p.a, p.a + 0.15 + near * 0.25);
+                ctx.stroke();
+              }
+              ctx.globalCompositeOperation = "source-over";
+              const g = ctx.createRadialGradient(cx, cy, hr * 0.9, cx, cy, hr * 1.5 + 30);
+              g.addColorStop(0, "rgba(255,190,120,0.95)");
+              g.addColorStop(0.25, "rgba(219,39,119,0.6)");
+              g.addColorStop(1, "rgba(168,85,247,0)");
+              ctx.fillStyle = g;
+              ctx.beginPath();
+              ctx.arc(cx, cy, hr * 1.5 + 30, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = "#000";
+              ctx.beginPath();
+              ctx.arc(cx, cy, hr, 0, Math.PI * 2);
+              ctx.fill();
+              return;
+            }
+            if (sparks.length === 0)
+              sparks = Array.from({ length: 400 }, () => {
+                const a = Math.random() * Math.PI * 2;
+                const v = 0.6 + Math.random() * 2.2;
+                return {
+                  x: cx,
+                  y: cy,
+                  vx: Math.cos(a) * v,
+                  vy: Math.sin(a) * v,
+                  hue: [25, 320, 270][Math.floor(Math.random() * 3)]
+                };
+              });
+            const e = clamp((t - BH.swap) / (BH.end - BH.swap - 150));
+            const hole = easeOut(e) * R;
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.beginPath();
+            ctx.arc(cx, cy, hole, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalCompositeOperation = "lighter";
+            ctx.strokeStyle = `rgba(255,220,180,${1 - e})`;
+            ctx.lineWidth = 40 * (1 - e) + 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, hole, 0, Math.PI * 2);
+            ctx.stroke();
+            for (const s of sparks) {
+              s.x += s.vx * d;
+              s.y += s.vy * d;
+              ctx.fillStyle = `hsla(${s.hue},100%,70%,${1 - e})`;
+              ctx.fillRect(s.x, s.y, 3, 3);
+            }
+            ctx.globalCompositeOperation = "source-over";
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 900, out })
+  ] })
+};
+const PT = { swap: 1800, end: 2800 };
+const particleText = {
+  id: "particle-text",
+  ...PT,
+  Render: ({ x, y }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FxCanvas,
+    {
+      make: (ctx, w, h) => {
+        const off = document.createElement("canvas");
+        off.width = w;
+        off.height = h;
+        const o = off.getContext("2d");
+        const pts = [];
+        if (o) {
+          const size = Math.min(w * 0.11, 130);
+          o.font = `900 ${size}px ui-monospace, monospace`;
+          o.textAlign = "center";
+          o.textBaseline = "middle";
+          o.fillStyle = "#fff";
+          o.fillText("CHAOS MODE", w / 2, h / 2);
+          const step2 = Math.max(3, Math.round(size / 26));
+          const data = o.getImageData(0, 0, w, h).data;
+          for (let py = 0; py < h; py += step2)
+            for (let px = 0; px < w; px += step2)
+              if (data[(py * w + px) * 4 + 3] > 128) pts.push({ tx: px, ty: py });
+        }
+        const dt = clock();
+        const ps = pts.map((p) => {
+          const a = Math.random() * Math.PI * 2;
+          const v = 0.5 + Math.random() * 1.6;
+          return {
+            ...p,
+            x,
+            y,
+            vx: Math.cos(a) * v,
+            vy: Math.sin(a) * v,
+            hue: lerp(185, 325, p.tx / w)
+          };
+        });
+        let blown = false;
+        return (t) => {
+          const d = dt(t);
+          ctx.clearRect(0, 0, w, h);
+          const cover = t < PT.swap ? easeOut(clamp(t / 650)) : 1 - easeIn(clamp((t - PT.swap) / 750));
+          ctx.fillStyle = DARK;
+          ctx.globalAlpha = cover;
+          ctx.fillRect(0, 0, w, h);
+          ctx.globalAlpha = t < PT.swap ? 1 : 1 - clamp((t - PT.swap) / 850);
+          if (t >= PT.swap && !blown) {
+            blown = true;
+            for (const p of ps) {
+              const a = Math.atan2(p.y - h / 2, p.x - w / 2) + (Math.random() - 0.5) * 0.8;
+              const v = 0.8 + Math.random() * 2.5;
+              p.vx = Math.cos(a) * v;
+              p.vy = Math.sin(a) * v;
+            }
+          }
+          ctx.globalCompositeOperation = "lighter";
+          const pull = clamp((t - 450) / 700);
+          for (const p of ps) {
+            if (t < PT.swap) {
+              p.vx *= 0.94;
+              p.vy *= 0.94;
+              p.x += p.vx * d;
+              p.y += p.vy * d;
+              const k = clamp(pull * pull * d * 0.012);
+              p.x += (p.tx - p.x) * k;
+              p.y += (p.ty - p.y) * k;
+            } else {
+              p.x += p.vx * d;
+              p.y += p.vy * d;
+            }
+            const jitter = t > 1300 && t < PT.swap ? (Math.random() - 0.5) * 1.5 : 0;
+            ctx.fillStyle = `hsla(${p.hue}, 95%, 60%, 0.35)`;
+            ctx.fillRect(p.x + jitter - 2.5, p.y - 2.5, 7, 7);
+            ctx.fillStyle = `hsl(${p.hue}, 100%, 78%)`;
+            ctx.fillRect(p.x + jitter, p.y, 3, 3);
+          }
+          ctx.globalCompositeOperation = "source-over";
+          ctx.globalAlpha = 1;
+        };
+      }
+    }
+  )
+};
+const SW = { swap: 1600, end: 2500 };
+const horizon = {
+  id: "horizon",
+  ...SW,
+  Render: ({ x, y }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FxCanvas,
+    {
+      make: (ctx, w, h) => {
+        const R = Math.hypot(w, h) + 40;
+        const hz = h * 0.58;
+        const sunR = Math.min(w, h) * 0.24;
+        const dt = clock();
+        let travel = 0;
+        const stars = Array.from({ length: 120 }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * hz * 0.9,
+          s: Math.random() * 1.6 + 0.3
+        }));
+        return (t) => {
+          const d = dt(t);
+          ctx.clearRect(0, 0, w, h);
+          const k = clamp(t / SW.swap);
+          travel += d * (15e-4 + k * k * 0.02);
+          const e = clamp((t - SW.swap) / (SW.end - SW.swap - 100));
+          ctx.save();
+          if (t < SW.swap) {
+            ctx.beginPath();
+            ctx.arc(x, y, easeInOut(clamp(t / 700)) * R, 0, Math.PI * 2);
+            ctx.clip();
+          } else {
+            const s = 1 + easeIn(e) * 5;
+            ctx.translate(w / 2, hz);
+            ctx.scale(s, s);
+            ctx.translate(-w / 2, -hz);
+            ctx.globalAlpha = 1 - easeIn(e);
+          }
+          const sky = ctx.createLinearGradient(0, 0, 0, hz);
+          sky.addColorStop(0, DARK);
+          sky.addColorStop(1, "#3b0a52");
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, w, hz);
+          ctx.fillStyle = "#fff";
+          for (const s of stars) ctx.fillRect(s.x, s.y, s.s, s.s);
+          const sy = hz - sunR * 0.35 + (1 - easeOut(clamp(t / 1200))) * sunR * 1.2;
+          const sg = ctx.createLinearGradient(0, sy - sunR, 0, sy + sunR);
+          sg.addColorStop(0, "#fde047");
+          sg.addColorStop(0.55, "#fb7185");
+          sg.addColorStop(1, "#c026d3");
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(0, 0, w, hz);
+          ctx.clip();
+          ctx.shadowColor = "#f472b6";
+          ctx.shadowBlur = 60;
+          ctx.fillStyle = sg;
+          ctx.beginPath();
+          ctx.arc(w / 2, sy, sunR, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "#2a0840";
+          for (let i = 0; i < 7; i++) {
+            const by = sy + sunR * (0.05 + i * 0.14);
+            ctx.fillRect(w / 2 - sunR, by, sunR * 2, 2 + i * 1.6);
+          }
+          ctx.restore();
+          ctx.fillStyle = DARK;
+          ctx.fillRect(0, hz, w, h - hz);
+          ctx.strokeStyle = "#e879f9";
+          ctx.lineWidth = 1.5;
+          ctx.shadowColor = "#e879f9";
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          for (let i = -24; i <= 24; i++) {
+            ctx.moveTo(w / 2 + i * 6, hz);
+            ctx.lineTo(w / 2 + i * w * 0.09, h);
+          }
+          for (let j = 0; j < 22; j++) {
+            const z = (j - travel % 1) / 22 * 20 + 0.6;
+            const ly = hz + (h - hz) * (0.6 / z);
+            if (ly > h) continue;
+            ctx.moveTo(0, ly);
+            ctx.lineTo(w, ly);
+          }
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "#f0abfc";
+          ctx.fillRect(0, hz - 1, w, 2);
+          ctx.restore();
+        };
+      }
+    }
+  )
+};
+function bolt(a, b, rough, depth, out) {
+  let pts = [a, b];
+  for (let d = 0; d < depth; d++) {
+    const next = [pts[0]];
+    for (let i = 1; i < pts.length; i++) {
+      const [x1, y1] = pts[i - 1];
+      const [x2, y2] = pts[i];
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      const off = (Math.random() - 0.5) * len * rough;
+      const nx = -(y2 - y1) / (len || 1);
+      const ny = (x2 - x1) / (len || 1);
+      const m = [(x1 + x2) / 2 + nx * off, (y1 + y2) / 2 + ny * off];
+      next.push(m, pts[i]);
+      if (d < 3 && Math.random() < 0.18) {
+        const ang = Math.atan2(y2 - y1, x2 - x1) + (Math.random() - 0.5) * 1.6;
+        out.push(
+          bolt(
+            m,
+            [m[0] + Math.cos(ang) * len * 1.5, m[1] + Math.sin(ang) * len * 1.5],
+            rough,
+            depth - d - 1,
+            out
+          )
+        );
+      }
+    }
+    pts = next;
+  }
+  return pts;
+}
+const LT = { swap: 1500, end: 2300 };
+const lightning = {
+  id: "lightning",
+  ...LT,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const strikes = [];
+          let next = 0;
+          let finale = false;
+          const edge = () => {
+            const s = Math.floor(Math.random() * 4);
+            const r = Math.random();
+            return s === 0 ? [r * w, -20] : s === 1 ? [w + 20, r * h] : s === 2 ? [r * w, h + 20] : [-20, r * h];
+          };
+          const strike = (a, b, t, big) => {
+            const paths = [];
+            paths.unshift(bolt(a, b, 0.55, 8, paths));
+            strikes.push({ paths, born: t, big });
+          };
+          return (t) => {
+            if (t < LT.swap - 250 && t >= next) {
+              strike([x, y], edge(), t, false);
+              if (Math.random() < 0.5) strike([x, y], edge(), t, false);
+              next = t + 90 + Math.random() * 90;
+            }
+            if (!finale && t >= LT.swap - 200) {
+              finale = true;
+              strike(
+                [w * (0.3 + Math.random() * 0.4), -20],
+                [w * (0.3 + Math.random() * 0.4), h + 20],
+                t,
+                true
+              );
+            }
+            ctx.clearRect(0, 0, w, h);
+            const cover = t < LT.swap ? Math.pow(clamp(t / LT.swap), 1.4) : 1 - clamp((t - LT.swap) / 650);
+            ctx.fillStyle = DARK;
+            ctx.globalAlpha = cover;
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalAlpha = 1;
+            ctx.lineJoin = "round";
+            for (const s of strikes) {
+              const age = t - s.born;
+              const life = s.big ? 700 : 320;
+              if (age > life) continue;
+              const a = 1 - age / life;
+              if (age < 70) {
+                ctx.fillStyle = `rgba(220,200,255,${(s.big ? 0.8 : 0.18) * (1 - age / 70)})`;
+                ctx.fillRect(0, 0, w, h);
+              }
+              for (const [pi, p] of s.paths.entries()) {
+                const main = pi === 0;
+                for (const [lw, col] of [
+                  [s.big ? 22 : 9, `rgba(168,85,247,${a * 0.35})`],
+                  [s.big ? 8 : 3.5, `rgba(34,211,238,${a * 0.7})`],
+                  [s.big ? 3 : 1.4, `rgba(255,255,255,${a})`]
+                ]) {
+                  ctx.lineWidth = main ? lw : lw * 0.5;
+                  ctx.strokeStyle = col;
+                  ctx.beginPath();
+                  ctx.moveTo(p[0][0], p[0][1]);
+                  for (const q of p) ctx.lineTo(q[0], q[1]);
+                  ctx.stroke();
+                }
+              }
+            }
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 600, out })
+  ] })
+};
+const VX = { swap: 1400, end: 2300 };
+const vortex = {
+  id: "vortex",
+  ...VX,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const R = Math.hypot(w, h) + 40;
+          return (t) => {
+            ctx.clearRect(0, 0, w, h);
+            const m = easeInOut(clamp(t / 900));
+            const cx = lerp(x, w / 2, m);
+            const cy = lerp(y, h / 2, m);
+            const disk = t < VX.swap ? easeIn(clamp(t / VX.swap)) * R + 6 : R;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, disk, 0, Math.PI * 2);
+            ctx.clip();
+            const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(disk, 1));
+            bg.addColorStop(0, "#2e0a4a");
+            bg.addColorStop(0.6, DARK);
+            bg.addColorStop(1, DARK);
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+            ctx.globalCompositeOperation = "lighter";
+            const spin = t * 42e-4;
+            const arms = 6;
+            for (let a = 0; a < arms; a++) {
+              for (let s = 1; s < 90; s++) {
+                const r = Math.pow(s / 90, 1.6) * R * 0.75;
+                const ang = a / arms * Math.PI * 2 + Math.log(r + 1) * 1.9 - spin;
+                const px = cx + Math.cos(ang) * r;
+                const py = cy + Math.sin(ang) * r;
+                ctx.fillStyle = `hsla(${(190 + s * 1.6 + a * 25) % 360}, 95%, 62%, ${0.15 + s / 90 * 0.55})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 1 + s / 90 * 9, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            ctx.globalCompositeOperation = "source-over";
+            ctx.restore();
+            if (t >= VX.swap) {
+              const e = clamp((t - VX.swap) / (VX.end - VX.swap - 150));
+              const hole = easeIn(e) * R;
+              const g = ctx.createRadialGradient(cx, cy, hole * 0.7, cx, cy, hole + 1);
+              g.addColorStop(0, "rgba(0,0,0,1)");
+              g.addColorStop(1, "rgba(0,0,0,0)");
+              ctx.globalCompositeOperation = "destination-out";
+              ctx.fillStyle = g;
+              ctx.fillRect(0, 0, w, h);
+              ctx.globalCompositeOperation = "source-over";
+            }
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 650, out })
+  ] })
+};
+const PS = { swap: 1300, end: 2300 };
+const paint = {
+  id: "paint",
+  ...PS,
+  Render: ({ x, y, out }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      FxCanvas,
+      {
+        make: (ctx, w, h) => {
+          const R = Math.hypot(w, h) * 1.15 + 40;
+          const layers = [NEON[2], NEON[1], NEON[0], DARK];
+          const blob = (cx, cy, r, k, t) => {
+            ctx.moveTo(cx + r, cy);
+            for (let i = 0; i <= 96; i++) {
+              const a = i / 96 * Math.PI * 2;
+              const wob = 1 + 0.06 * Math.sin(3 * a + t * 3e-3 + k) + 0.035 * Math.sin(7 * a - t * 5e-3 + k * 2) + 0.02 * Math.sin(13 * a + k * 3);
+              ctx.lineTo(cx + Math.cos(a) * r * wob, cy + Math.sin(a) * r * wob);
+            }
+          };
+          return (t) => {
+            ctx.clearRect(0, 0, w, h);
+            if (t < PS.swap) {
+              layers.forEach((col, i) => {
+                const st = i * 130;
+                const r = easeInOut(clamp((t - st) / (PS.swap - 100 - st))) * R;
+                if (r <= 0) return;
+                ctx.fillStyle = col;
+                ctx.beginPath();
+                blob(x, y, r, i, t);
+                ctx.fill();
+              });
+              return;
+            }
+            const e = t - PS.swap;
+            const span = PS.end - PS.swap - 150;
+            [NEON[2], NEON[1], NEON[0], DARK].forEach((col, i) => {
+              const st = (3 - i) * 110;
+              const r = easeInOut(clamp((e - st) / (span - 330))) * R;
+              ctx.fillStyle = col;
+              ctx.beginPath();
+              ctx.rect(0, 0, w, h);
+              if (r > 0) blob(w / 2, h / 2, r, i + 5, t);
+              ctx.fill("evenodd");
+            });
+          };
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 750, out })
+  ] })
+};
+const TL = { swap: 1700, end: 3100 };
+const TILE = 90;
+const tiles = {
+  id: "tiles",
+  ...TL,
+  Render: function Tiles({ x, y, out }) {
+    const [grid] = reactExports.useState(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const cols = Math.ceil(w / TILE);
+      const rows = Math.ceil(h / TILE);
+      const far = Math.hypot(w, h);
+      const list = [];
+      for (let row = 0; row < rows; row++)
+        for (let col = 0; col < cols; col++) {
+          const cx = (col + 0.5) * (w / cols);
+          const cy = (row + 0.5) * (h / rows);
+          const dx = cx - w / 2;
+          const dy = cy - h / 2;
+          list.push({
+            key: row * cols + col,
+            col,
+            row,
+            vars: {
+              "--flip": `${Math.round(Math.hypot(cx - x, cy - y) / far * 650 + Math.random() * 60)}ms`,
+              "--burst": `${Math.round(Math.hypot(dx, dy) / (far / 2) * 280 + Math.random() * 80)}ms`,
+              "--rx": `${Math.round((Math.random() - 0.5) * 540)}deg`,
+              "--ry": `${Math.round((Math.random() - 0.5) * 540)}deg`,
+              "--rz": `${Math.round((Math.random() - 0.5) * 180)}deg`,
+              "--z": `${Math.round(600 + Math.random() * 900)}px`,
+              "--tx": `${Math.round(dx * (1.2 + Math.random()))}px`,
+              "--ty": `${Math.round(dy * (1.2 + Math.random()))}px`
+            }
+          });
+        }
+      return { list, cols, rows };
+    });
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `fx-tiles absolute inset-0 ${out ? "is-out" : ""}`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "fx-tiles-stage absolute inset-0 grid",
+          style: {
+            gridTemplateColumns: `repeat(${grid.cols}, 1fr)`,
+            gridTemplateRows: `repeat(${grid.rows}, 1fr)`
+          },
+          children: grid.list.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fx-tile", style: t.vars, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-face fx-front" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "fx-face fx-back",
+                style: {
+                  backgroundSize: `${grid.cols * 100}% ${grid.rows * 100}%`,
+                  backgroundPosition: `${t.col / Math.max(1, grid.cols - 1) * 100}% ${t.row / Math.max(1, grid.rows - 1) * 100}%`
+                }
+              }
+            )
+          ] }, t.key))
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        FxCanvas,
+        {
+          className: "fx-tiles-warp",
+          make: (ctx, w, h) => {
+            const stars = starfield(w, h, 700);
+            const dt = clock();
+            return (t) => {
+              const d = dt(t);
+              ctx.clearRect(0, 0, w, h);
+              const k = clamp((t - 350) / (TL.swap - 350));
+              stars(ctx, d, 0.4 + k * k * 14, w / 2, h / 2);
+            };
+          }
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-flash absolute inset-0" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 750, out })
+    ] });
+  }
+};
+const GL = { swap: 1200, end: 2e3 };
+const glitch = {
+  id: "glitch",
+  ...GL,
+  Render: function Glitch({ out }) {
+    const [bars] = reactExports.useState(
+      () => Array.from({ length: 18 }, (_, i) => {
+        const side = i % 2 ? 1 : -1;
+        return {
+          i,
+          tint: i % 5 === 0 ? "fx-bar-neon" : "",
+          vars: {
+            "--from": `${side * 110}%`,
+            "--to": `${-side * 110}%`,
+            "--d": `${Math.round(Math.random() * 550)}ms`,
+            "--d2": `${Math.round(Math.random() * 350)}ms`,
+            "--j": `${Math.round((Math.random() - 0.5) * 40)}px`,
+            top: `${i * 100 / 18}%`,
+            height: `calc(${100 / 18}% + 1px)`
+          }
+        };
+      })
+    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `fx-glitch absolute inset-0 overflow-hidden ${out ? "is-out" : ""}`, children: [
+      bars.map((b) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `fx-bar absolute inset-x-0 ${b.tint}`, style: b.vars }, b.i)),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-glitch-noise absolute inset-0" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-glitch-scan absolute inset-x-0 h-2" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 500, out })
+    ] });
+  }
+};
+const BL = { swap: 1150, end: 2e3 };
+const blinds = {
+  id: "blinds",
+  ...BL,
+  Render: function Blinds({ x, out }) {
+    const [slats] = reactExports.useState(() => {
+      const w = window.innerWidth;
+      const n = Math.max(8, Math.round(w / 110));
+      const at = Math.floor(x / w * n);
+      const step2 = Math.min(55, 480 / n);
+      return Array.from({ length: n }, (_, i) => ({
+        i,
+        n,
+        vars: {
+          "--d": `${Math.round(Math.abs(i - at) * step2)}ms`,
+          "--d2": `${Math.round(i * (300 / n))}ms`,
+          left: `${i * 100 / n}%`,
+          width: `calc(${100 / n}% + 1px)`,
+          backgroundSize: `${n * 100}% 100%`,
+          backgroundPosition: `${i / Math.max(1, n - 1) * 100}% 0`
+        }
+      }));
+    });
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `fx-blinds absolute inset-0 ${out ? "is-out" : ""}`, children: [
+      slats.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-slat absolute inset-y-0", style: s.vars }, s.i)),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 600, out })
+    ] });
+  }
+};
+const SL = { swap: 1200, end: 2100 };
+const laser = {
+  id: "laser",
+  ...SL,
+  Render: function Laser({ out }) {
+    const [angle] = reactExports.useState(
+      () => Math.atan2(-0.1 * window.innerHeight, window.innerWidth) * 180 / Math.PI
+    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `fx-laser absolute inset-0 overflow-hidden ${out ? "is-out" : ""}`, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-half fx-half-a absolute inset-0" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-half fx-half-b absolute inset-0" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "fx-beam absolute left-[-10%] top-1/2 h-[3px] w-[120%]",
+          style: { transform: `rotate(${angle}deg)` }
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-impact absolute inset-0" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 750, out })
+    ] });
+  }
+};
+const CR = { swap: 1250, end: 2100 };
+const crt = {
+  id: "crt",
+  ...CR,
+  Render: ({ out }) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `fx-crt absolute inset-0 ${out ? "is-out" : ""}`, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "fx-crt-screen absolute inset-0 overflow-hidden", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-crt-glow absolute inset-0" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-crt-lines absolute inset-0" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-crt-roll absolute inset-x-0 h-1/4" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 550, out: false }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-crt-white absolute inset-0" })
+  ] }) })
+};
+const TN = { swap: 1400, end: 2100 };
+const tunnel = {
+  id: "tunnel",
+  ...TN,
+  Render: function Tunnel({ x, y, out }) {
+    const [rings] = reactExports.useState(
+      () => Array.from({ length: 16 }, (_, i) => ({
+        i,
+        vars: {
+          "--rot": `${i * 11}deg`,
+          animationDelay: `${-i * 90}ms`,
+          borderColor: ["#22d3ee", "#a855f7", "#db2777"][i % 3]
+        }
+      }))
+    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
-        className: "absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 transition-opacity duration-300",
-        style: { opacity: open ? 0 : 1 },
+        className: `fx-tunnel absolute inset-0 overflow-hidden ${out ? "is-out" : ""}`,
+        style: { "--ox": `${x}px`, "--oy": `${y}px` },
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "preloader-rise text-3xl font-bold tracking-tight sm:text-5xl glow-text", children: profile.name }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-px w-48 overflow-hidden bg-border", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              className: "h-full bg-gradient-to-r from-primary to-accent",
-              style: { width: `${count}%` }
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-mono text-xs tabular-nums text-muted-foreground", children: [
-            String(count).padStart(3, "0"),
-            "%"
-          ] })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fx-tunnel-space absolute inset-0", children: rings.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "fx-ring", style: r.vars }, r.i)) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Word, { delay: 600, out })
         ]
       }
-    )
-  ] });
+    );
+  }
+};
+const EFFECTS = [
+  tiles,
+  hyperspace,
+  glitch,
+  vortex,
+  pixels,
+  codeRain,
+  blackHole,
+  blinds,
+  particleText,
+  horizon,
+  paint,
+  tunnel,
+  lightning,
+  laser,
+  crt
+];
+const NO_REPEAT = 5;
+function pickEffect() {
+  const forced = new URLSearchParams(window.location.search).get("fx");
+  const byId = EFFECTS.find((e) => e.id === forced);
+  if (byId) return byId;
+  const recent = readJson(
+    STORAGE_KEYS.recentTransitions,
+    (v) => Array.isArray(v) ? v.filter((x) => typeof x === "string") : void 0
+  ) ?? [];
+  const pool = EFFECTS.filter((e) => !recent.includes(e.id));
+  const fx = pool[Math.floor(Math.random() * pool.length)] ?? EFFECTS[0];
+  writeJson(STORAGE_KEYS.recentTransitions, [fx.id, ...recent].slice(0, NO_REPEAT));
+  return fx;
+}
+const CALM = { swap: 550, end: 1050 };
+function ModeTransition({
+  run,
+  onSwap,
+  onDone
+}) {
+  const [fx] = reactExports.useState(() => run.to === "chaos" ? pickEffect() : null);
+  const [out, setOut] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    const t = fx ?? CALM;
+    const a = window.setTimeout(() => {
+      onSwap();
+      setOut(true);
+    }, t.swap);
+    const b = window.setTimeout(onDone, t.end);
+    return () => {
+      window.clearTimeout(a);
+      window.clearTimeout(b);
+    };
+  }, []);
+  if (!fx) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        "aria-hidden": true,
+        style: { "--ox": `${run.x}px`, "--oy": `${run.y}px` },
+        className: `mode-calm fixed inset-0 z-[200] bg-background ${out ? "is-out" : ""}`
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "aria-hidden": true, "data-fx": fx.id, className: "pointer-events-auto fixed inset-0 z-[200]", children: /* @__PURE__ */ jsxRuntimeExports.jsx(fx.Render, { x: run.x, y: run.y, out }) });
 }
 function MouseGlow() {
   const ref = reactExports.useRef(null);
@@ -2210,7 +3155,7 @@ function MouseGlow() {
     let frame = 0;
     let x = -200;
     let y = -200;
-    const paint = () => {
+    const paint2 = () => {
       frame = 0;
       el.style.setProperty("--glow-x", `${x}px`);
       el.style.setProperty("--glow-y", `${y}px`);
@@ -2218,7 +3163,7 @@ function MouseGlow() {
     const onMove = (e) => {
       x = e.clientX;
       y = e.clientY;
-      if (!frame) frame = requestAnimationFrame(paint);
+      if (!frame) frame = requestAnimationFrame(paint2);
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => {
@@ -2267,7 +3212,7 @@ const BASE_ITEMS = [
   { id: "contact", label: "Contact" }
 ];
 const GAMING_ITEM = { id: "game", label: "Gaming" };
-function NavBar() {
+function NavBar({ onSimple }) {
   const [active, setActive] = reactExports.useState("experience");
   const [hover, setHover] = reactExports.useState(null);
   const [progress, setProgress] = reactExports.useState(0);
@@ -2359,10 +3304,16 @@ function NavBar() {
           ]
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { asChild: true, size: "sm", variant: "outline", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: `mailto:${profile.email}`, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, {}),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Get in touch" })
-      ] }) }) })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { size: "sm", variant: "ghost", onClick: onSimple, title: "Back to the simple view", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Leaf, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Simple view" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { asChild: true, size: "sm", variant: "outline", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: `mailto:${profile.email}`, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Get in touch" })
+        ] }) })
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-[2px] w-full bg-transparent", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
@@ -2607,7 +3558,7 @@ function RobotWorld({ walkway }) {
     dying: null,
     shots: []
   });
-  const [, paint] = reactExports.useReducer((n) => n + 1, 0);
+  const [, paint2] = reactExports.useReducer((n) => n + 1, 0);
   const ready = reactExports.useRef(false);
   const before = reactExports.useRef(null);
   const live = ROBOT_NAMES.filter((n) => robots[n] || world.current.dying === n);
@@ -2632,7 +3583,7 @@ function RobotWorld({ walkway }) {
       world.current.ball.x = w * 0.28 + ROBOT_W + 6;
       if (!walkway) for (const n of ROBOT_NAMES) world.current[n].grounded = true;
       ready.current = true;
-      paint();
+      paint2();
     }
     let cancelled = false;
     let shotId = 0;
@@ -2643,7 +3594,7 @@ function RobotWorld({ walkway }) {
     const set = (edit) => {
       if (cancelled) return;
       edit(world.current);
-      paint();
+      paint2();
     };
     const span = () => ({
       min: EDGE_PX,
@@ -2887,7 +3838,7 @@ function RobotWorld({ walkway }) {
     p[name]++;
     const say = (who, text) => {
       world.current[who] = { ...world.current[who], say: text };
-      paint();
+      paint2();
     };
     if (!p.argued && p.alice >= 3 && p.bob >= 3) {
       p.argued = true;
@@ -3144,6 +4095,410 @@ function SessionTimer() {
     }
   );
 }
+function Typewriter({
+  words,
+  className,
+  speed = 80,
+  pause = 1400
+}) {
+  const [mounted, setMounted] = reactExports.useState(false);
+  const [reduceMotion, setReduceMotion] = reactExports.useState(false);
+  const [i, setI] = reactExports.useState(0);
+  const [text, setText] = reactExports.useState("");
+  const [deleting, setDeleting] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    setMounted(true);
+    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+  reactExports.useEffect(() => {
+    if (!mounted || reduceMotion) return;
+    const current = words[i % words.length];
+    const done = !deleting && text === current;
+    const cleared = deleting && text === "";
+    const delay = done ? pause : cleared ? 300 : deleting ? speed / 2 : speed;
+    const t = setTimeout(() => {
+      if (done) setDeleting(true);
+      else if (cleared) {
+        setDeleting(false);
+        setI((v) => v + 1);
+      } else {
+        setText(deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1));
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [text, deleting, i, mounted, reduceMotion, words, speed, pause]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className, children: [
+    mounted && !reduceMotion ? text : words[0],
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" })
+  ] });
+}
+const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
+const photos = [
+  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" }
+];
+function useScrollReveal(selector = "main > section") {
+  reactExports.useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const els = Array.from(document.querySelectorAll(selector)).filter(
+      (el) => el.getBoundingClientRect().top > window.innerHeight
+    );
+    for (const el of els) el.classList.add("reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          e.target.classList.add("reveal-in");
+          io.unobserve(e.target);
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    );
+    for (const el of els) io.observe(el);
+    return () => io.disconnect();
+  }, [selector]);
+}
+const NAV = [
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "education", label: "Education" },
+  { id: "contact", label: "Contact" }
+];
+function projectLinks(p) {
+  const out = [];
+  if (p.repo) out.push({ label: p.repoLabel ?? "GitHub", url: p.repo });
+  if (p.links) out.push(...p.links);
+  return out;
+}
+function SectionTitle({ children }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "mb-6 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground", children });
+}
+function TypeOnce({
+  text,
+  delay = 300,
+  speed = 70
+}) {
+  const [n, setN] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return setN(text.length);
+    let i = 0;
+    let t = window.setTimeout(function step2() {
+      setN(++i);
+      if (i < text.length) t = window.setTimeout(step2, speed);
+    }, delay);
+    setN(0);
+    return () => window.clearTimeout(t);
+  }, [text, delay, speed]);
+  const typing = n !== null && n < text.length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative inline-block", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: n === null ? "" : "invisible", children: text }),
+    n !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { "aria-hidden": true, className: "absolute inset-0 whitespace-nowrap", children: [
+      text.slice(0, n),
+      typing && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-0.5 inline-block h-[0.9em] w-[3px] translate-y-[0.1em] bg-primary" })
+    ] })
+  ] });
+}
+function Portrait() {
+  const ref = reactExports.useRef(null);
+  const photo = photos[0];
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `rotateY(${x * 16}deg) rotateX(${-y * 16}deg)`;
+  };
+  const onLeave = () => {
+    if (ref.current) ref.current.style.transform = "";
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "sv-rise relative mx-auto shrink-0 [perspective:800px]",
+      style: { animationDelay: "200ms" },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sv-float", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          ref,
+          onPointerMove: onMove,
+          onPointerLeave: onLeave,
+          className: "relative size-40 transition-transform duration-300 ease-out sm:size-52",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "aria-hidden": true, className: "sv-ring absolute -inset-[3px] rounded-full" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                "aria-hidden": true,
+                className: "absolute -inset-6 -z-10 rounded-full bg-primary/15 blur-2xl"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "img",
+              {
+                src: photo.src,
+                alt: photo.alt,
+                width: 320,
+                height: 320,
+                className: "relative size-full rounded-full border-4 border-background object-cover"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "absolute -bottom-1 -right-3 inline-flex items-center gap-1 rounded-full border border-border bg-background/90 px-2.5 py-1 text-xs shadow-lg backdrop-blur", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "size-3.5 text-amber-400" }),
+              "ACPC Finalist"
+            ] })
+          ]
+        }
+      ) })
+    }
+  );
+}
+function SimpleView({ onChaos }) {
+  useScrollReveal("main > section");
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-background text-foreground", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "mx-auto flex h-14 max-w-3xl items-center justify-between gap-4 px-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: "#top", className: "font-mono text-sm font-semibold tracking-tight", children: [
+        domainParts[0],
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: domainParts[1] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "hidden items-center gap-5 text-sm text-muted-foreground sm:flex", children: NAV.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: `#${n.id}`, className: "transition-colors hover:text-foreground", children: n.label }, n.id)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: onChaos,
+          className: "chaos-btn group inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "size-3.5 transition-transform group-hover:rotate-12 group-hover:scale-110" }),
+            "Chaos mode"
+          ]
+        }
+      )
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "mx-auto max-w-3xl px-6 pb-24", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "flex flex-col-reverse items-center gap-10 pb-14 pt-14 sm:flex-row sm:items-center sm:justify-between sm:pt-20", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "sv-rise font-mono text-sm text-primary", children: "Hi, I'm" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-1 text-4xl font-semibold tracking-tight sm:text-5xl", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TypeOnce, { text: profile.name }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              className: "sv-rise mt-3 h-7 text-lg text-muted-foreground",
+              style: { animationDelay: "900ms" },
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typewriter, { words: roles, speed: 60, pause: 1800 })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              className: "sv-rise mt-6 max-w-xl leading-relaxed text-foreground/85",
+              style: { animationDelay: "1100ms" },
+              children: profile.tagline
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "sv-rise mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground",
+              style: { animationDelay: "1250ms" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(MapPin, { className: "size-4" }),
+                  profile.location
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "a",
+                  {
+                    href: `mailto:${profile.email}`,
+                    className: "inline-flex items-center gap-1.5 hover:text-foreground",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "size-4" }),
+                      profile.email
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "a",
+                  {
+                    href: profile.cvUrl,
+                    target: "_blank",
+                    rel: "noreferrer",
+                    className: "inline-flex items-center gap-1.5 hover:text-foreground",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "size-4" }),
+                      "CV"
+                    ]
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-4 flex flex-wrap gap-2", children: links.map((l, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "a",
+            {
+              href: l.url,
+              target: "_blank",
+              rel: "noreferrer",
+              style: { animationDelay: `${1350 + i * 80}ms` },
+              className: "sv-rise inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-sm text-muted-foreground transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:text-foreground",
+              children: [
+                l.label,
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-3.5" })
+              ]
+            },
+            l.label
+          )) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Portrait, {})
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "experience", className: "scroll-mt-20 border-t border-border py-14", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionTitle, { children: "Experience" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ol", { className: "space-y-0 [&>li]:pb-10", children: experiences.map((x) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "pt-0.5 text-sm text-muted-foreground", children: x.period }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative sm:border-l sm:border-border sm:pl-6", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "span",
+              {
+                "aria-hidden": true,
+                className: `absolute -left-[5px] top-1.5 hidden size-2.5 rounded-full border-2 border-background sm:block ${x.current ? "sv-pulse bg-primary" : "bg-muted-foreground/50"}`
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-medium", children: [
+              x.role,
+              " ·",
+              " ",
+              x.linkedin ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "a",
+                {
+                  href: x.linkedin,
+                  target: "_blank",
+                  rel: "noreferrer",
+                  className: "underline-offset-4 hover:underline",
+                  children: x.company
+                }
+              ) : x.company
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-0.5 text-sm text-muted-foreground", children: [
+              x.employment,
+              x.website && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                " · ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "a",
+                  {
+                    href: x.website.url,
+                    target: "_blank",
+                    rel: "noreferrer",
+                    className: "hover:text-foreground",
+                    children: x.website.label
+                  }
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-3 space-y-2 text-sm leading-relaxed text-foreground/80", children: x.points.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "relative pl-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute left-0 top-[0.6em] size-1 rounded-full bg-muted-foreground/60" }),
+              p
+            ] }, p)) })
+          ] })
+        ] }, x.company)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "projects", className: "scroll-mt-20 border-t border-border py-14", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionTitle, { children: "Projects" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-4 sm:grid-cols-2", children: projects.map((p) => {
+          const ls = projectLinks(p);
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "article",
+            {
+              className: `flex flex-col rounded-lg border border-border p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_8px_30px_-12px_var(--color-primary)] ${p.accent ? "sm:col-span-2" : ""}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: p.tag }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-1 font-medium", children: p.title }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm leading-relaxed text-foreground/80", children: p.description }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-xs leading-relaxed text-muted-foreground", children: p.stack.join(" · ") }),
+                (ls.length > 0 || p.privateRepo) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-4 text-sm", children: [
+                  ls.map((l) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "a",
+                    {
+                      href: l.url,
+                      target: "_blank",
+                      rel: "noreferrer",
+                      className: "inline-flex items-center gap-0.5 text-foreground/90 underline-offset-4 hover:underline",
+                      children: [
+                        l.label,
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUpRight, { className: "size-3.5" })
+                      ]
+                    },
+                    l.url
+                  )),
+                  p.privateRepo && ls.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Private repo" })
+                ] })
+              ]
+            },
+            p.title
+          );
+        }) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "border-t border-border py-14", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionTitle, { children: "Skills" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("dl", { className: "space-y-3 text-sm", children: Object.entries(skills).map(([group2, items]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dt", { className: "text-muted-foreground", children: group2 }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("dd", { className: "text-foreground/85", children: items.join(", ") })
+        ] }, group2)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "education", className: "scroll-mt-20 border-t border-border py-14", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionTitle, { children: "Education" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "2021 – 2025" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-medium", children: education.degree }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-0.5 text-sm text-muted-foreground", children: [
+              education.school,
+              " · ",
+              education.detail
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "mb-6 mt-14 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground", children: "Competitions" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-5", children: competitions.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "grid gap-1 sm:grid-cols-[10rem_1fr] sm:gap-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium", children: c.title }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm leading-relaxed text-foreground/80", children: c.detail })
+        ] }, c.title)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "contact", className: "scroll-mt-20 border-t border-border py-14", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SectionTitle, { children: "Contact" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-xl text-foreground/85", children: "Let's build something. The fastest way to reach me is email." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 flex flex-wrap gap-3 text-sm", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "a",
+            {
+              href: `mailto:${profile.email}`,
+              className: "inline-flex items-center gap-1.5 rounded-md bg-foreground px-3.5 py-2 font-medium text-background transition-opacity hover:opacity-90",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Mail, { className: "size-4" }),
+                "Email me"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "a",
+            {
+              href: `tel:${profile.phone}`,
+              className: "inline-flex items-center gap-1.5 rounded-md border border-border px-3.5 py-2 text-muted-foreground transition-colors hover:text-foreground",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Phone, { className: "size-4" }),
+                profile.phoneDisplay
+              ]
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("footer", { className: "border-t border-border pt-8 text-xs text-muted-foreground", children: [
+        "© ",
+        (/* @__PURE__ */ new Date()).getFullYear(),
+        " ",
+        profile.name
+      ] })
+    ] })
+  ] });
+}
 function Starfield() {
   const canvasRef = reactExports.useRef(null);
   reactExports.useEffect(() => {
@@ -3303,7 +4658,6 @@ const MOMENTS = [
   { src: selfieNight, alt: "The night after, with the whole crew" }
 ];
 const IDLE_SLIDE_MS = 6e3;
-const AUTOPLAYED_KEY = "acpc-autoplayed";
 const PLAY_SLIDE_MS = 5e3;
 const BARS = 14;
 function time(s) {
@@ -3413,61 +4767,6 @@ function AcpcMoments() {
     return () => {
       window.removeEventListener(PARTY_EVENT, on);
       window.clearTimeout(timer);
-    };
-  }, []);
-  const toggleRef = reactExports.useRef(toggle);
-  toggleRef.current = toggle;
-  const anchorRef = reactExports.useRef(null);
-  reactExports.useEffect(() => {
-    const anchor = anchorRef.current;
-    const audio = audioRef.current;
-    if (!anchor || !audio) return;
-    try {
-      if (sessionStorage.getItem(AUTOPLAYED_KEY) === "1") return;
-    } catch {
-    }
-    let inView = false;
-    let pending = false;
-    let done = false;
-    const finish = () => {
-      done = true;
-      pending = false;
-      try {
-        sessionStorage.setItem(AUTOPLAYED_KEY, "1");
-      } catch {
-      }
-      window.removeEventListener("pointerdown", onGesture, true);
-      window.removeEventListener("keydown", onGesture, true);
-      io.disconnect();
-    };
-    const tryPlay = () => {
-      if (done) return;
-      if (!audio.paused || audio.currentTime > 0) return finish();
-      const activated = navigator.userActivation?.hasBeenActive ?? true;
-      if (!activated) {
-        pending = true;
-        return;
-      }
-      finish();
-      void toggleRef.current();
-    };
-    const onGesture = () => {
-      if (pending && inView) setTimeout(tryPlay, 0);
-    };
-    const io = new IntersectionObserver(
-      ([e]) => {
-        inView = e.isIntersecting;
-        if (inView) tryPlay();
-      },
-      { threshold: 0.6 }
-    );
-    io.observe(anchor);
-    window.addEventListener("pointerdown", onGesture, true);
-    window.addEventListener("keydown", onGesture, true);
-    return () => {
-      io.disconnect();
-      window.removeEventListener("pointerdown", onGesture, true);
-      window.removeEventListener("keydown", onGesture, true);
     };
   }, []);
   const seek = (e) => {
@@ -3597,17 +4896,7 @@ function AcpcMoments() {
       }
     )
   ] });
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "span",
-      {
-        ref: anchorRef,
-        "aria-hidden": true,
-        className: "pointer-events-none absolute inset-x-0 top-0 h-[280px]"
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls })
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ContestBalloons, { backdrop, controls }) });
 }
 function Achievements() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "py-24 border-t border-border", children: [
@@ -4108,7 +5397,7 @@ function ParticleHeading({ lines, className }) {
     let dpr = 1;
     let dot = 2;
     let image = null;
-    let pixels = new Uint32Array(0);
+    let pixels2 = new Uint32Array(0);
     let pointer = null;
     let awake = true;
     let assembled = false;
@@ -4203,12 +5492,12 @@ function ParticleHeading({ lines, className }) {
       vx = nvx;
       vy = nvy;
       image = ctx.createImageData(W, H);
-      pixels = new Uint32Array(image.data.buffer);
+      pixels2 = new Uint32Array(image.data.buffer);
       awake = true;
     };
     const draw = () => {
       if (!image) return;
-      pixels.fill(0);
+      pixels2.fill(0);
       for (let i = 0; i < n; i++) {
         const px = x[i] | 0;
         const py = y[i] | 0;
@@ -4216,7 +5505,7 @@ function ParticleHeading({ lines, className }) {
         const c = color[i];
         for (let dy = 0; dy < dot; dy++) {
           const row = (py + dy) * W + px;
-          for (let dx = 0; dx < dot; dx++) pixels[row + dx] = c;
+          for (let dx = 0; dx < dot; dx++) pixels2[row + dx] = c;
         }
       }
       ctx.putImageData(image, 0, 0);
@@ -4585,43 +5874,6 @@ function Experience() {
     ] })
   ] }) });
 }
-function Typewriter({
-  words,
-  className,
-  speed = 80,
-  pause = 1400
-}) {
-  const [mounted, setMounted] = reactExports.useState(false);
-  const [reduceMotion, setReduceMotion] = reactExports.useState(false);
-  const [i, setI] = reactExports.useState(0);
-  const [text, setText] = reactExports.useState("");
-  const [deleting, setDeleting] = reactExports.useState(false);
-  reactExports.useEffect(() => {
-    setMounted(true);
-    setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
-  reactExports.useEffect(() => {
-    if (!mounted || reduceMotion) return;
-    const current = words[i % words.length];
-    const done = !deleting && text === current;
-    const cleared = deleting && text === "";
-    const delay = done ? pause : cleared ? 300 : deleting ? speed / 2 : speed;
-    const t = setTimeout(() => {
-      if (done) setDeleting(true);
-      else if (cleared) {
-        setDeleting(false);
-        setI((v) => v + 1);
-      } else {
-        setText(deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1));
-      }
-    }, delay);
-    return () => clearTimeout(t);
-  }, [text, deleting, i, mounted, reduceMotion, words, speed, pause]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className, children: [
-    mounted && !reduceMotion ? text : words[0],
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "caret-blink ml-1 inline-block h-[1em] w-[2px] -mb-1 bg-primary align-middle" })
-  ] });
-}
 const STRAP_POINTS = 14;
 const GRAVITY$1 = 1700;
 const DAMPING = 0.994;
@@ -4694,7 +5946,7 @@ function LanyardBadge({ photo, photoAlt }) {
     const by = hole.y + (reduce ? rod : rod * 0.85);
     pts.push({ x: bx, y: by, px: bx, py: by, invM: 1 / CARD_MASS });
     sim.current = { pts, seg, grab: null, asleep: false, tilt: 0 };
-    const paint = () => {
+    const paint2 = () => {
       const s = sim.current;
       const h = s.pts[STRAP_POINTS - 1];
       const b = s.pts[STRAP_POINTS];
@@ -4714,7 +5966,7 @@ function LanyardBadge({ photo, photoAlt }) {
       strapRef.current?.setAttribute("d", d);
     };
     if (reduce) {
-      paint();
+      paint2();
       return;
     }
     let raf = 0;
@@ -4787,13 +6039,13 @@ function LanyardBadge({ photo, photoAlt }) {
       const vy = (b.y - b.py) / dt;
       const target = Math.max(-MAX_TILT$1, Math.min(MAX_TILT$1, vx * 0.035));
       s.tilt += (target - s.tilt) * 0.12;
-      paint();
+      paint2();
       const still = s.pts.every((p) => Math.hypot(p.x - p.px, p.y - p.py) / dt < REST_SPEED$1);
       if (still && !s.grab && Math.abs(s.tilt) < 0.2 && Math.hypot(vx, vy) < REST_SPEED$1) {
         s.asleep = true;
       }
     };
-    paint();
+    paint2();
     raf = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(raf);
@@ -5024,10 +6276,6 @@ function LanyardBadge({ photo, photoAlt }) {
     }
   );
 }
-const acpc = "/assets/me-acpc-Bzm_CyMY.jpeg";
-const photos = [
-  { src: acpc, alt: "Ahmed Khaled holding balloons at the ACPC finals" }
-];
 function useSinkOnScroll() {
   const ref = reactExports.useRef(null);
   reactExports.useEffect(() => {
@@ -7489,10 +8737,10 @@ function makeContact(ai, bi, cax, cay, cbx, cby, ra, rb) {
 function collidePair(bodies, i, j, out) {
   const A = bodies[i];
   const B = bodies[j];
-  const reach = A.half + A.r + B.half + B.r;
+  const reach2 = A.half + A.r + B.half + B.r;
   const ddx = B.x - A.x;
   const ddy = B.y - A.y;
-  if (ddx * ddx + ddy * ddy > reach * reach) return;
+  if (ddx * ddx + ddy * ddy > reach2 * reach2) return;
   const [a0x, a0y, a1x, a1y] = ends(A);
   const [b0x, b0y, b1x, b1y] = ends(B);
   const found = [];
@@ -7602,16 +8850,16 @@ function solveContact(bodies, c, dt) {
 function detect(bodies, W, H) {
   const contacts = [];
   const order = bodies.map((_, i) => i);
-  const reach = bodies.map((b) => b.half + b.r);
-  order.sort((p, q) => bodies[p].x - reach[p] - (bodies[q].x - reach[q]));
+  const reach2 = bodies.map((b) => b.half + b.r);
+  order.sort((p, q) => bodies[p].x - reach2[p] - (bodies[q].x - reach2[q]));
   for (let k = 0; k < order.length; k++) {
     const i = order[k];
     collideWalls(bodies, i, W, H, contacts);
-    const right = bodies[i].x + reach[i];
+    const right = bodies[i].x + reach2[i];
     for (let m = k + 1; m < order.length; m++) {
       const j = order[m];
-      if (bodies[j].x - reach[j] > right) break;
-      if (Math.abs(bodies[j].y - bodies[i].y) > reach[i] + reach[j]) continue;
+      if (bodies[j].x - reach2[j] > right) break;
+      if (Math.abs(bodies[j].y - bodies[i].y) > reach2[i] + reach2[j]) continue;
       collidePair(bodies, i, j, contacts);
     }
   }
@@ -7727,7 +8975,7 @@ function SkillsPlayground({ groups }) {
         };
       });
     };
-    const paint = () => {
+    const paint2 = () => {
       bodies.current.forEach((b, i) => {
         const el = chipRefs.current[i];
         if (el)
@@ -7750,7 +8998,7 @@ function SkillsPlayground({ groups }) {
       const dt = elapsed / SUBSTEPS;
       for (let s = 0; s < SUBSTEPS; s++) step(bodies.current, W, H, dt, grab.current);
       separate(bodies.current, W, H);
-      paint();
+      paint2();
       const moving = bodies.current.some(
         (b) => Math.hypot(b.vx, b.vy) > REST_SPEED || Math.abs(b.w) > REST_SPIN
       );
@@ -8961,27 +10209,6 @@ function Terminal({
     }
   );
 }
-function useScrollReveal(selector = "main > section") {
-  reactExports.useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const els = Array.from(document.querySelectorAll(selector)).filter(
-      (el) => el.getBoundingClientRect().top > window.innerHeight
-    );
-    for (const el of els) el.classList.add("reveal");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add("reveal-in");
-          io.unobserve(e.target);
-        }
-      },
-      { rootMargin: "0px 0px -12% 0px" }
-    );
-    for (const el of els) io.observe(el);
-    return () => io.disconnect();
-  }, [selector]);
-}
 function useSpotlight() {
   reactExports.useEffect(() => {
     const onMove = (e) => {
@@ -9000,6 +10227,33 @@ function isWindowMode(value) {
   return value !== null && WINDOW_MODES.includes(value);
 }
 function Index() {
+  const [view, setView] = reactExports.useState("simple");
+  const [run, setRun] = reactExports.useState(null);
+  const switchTo = (to) => (e) => {
+    if (run) return;
+    const swap = () => {
+      setView(to);
+      window.scrollTo(0, 0);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return swap();
+    const r = e.currentTarget.getBoundingClientRect();
+    setRun({
+      to,
+      x: r.left + r.width / 2,
+      y: r.top + r.height / 2
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    view === "simple" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SimpleView, { onChaos: switchTo("chaos") }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ChaosView, { onSimple: switchTo("simple") }),
+    run && /* @__PURE__ */ jsxRuntimeExports.jsx(ModeTransition, { run, onSwap: () => {
+      setView(run.to);
+      window.scrollTo(0, 0);
+    }, onDone: () => setRun(null) })
+  ] });
+}
+function ChaosView({
+  onSimple
+}) {
   const [termMode, setTermMode] = reactExports.useState(() => {
     const saved = readString(STORAGE_KEYS.termMode);
     return isWindowMode(saved) ? saved : "closed";
@@ -9029,19 +10283,18 @@ function Index() {
     return () => window.removeEventListener(VEHICLE_DRIVING_EVENT, onDriving);
   }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative min-h-screen overflow-x-clip bg-background text-foreground", children: [
-    mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Preloader, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { "aria-hidden": true, className: "grain" }),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(Starfield, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MouseGlow, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(CustomCursor, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(RobotWorld, { walkway: termMode !== "float" }),
     mounted && termMode !== "closed" && /* @__PURE__ */ jsxRuntimeExports.jsx(Terminal, { mode: termMode, onClose: () => changeMode("closed"), onMinimize: () => changeMode("min"), onRestore: () => changeMode("float") }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(NavBar, { onSimple }),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(SessionTimer, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(BackToTop, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(PlayCar, {}),
     mounted && /* @__PURE__ */ jsxRuntimeExports.jsx(MysteryHud, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "relative z-10 max-w-5xl mx-auto px-6 pb-24", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { id: "top", className: "chaos-enter relative z-10 max-w-5xl mx-auto px-6 pb-24", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Hero, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Stats, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Experience, {}),
